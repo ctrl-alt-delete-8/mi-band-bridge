@@ -1,0 +1,54 @@
+[package]
+name = "bandbridge-gui"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Text only. The default features add image support, which the key does not
+# need.
+arboard = { version = "3", default-features = false }
+bandbridge = { path = ".." }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-dialog = "2"
+tokio = { version = "1", features = ["macros", "rt", "sync", "time"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# Record keys: an event tap on a run loop of its own, and the media keys,
+# which come as system-defined events. The library builds these already.
+objc2 = "0.6"
+# Give the focus back after a desktop switch: see desktop_switch.rs.
+block2 = "0.6"
+objc2-app-kit = "0.3"
+objc2-core-foundation = { version = "0.3", default-features = false, features = ["std", "CFArray", "CFCGTypes", "CFDate", "CFDictionary", "CFMachPort", "CFNumber", "CFRunLoop", "CFString"] }
+objc2-core-graphics = "0.3"
+# Keep running with no window open: see keep_running_without_a_window.
+objc2-foundation = "0.3"
+
+[target.'cfg(windows)'.dependencies]
+# One BandBridge at a time (W10): a second launch brings the first window
+# forward, and quits. 2.4 is the last that takes the Tauri the Mac app builds
+# with: 2.5 would move the whole app to a newer Tauri.
+tauri-plugin-single-instance = "~2.4"
+# Record keys: a low-level keyboard hook on a thread of its own, installed
+# at startup, and again after a recording that heard no key (LibraryLoader
+# for its module handle, Threading for its thread's id). The shell's open
+# verb, for the page about the auth key, and the frame Windows draws for the
+# zoom (W8). The version the library already builds, so the crate is built
+# once.
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Dwm",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }

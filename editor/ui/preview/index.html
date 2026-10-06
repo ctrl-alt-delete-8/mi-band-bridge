@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Mi Band App Editor preview</title>
+<!-- The preview harness: preview.js says how to use it. The app never loads
+     this page. -->
+<style>
+  /* Stand-ins for the window buttons macOS draws over the title bar, at their
+     size and place in the app on macOS 27: 14 points, 23 apart, from x 12,
+     centered on the bar. */
+  .preview-window-buttons { position: fixed; top: 0; left: 12px; height: 38px;
+                            display: flex; align-items: center; gap: 9px;
+                            pointer-events: none; }
+  .preview-window-buttons i { width: 14px; height: 14px; border-radius: 50%; }
+  .preview-window-buttons i:nth-child(1) { background: #ff6058; }
+  .preview-window-buttons i:nth-child(2) { background: #febd2e; }
+  .preview-window-buttons i:nth-child(3) { background: #28c942; }
+</style>
+<script src="preview.js" defer></script>

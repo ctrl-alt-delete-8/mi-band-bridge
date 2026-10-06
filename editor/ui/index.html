@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Mi Band App Editor</title>
+<script src="system.js"></script>
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  /* The BandBridge window's tokens and components, copied from
+     gui/ui/index.html: the two apps build separately, so they share their
+     design language by copy, and a change to one belongs in the other. Each
+     token holds its light and its dark value, and the system's appearance
+     picks one. */
+  :root {
+    color-scheme: light dark;
+    --bg: light-dark(#edeef1, #34373e);
+    --card: light-dark(#ffffff, #3e424a);
+    --card-sunk: light-dark(#f7f7f9, #383b43);
+    --chip: light-dark(#eff0f3, #484c55);
+    --hairline: light-dark(#ecedf0, #474a53);
+    --line: light-dark(#e2e3e7, #4f535d);
+    --line-strong: light-dark(#cdcfd5, #5e636e);
+    --ink: light-dark(#111318, #edeef1);
+    --dim: light-dark(#5b5f67, #aeb2ba);
+    --faint: light-dark(#8b8f97, #9da1a9);
+    --accent: light-dark(#0a6bce, #6bb0f5);
+    --accent-soft: light-dark(#e9f1fc, #2d4a6b);
+    --accent-ink: light-dark(#ffffff, #0b1a2c);
+    --good: light-dark(#137a3a, #3ecd75);
+    --good-soft: light-dark(#e4f4ea, #24402c);
+    --warn: light-dark(#8a5a07, #e4a32b);
+    --warn-soft: light-dark(#fcf3df, #443218);
+    --bad: light-dark(#b3261e, #ff8b82);
+    --bad-soft: light-dark(#fce9e7, #4a2823);
+    --focus-ring: light-dark(#0a6bce, #4c9df0);
+    --chip-raised: light-dark(#ffffff, #565b65);
+    --bad-ink: light-dark(#ffffff, #2e1613);
+    /* Windows' caption buttons, in Windows 11's own tints: one under the
+       pointer, a lighter one while pressed. Close turns red. */
+    --caption-hover: light-dark(rgba(0, 0, 0, 0.0373), rgba(255, 255, 255, 0.0605));
+    --caption-press: light-dark(rgba(0, 0, 0, 0.0241), rgba(255, 255, 255, 0.0419));
+    --caption-close: #c42b1c;
+    /* The design draws in Inter and JetBrains Mono, which fonts/fonts.css
+       declares. BandBridge uses the faces macOS ships instead. The editor
+       carries the design's own, because it also runs on Windows, whose
+       faces are further from the design. */
+    --ui: Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  /* The title bar and the toolbar stay put, and the body fills the rest. */
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; overflow: hidden;
+         font: 12px/1.5 var(--ui); color: var(--ink); background: var(--bg); }
+  /* An id rule beats the browser's [hidden] display:none, so say it here too. */
+  [hidden] { display: none !important; }
+
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .icon { flex: none; fill: none; stroke: currentColor; stroke-width: 2;
+          stroke-linecap: round; stroke-linejoin: round; }
+
+  /* The title bar, as BandBridge's (decision E2). macOS draws its three
+     window buttons over the left end of the bar, where tauri.conf.json puts
+     them: 14 points each, from x 12 to 72, centered on the bar, as measured
+     on macOS 27. The mark sits 26 points past them, the gap the design
+     leaves. */
+  .titlebar { flex: none; height: 38px; display: flex; align-items: center; gap: 10px;
+              padding: 0 14px 0 98px; background: var(--bg);
+              /* A line drawn inside the bar, so the bar's content centers on
+                 the same line as the window buttons. */
+              box-shadow: inset 0 -1px 0 var(--hairline);
+              cursor: default; user-select: none; -webkit-user-select: none; }
+  .titlebar .mark { width: 14px; height: 14px; color: var(--dim); }
+  /* On Windows the window has no frame, so the page draws the whole bar
+     (W8), as BandBridge's window does: the Mac's row, with Windows' caption
+     buttons in place of the traffic lights. With no buttons before it, the
+     mark starts at the bar's 14 points of padding. The caption buttons sit
+     in the window's top right corner, 46 by 32 points each, with Windows'
+     own glyphs, and the pill stops 14 points short of them. With no pill,
+     they still keep to the right end. */
+  :root[data-system="windows"] .titlebar { padding: 0 0 0 14px; }
+  .caption-buttons { display: none; }
+  :root[data-system="windows"] .caption-buttons { display: flex; align-self: flex-start;
+                                                  margin-left: 4px; }
+  :root[data-system="windows"] .pill[hidden] + .caption-buttons { margin-left: auto; }
+  button.caption { width: 46px; height: 32px; padding: 0; border: 0; border-radius: 0;
+                   background: transparent; color: var(--ink); cursor: default;
+                   font: 10px/32px "Segoe Fluent Icons", "Segoe MDL2 Assets"; }
+  button.caption:focus-visible { outline: none; }
+  button.caption:hover:not(:disabled) { background: var(--caption-hover); }
+  button.caption:active { background: var(--caption-press); }
+  button.caption.close:hover:not(:disabled) { background: var(--caption-close); color: #ffffff; }
+  button.caption.close:active { background: rgb(196 43 28 / 0.9); color: rgb(255 255 255 / 0.7); }
+  /* A window that is not in front has its buttons dimmed, as Windows does. */
+  :root.window-inactive button.caption:not(:hover) { color: var(--faint); }
+  h1 { margin: 0; font-size: 12.5px; font-weight: 600; line-height: 15px; }
+  /* BandBridge's state (decision E3): green when its band is connected,
+     amber when it runs without the band, since an install fails then, and
+     the idle chip when it does not run at all. */
+  .pill { margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+          padding: 3px 9px 3px 7px; border-radius: 99px;
+          font-size: 11px; font-weight: 500; line-height: 13px;
+          font-variant-numeric: tabular-nums;
+          background: var(--chip); color: var(--faint); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill[data-tone="good"] { background: var(--good-soft); color: var(--good); }
+  .pill[data-tone="warn"] { background: var(--warn-soft); color: var(--warn); }
+  /* The About button, after the pill, or at the bar's right end with no
+     pill, and its dialog: the name and version, what the app is not, and
+     its licenses, which open in the browser. */
+  .about-button { flex: none; display: inline-flex; align-items: center; justify-content: center;
+                  width: 24px; height: 24px; padding: 0; border: 0; border-radius: 6px;
+                  background: transparent; color: var(--dim); cursor: default; }
+  .about-button .icon { width: 14px; height: 14px; }
+  .about-button:hover:not(:disabled) { background: var(--chip); color: var(--ink); }
+  .pill[hidden] + .about-button { margin-left: auto; }
+  dialog.about { width: 340px; padding: 18px 20px 16px; border: 0; border-radius: 12px;
+                 background: var(--card); color: var(--ink);
+                 outline: 1px solid var(--line); outline-offset: -.5px; box-shadow: 0 8px 24px #0000002e; }
+  dialog.about::backdrop { background: #0000002e; }
+  dialog.about h2 { margin: 0 0 8px; font-size: 14px; font-weight: 600; line-height: 18px; }
+  dialog.about p { margin: 0 0 6px; color: var(--dim); font-size: 12px; line-height: 16px; }
+  dialog.about .about-links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; }
+  dialog.about .about-links .link { margin-left: 0; }
+  dialog.about .about-note { margin: 8px 0 0; color: var(--bad); }
+  dialog.about form { display: flex; justify-content: flex-end; margin: 14px 0 0; }
+
+  button { font: inherit; font-size: 11.5px; font-weight: 500; line-height: 14px;
+           padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line-strong);
+           background: var(--card); color: var(--ink); cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  /* What cannot be used yet, as the design draws it: the whole control at
+     45%, with its stroke kept. BandBridge draws it at 50% with a lighter
+     stroke. */
+  button:disabled { opacity: .45; cursor: default; }
+  button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  button.accent { border-color: var(--accent); background: var(--accent);
+                  color: var(--accent-ink); font-weight: 600; }
+  /* A button with an icon before its words. */
+  button.iconic { display: inline-flex; align-items: center; gap: 6px; }
+  button.iconic .icon { width: 12px; height: 12px; color: var(--dim); }
+  button.accent .icon { color: inherit; }
+  /* The primary buttons: Install on band, and Open folder… on the start card. */
+  button.install { flex: none; padding: 7px 12px; border: 0; border-radius: 7px;
+                   font-size: 12px; line-height: 15px; }
+  /* While it installs, Install on band takes no click, and shows at full
+     strength how far the install is, as the design's state 3 draws it. */
+  button.install.busy:disabled { opacity: 1; }
+  /* A loader turns while its work runs, as BandBridge's do. */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 1.2s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  button.big { padding: 9px 16px; border: 0; border-radius: 7px;
+               font-size: 12px; line-height: 15px; }
+
+  input, select { font: inherit; }
+  select, input:not([type]), input[type="number"] {
+    padding: 5px 7px; border-radius: 6px; border: 1px solid var(--line-strong);
+    background: var(--card); color: var(--ink); }
+  .bad { color: var(--bad); white-space: pre-wrap; }
+  .dim { color: var(--dim); }
+
+  /* The toolbar, from the design's state frames: the folder, the app and a
+     new app on the left, then Build and Install on band at the right end.
+     Its empty stretches move the window, as a Mac toolbar does. */
+  .toolbar { flex: none; height: 50px; display: flex; align-items: center; gap: 8px;
+             padding: 0 14px; background: var(--bg); border-bottom: 1px solid var(--hairline); }
+  .toolbar > button { flex: none; white-space: nowrap; }
+  /* Only the path gives way: a long one is cut short rather than push the
+     toolbar apart. Its tooltip holds the whole path. */
+  .folder-path { flex: 0 1 auto; min-width: 0; padding: 0 6px 0 2px; overflow: hidden;
+                 text-overflow: ellipsis; white-space: nowrap;
+                 font: 400 11px/14px var(--mono); color: var(--dim); }
+  .folder-path.none { color: var(--faint); }
+  .vsep { flex: none; width: 1px; height: 22px; background: var(--line); }
+  .picker, .new-app { flex: none; display: flex; align-items: center; }
+  .picker { gap: 8px; padding: 0 4px; }
+  .new-app { gap: 6px; }
+  /* A group whose control is out of use dims as one, as the design draws
+     it, and its button does not dim a second time. */
+  .picker:has(select:disabled), .new-app:has(input:disabled) { opacity: .45; }
+  .new-app button:disabled { opacity: 1; }
+  .cap { font-size: 9.5px; font-weight: 700; line-height: 11px; letter-spacing: 1.2px;
+         text-transform: uppercase; color: var(--faint); }
+  /* The app picker. The select covers the whole box, unseen, so a click
+     anywhere on it opens the menu, and the box draws the chosen name, the
+     number of apps, and the arrows. */
+  .popup { position: relative; width: 150px; display: flex; align-items: center; gap: 7px;
+           padding: 6px 8px 6px 10px; border: 1px solid var(--line-strong); border-radius: 6px;
+           background: var(--card); }
+  .popup:focus-within { border-color: var(--accent); box-shadow: 0 0 0 .5px var(--accent); }
+  .popup select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+                  opacity: 0; cursor: pointer; }
+  .popup select:disabled { cursor: default; }
+  .popup .box { width: 12px; height: 12px; color: var(--faint); }
+  .popup .chevrons { width: 12px; height: 12px; color: var(--dim); }
+  .app-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+              font-size: 12px; font-weight: 600; line-height: 15px; color: var(--ink); }
+  .app-name.none { color: var(--faint); }
+  .app-count { flex: none; padding: 1px 5px; border-radius: 4px; background: var(--chip);
+               font: 500 9.5px/13px var(--mono); color: var(--dim); }
+  #new-name { width: 150px; margin: 0; padding: 6px 10px; border: 1px solid var(--line-strong);
+              border-radius: 6px; outline: none; background: var(--card); color: var(--ink);
+              font: 400 12px/15px var(--ui); }
+  #new-name::placeholder { color: var(--faint); opacity: 1; }
+  #new-name:focus { border-color: var(--accent); box-shadow: 0 0 0 .5px var(--accent); }
+  /* Build and Install on band stand at the right end, with a note before
+     them when a check error stops the build. */
+  #build { margin-left: auto; }
+  .blocked { flex: none; margin-left: auto; font-size: 11px; font-weight: 500; line-height: 1.21;
+             color: var(--bad); white-space: nowrap; }
+  .blocked:not([hidden]) + #build { margin-left: 0; }
+
+  /* Before an app is open: the design's state 1, centered in the room below
+     the toolbar, 40 points above center. */
+  .start { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column;
+           padding: 0 16px 40px; }
+  .empty { margin: auto; width: 560px; max-width: 100%; display: flex; flex-direction: column;
+           align-items: center; gap: 14px; }
+  .tile { flex: none; width: 56px; height: 56px; border-radius: 14px; display: grid;
+          place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .tile .icon { width: 26px; height: 26px; }
+  .empty-title { margin: 0; font-size: 20px; font-weight: 600; line-height: 24px;
+                 letter-spacing: 0; color: var(--ink); text-align: center; }
+  .empty-lede { margin: 0; width: 440px; max-width: 100%; font-size: 13px; line-height: 20px;
+                text-align: center; color: var(--dim); }
+  .empty-actions { display: flex; flex-direction: column; align-items: center; gap: 8px;
+                   padding-top: 6px; }
+  .empty-hint, .empty-note { margin: 0; font-size: 11px; line-height: 14px; text-align: center; }
+  .empty-hint { color: var(--faint); }
+  .empty-note { max-width: 440px; color: var(--bad); white-space: pre-wrap; }
+  /* How an app is made, in three steps. The card's border sits inside its
+     edge, so each step's padding is the design's less that border. */
+  .steps { width: 100%; min-height: 104px; margin: 0; padding: 0; list-style: none; display: flex;
+           overflow: hidden; border: 1px solid var(--line); border-radius: 10px;
+           background: var(--card); }
+  .steps li { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px;
+              padding: 13px 15px; }
+  .steps li + li { border-left: 1px solid var(--hairline); }
+  .step-head { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600;
+               line-height: 15px; color: var(--ink); }
+  .step-num { flex: none; width: 18px; height: 18px; border-radius: 99px; display: grid;
+              place-items: center; background: var(--chip); font: 600 10px/13px var(--mono);
+              color: var(--dim); }
+  .step-body { font-size: 11.5px; line-height: 17px; color: var(--dim); }
+
+  /* State 4: the build tools are missing. The notice sits 12 points above
+     the middle of the room below the toolbar, and nothing else works until
+     the tools are there. Its rows and commands come from tools_status, for
+     the system the editor runs on (decision E8). */
+  .tools-view { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column;
+                padding: 0 16px 24px; }
+  .notice { --normal: 1.21; --normal-mono: 1.32;
+            margin: auto; width: 620px; max-width: 100%; display: flex; flex-direction: column;
+            overflow: hidden; border-radius: 12px; background: var(--card);
+            outline: 1px solid var(--line); outline-offset: -.5px; box-shadow: 0 8px 24px #0000000f; }
+  .notice-head { display: flex; align-items: flex-start; gap: 14px; padding: 20px 22px 16px; }
+  .notice-tile { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid;
+                 place-items: center; background: var(--warn-soft); color: var(--warn); }
+  .notice-tile .icon { width: 19px; height: 19px; }
+  .notice-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .notice-title { margin: 0; font: 600 16px/var(--normal) var(--ui); letter-spacing: 0; color: var(--ink); }
+  .notice-body { margin: 0; font: 400 12.5px/19px var(--ui); color: var(--dim); }
+  .notice-part { display: flex; flex-direction: column; gap: 8px; padding: 0 22px 16px; }
+  .notice-part.commands { padding-bottom: 18px; }
+  .notice .cap { line-height: var(--normal); }
+  .tool-rows { display: flex; flex-direction: column; overflow: hidden; border-radius: 8px;
+               background: var(--card-sunk); outline: 1px solid var(--line); outline-offset: -.5px; }
+  .tool-row { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 9px 12px; }
+  .tool-row + .tool-row { border-top: 1px solid var(--hairline); }
+  .tool-row > .icon { width: 14px; height: 14px; }
+  .tool-row.found > .icon { color: var(--good); }
+  .tool-row.missing > .icon { color: var(--bad); }
+  .tool-name { flex: none; font: 600 12.5px/var(--normal) var(--ui); color: var(--ink); white-space: nowrap; }
+  /* What was found is a version or a path, in mono. What a missing tool
+     does is words. */
+  .tool-detail { min-width: 0; margin-right: auto; overflow: hidden; text-overflow: ellipsis;
+                 white-space: nowrap; font: 400 11.5px/var(--normal) var(--ui); color: var(--faint); }
+  .tool-row.found .tool-detail { font: 400 10.5px/var(--normal-mono) var(--mono); }
+  .tool-state { flex: none; padding: 2px 9px; border-radius: 99px;
+                font: 600 10.5px/var(--normal) var(--ui); white-space: nowrap; }
+  .tool-row.found .tool-state { background: var(--good-soft); color: var(--good); }
+  .tool-row.missing .tool-state { background: var(--bad-soft); color: var(--bad); }
+  .commands-head { display: flex; align-items: center; min-width: 0; }
+  .copy { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: 5px; padding: 0;
+          border: 0; background: transparent; color: var(--accent);
+          font: 500 11px/var(--normal) var(--ui); }
+  .copy .icon { width: 11px; height: 11px; }
+  .code { display: flex; flex-direction: column; gap: 7px; padding: 12px 14px; border-radius: 8px;
+          background: var(--card-sunk); outline: 1px solid var(--line); outline-offset: -.5px; }
+  .cmd-line { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+  .prompt { flex: none; font: 400 12px/var(--normal-mono) var(--mono); color: var(--faint); user-select: none;
+            -webkit-user-select: none; }
+  /* A long command wraps under itself, and Copy copies it whole. */
+  .cmd { min-width: 0; font: 500 12px/var(--normal-mono) var(--mono); color: var(--ink);
+         white-space: pre-wrap; overflow-wrap: anywhere; }
+  .notice-foot { display: flex; align-items: center; gap: 10px; padding: 12px 22px;
+                 border-top: 1px solid var(--hairline); background: var(--card-sunk); }
+  .notice-foot > .icon { width: 14px; height: 14px; color: var(--accent); }
+  .notice-foot-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; margin-right: auto; }
+  .notice-foot-title { margin: 0; font: 600 12.5px/var(--normal) var(--ui); color: var(--ink); }
+  .notice-foot-body { margin: 0; font: 400 11px/var(--normal) var(--ui); color: var(--faint); }
+  button.quit { flex: none; padding: 7px 12px; border: 0; border-radius: 7px;
+                font-size: 12px; line-height: var(--normal); }
+
+  /* An app open: the three panes of the design's state 2, 340, 540 and 300
+     points wide in the design's window. The middle one takes whatever the
+     window gives beyond that, and each one scrolls on its own. */
+  .panes { flex: 1; min-height: 0; display: grid;
+           grid-template-columns: 340px minmax(0, 1fr) 300px; }
+  .pane { min-width: 0; min-height: 0; display: flex; flex-direction: column;
+          background: var(--card); }
+  .app-pane { overflow-y: auto; border-right: 1px solid var(--hairline); }
+  .preview-pane { overflow-y: auto; align-items: center; gap: 10px; padding: 14px 16px;
+                  border-left: 1px solid var(--hairline); background: var(--bg); }
+  .pane-part { flex: none; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+               padding: 14px 16px; }
+  .pane-part + .pane-part { border-top: 1px solid var(--hairline); }
+  .pane-head { display: flex; align-items: center; gap: 8px; min-width: 0; align-self: stretch; }
+  /* Where the design sets a line's height as "normal", pen.dev takes the
+     font's own, unrounded: 1.21 of the size for Inter, 1.32 for JetBrains
+     Mono. A browser rounds it, which draws each line a little taller, so
+     the panes say it outright. */
+  .panes { --normal: 1.21; --normal-mono: 1.32; }
+  h2, .h2 { margin: 0; font-size: 11px; font-weight: 600; line-height: 13px;
+            letter-spacing: .4px; color: var(--dim); }
+  .panes h2, .panes .h2 { line-height: var(--normal); }
+  .help, .hint { margin: 0; font-size: 11px; line-height: var(--normal); color: var(--faint); }
+  /* The design draws the editor's small capitals 11 points tall. */
+  .editor .cap { line-height: 11px; }
+  .hint { white-space: nowrap; }
+  .push { margin-left: auto; }
+
+  /* The panes' strokes sit on the edge, half in and half out, as the design
+     draws them, so each control takes the design's own box. The toolbar's
+     buttons keep BandBridge's border inside the box. */
+  .pane .btn { display: inline-flex; flex: none; align-items: center; gap: 6px;
+               padding: 5px 9px; border: 0; border-radius: 6px; outline: 1px solid var(--line-strong);
+               outline-offset: -.5px; background: var(--card); color: var(--ink);
+               font: 500 11.5px/var(--normal) var(--ui); white-space: nowrap; }
+  .pane .btn:hover:not(:disabled) { outline-color: var(--accent); }
+  .pane .btn:focus-visible, .pane .field:focus-within, .pane .well:focus-within {
+    outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  .pane .btn.dim { color: var(--dim); }
+  .pane .btn.small { padding: 4px 9px; }
+  .pane .btn.roomy { padding: 6px 10px; }
+  .pane .btn .icon { width: 12px; height: 12px; color: var(--dim); }
+  .field { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 6px 10px;
+           border-radius: 6px; background: var(--card); color: var(--ink);
+           outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  .field > .icon { width: 12px; height: 12px; color: var(--faint); }
+  .pane .field > input { flex: 1; min-width: 0; width: 100%; margin: 0; padding: 0; border: 0;
+                         border-radius: 0; outline: 0; background: transparent; color: inherit; }
+  /* A color well: the swatch opens the system's color picker, laid over it
+     unseen, and the hex beside it takes a typed #rrggbb. */
+  .well { position: relative; flex: none; display: inline-flex; align-items: center; gap: 8px;
+          padding: 4px 9px 4px 4px; border-radius: 6px; background: var(--card);
+          outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  .swatch { position: relative; flex: none; width: 20px; height: 20px; border-radius: 4px;
+            outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  .swatch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0;
+                  border: 0; opacity: 0; cursor: pointer; }
+  .pane .well .hex { width: 7ch; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0;
+                     background: transparent; font: 400 11px/var(--normal-mono) var(--mono); color: var(--dim);
+                     text-transform: uppercase; }
+  /* A choice of a few: the chosen one raised. */
+  .seg { flex: none; display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+         border-radius: 7px; background: var(--chip); }
+  .seg button { min-width: 34px; padding: 4px 12px; border: 0; border-radius: 5px;
+                background: transparent; color: var(--dim); font: 500 11px/var(--normal) var(--ui); }
+  .seg button[aria-pressed="true"] { background: var(--chip-raised); color: var(--ink); font-weight: 600;
+                                     outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  .seg button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+  /* The App pane: the app's settings, one to a row. */
+  .pane-file { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+               white-space: nowrap; font: 400 10px/var(--normal-mono) var(--mono); color: var(--faint); }
+  .settings { display: flex; flex-direction: column; border-radius: 8px; background: var(--card-sunk);
+              outline: 1px solid var(--line); outline-offset: -.5px; }
+  .setting { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 9px 12px; }
+  .setting + .setting { border-top: 1px solid var(--hairline); }
+  .setting-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .setting-label { font-size: 12px; font-weight: 600; line-height: var(--normal); color: var(--ink);
+                   white-space: nowrap; }
+  #name-field { width: 180px; flex: none; }
+  #name { font: 500 12.5px/var(--normal) var(--ui); }
+  .settings .swatch { width: 18px; height: 18px; outline: 0; }
+  .icon-row { gap: 8px; }
+  /* The app icon, as the generator made it: the user's picture, or a disc in
+     the app color. */
+  .icon-thumb { flex: none; width: 30px; height: 30px; border-radius: 8px; object-fit: contain; }
+  .strip-setting { flex-direction: column; align-items: stretch; gap: 9px; padding-bottom: 11px; }
+  .strip-top { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .number { flex: none; display: flex; align-items: center; gap: 6px; }
+  .pane .number input { width: 52px; margin: 0; padding: 5px 8px; border: 0; border-radius: 6px;
+                        outline: 1px solid var(--line-strong); outline-offset: -.5px;
+                        background: var(--card); color: var(--ink); text-align: right;
+                        font: 500 12px/var(--normal-mono) var(--mono); -moz-appearance: textfield; }
+  .pane .number input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  .number input::-webkit-inner-spin-button, .number input::-webkit-outer-spin-button {
+    -webkit-appearance: none; margin: 0; }
+  .unit { font-size: 11px; font-weight: 500; line-height: var(--normal); color: var(--faint); }
+  .slider { display: flex; flex-direction: column; gap: 5px; }
+  /* The system's slider, 7 points wider than its rail at each end, so the
+     knob's center runs the rail's whole length, as the design draws it.
+     --at is where the knob stands, from 0 to 1. */
+  .slider input { --at: 0; width: calc(100% + 14px); height: 14px; margin: 0 -7px; padding: 0;
+                  -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; }
+  .slider input::-webkit-slider-runnable-track {
+    height: 4px; border-radius: 2px;
+    background: linear-gradient(to right, transparent 7px, var(--accent) 7px,
+      var(--accent) calc(7px + (100% - 14px) * var(--at)),
+      var(--line-strong) calc(7px + (100% - 14px) * var(--at)),
+      var(--line-strong) calc(100% - 7px), transparent calc(100% - 7px)); }
+  /* The knob is white in either theme, as the design draws it. */
+  .slider input::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 2px #0000002e, 0 0 0 .5px var(--line-strong),
+      inset 0 0 0 .5px var(--line-strong); }
+  .slider input:focus-visible { outline: 0; }
+  .slider input:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--focus-ring); }
+  .scale { display: flex; justify-content: space-between; font: 400 9.5px/var(--normal-mono) var(--mono);
+           color: var(--faint); }
+
+  /* Checks: the counts, then a card for each error and warning. */
+  .checks { flex: 1 0 auto; }
+  .count { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px;
+           border-radius: 99px; background: var(--chip); color: var(--dim);
+           font: 500 10.5px/var(--normal) var(--ui); white-space: nowrap; }
+  .count::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--faint); }
+  .count.bad { background: var(--bad-soft); color: var(--bad); }
+  .count.warn { background: var(--warn-soft); color: var(--warn); }
+  .count.bad::before, .count.warn::before { background: currentColor; }
+  #count-errors { margin-left: auto; }
+  .findings { display: contents; }
+  .finding { display: flex; align-items: flex-start; gap: 9px; padding: 10px 11px; border-radius: 8px; }
+  .finding > .icon { width: 14px; height: 14px; }
+  .finding.error { background: var(--bad-soft); }
+  .finding.error > .icon { color: var(--bad); }
+  .finding.warning { background: var(--warn-soft); }
+  .finding.warning > .icon { color: var(--warn); }
+  .finding.dismissed { background: var(--card-sunk); outline: 1px solid var(--line); outline-offset: -.5px; }
+  /* A setting the user chose, such as smaller text: not a problem, so gray. */
+  .finding.setting { background: var(--chip); }
+  .finding.setting > .icon { color: var(--dim); }
+  .finding-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .finding-title { margin: 0; font-size: 12px; font-weight: 600; line-height: 16px; color: var(--ink);
+                   overflow-wrap: anywhere; }
+  .finding-body { margin: 0; font-size: 11px; line-height: 16px; color: var(--dim); overflow-wrap: anywhere; }
+  .finding.dismissed > .icon, .finding.dismissed .finding-title,
+  .finding.dismissed .finding-body { color: var(--faint); }
+  .finding-actions { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 4px; }
+  .check-status { display: flex; align-items: center; gap: 7px; margin: 0; padding: 2px 0 0 1px;
+                  font-size: 11.5px; font-weight: 500; line-height: var(--normal); }
+  .check-status .icon { width: 13px; height: 13px; }
+  .check-status.good { color: var(--good); }
+  .check-status.bad { color: var(--bad); }
+
+  /* The Buttons pane: one row per button, in the order the band draws them.
+     The list's hairlines are its background, showing between the rows. */
+  .buttons-part { flex: 1; min-height: 0; overflow-y: auto; }
+  .tag-count { flex: none; padding: 1px 6px; border-radius: 4px; background: var(--chip);
+               font: 500 10px/var(--normal-mono) var(--mono); color: var(--dim); }
+  .list { flex: none; display: flex; flex-direction: column; gap: 1px; border-radius: 8px;
+          overflow: hidden; background: var(--hairline); outline: 1px solid var(--line);
+          outline-offset: -.5px; }
+  .brow { display: flex; flex-direction: column; min-width: 0; background: var(--card-sunk); }
+  .brow.open { border-radius: 8px; background: var(--card);
+               outline: 1.5px solid var(--accent); outline-offset: -.75px; }
+  .brow.open.bad { outline-color: var(--bad); }
+  .brow-head { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px 8px 12px; }
+  .index { flex: none; width: calc(var(--digits, 1) * 1ch); text-align: right;
+           font: 400 10.5px/var(--normal-mono) var(--mono); color: var(--faint); }
+  .chip22 { flex: none; width: 22px; height: 22px; border-radius: 5px;
+            outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  img.chip22 { outline: 0; object-fit: cover; background: #000; }
+  .brow-text { display: flex; align-items: center; gap: 6px; min-width: 0; margin-right: auto; }
+  .brow-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                font-size: 12.5px; font-weight: 600; line-height: var(--normal); color: var(--ink); }
+  /* A picture hides the label on the band, so the list shows it quieter. */
+  .brow-label.muted { color: var(--dim); }
+  .tag { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px;
+         border-radius: 4px; background: var(--chip); color: var(--dim);
+         font-size: 10px; font-weight: 500; line-height: var(--normal); white-space: nowrap; }
+  .tag .icon { width: 10px; height: 10px; }
+  .sig { flex: none; max-width: 16ch; overflow: hidden; text-overflow: ellipsis; padding: 2px 7px;
+         border-radius: 5px; background: var(--card); outline: 1px solid var(--line); outline-offset: -.5px;
+         font: 500 11px/var(--normal-mono) var(--mono); color: var(--ink); white-space: nowrap; }
+  .sig.bad { background: var(--bad-soft); outline-color: var(--bad); color: var(--bad); }
+  /* A button with no signal keeps its pill at the size of one that has one. */
+  .sig:empty { min-width: 40px; min-height: 18px; }
+  .row-actions { flex: none; display: flex; gap: 2px; }
+  .icon-btn { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0;
+              border-radius: 5px; background: transparent; color: var(--dim); }
+  .icon-btn .icon { width: 13px; height: 13px; }
+  .icon-btn.remove { color: var(--bad); }
+  .icon-btn:hover:not(:disabled) { background: var(--chip); }
+  .icon-btn:disabled { opacity: .35; }
+  .disclosure { display: grid; place-items: center; width: 12px; height: 12px; padding: 0; border: 0;
+                background: transparent; color: var(--faint); }
+  .disclosure .icon { width: 12px; height: 12px; }
+  /* The open row: the button's whole editor. */
+  .editor { display: flex; flex-direction: column; gap: 14px; padding: 4px 16px 16px 34px; }
+  .erow { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+  .efield { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .efield.grow { flex: 1 1 160px; }
+  .efield.signal { flex: none; width: 128px; }
+  .efield.color { flex: none; width: 150px; }
+  .efield > .well { align-self: flex-start; }
+  .editor .field { padding: 7px 10px; }
+  .label-input { font: 500 12.5px/var(--normal) var(--ui); }
+  .signal-input { font: 500 12.5px/var(--normal-mono) var(--mono); }
+  .field.muted { background: var(--card-sunk); color: var(--faint); }
+  .editor .bad { outline: 1.5px solid var(--bad); outline-offset: -.75px; }
+  .enote { display: flex; align-items: center; gap: 5px; font-size: 11px; line-height: var(--normal);
+           color: var(--faint); }
+  .enote .icon { width: 11px; height: 11px; }
+  .row-errors { display: contents; }
+  .row-error { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px;
+               background: var(--bad-soft); color: var(--bad);
+               font-size: 11.5px; font-weight: 500; line-height: 16px; }
+  .row-error > .icon { width: 13px; height: 13px; }
+  .row-error > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .pressed { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .auto { display: flex; align-items: center; gap: 6px; font-size: 11px; line-height: var(--normal);
+          color: var(--faint); white-space: nowrap; }
+  .auto .swatch { width: 16px; height: 16px; }
+  .picrow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .pic { flex: none; width: 64px; height: 44px; border-radius: 6px; object-fit: cover; background: #000; }
+  .pic.empty { display: grid; place-items: center; background: var(--card-sunk); color: var(--faint);
+               outline: 1px solid var(--line-strong); outline-offset: -.5px; }
+  .pic.empty .icon { width: 16px; height: 16px; }
+  .pic-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin-right: auto; }
+  .pic-file { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+              font: 500 11.5px/var(--normal-mono) var(--mono); color: var(--ink); }
+  .pic-help { flex: 1 1 140px; margin: 0; font-size: 11px; line-height: 15px; color: var(--faint); }
+  .fullwidth { display: flex; align-items: center; gap: 10px; }
+  .fullwidth > div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  /* A switch. Its knob is white in either theme, as the design draws it. */
+  .switch { position: relative; flex: none; width: 32px; height: 18px; padding: 0; border: 0;
+            border-radius: 99px; background: var(--line-strong); }
+  .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px;
+                   border-radius: 50%; background: #fff; }
+  .switch[aria-checked="true"] { background: var(--accent); }
+  .switch[aria-checked="true"]::after { left: 16px; }
+  .add-row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  /* In a narrow window, with the list's scroll bar shown, the hint wraps
+     rather than push the list sideways. */
+  .add-row .hint { min-width: 0; white-space: normal; }
+
+  /* The Output drawer, at the foot of the Buttons pane (decision E5): its
+     head alone until a build or an install runs, then what they say, line
+     by line with their times. */
+  .output { flex: none; display: flex; flex-direction: column; gap: 8px; padding: 9px 16px 7.5px;
+            border-top: 1px solid var(--hairline); background: var(--card); }
+  .output.open { padding: 10px 16px 14px; }
+  .output-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .output-toggle { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 0;
+                   border: 0; background: transparent; }
+  .output-toggle .icon { width: 12px; height: 12px; color: var(--faint); }
+  .output.open .output-toggle .icon { transform: rotate(90deg); }
+  .output-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                 font-size: 11px; line-height: var(--normal); color: var(--faint); }
+  /* What runs, or what stopped: "Installing… 62%", "Install stopped". The
+     design draws it 17 points tall, so its line is 13, as the title bar's
+     pill sets its own. */
+  .run-chip { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px;
+              border-radius: 99px; background: var(--accent-soft); color: var(--accent);
+              font: 500 10.5px/13px var(--ui); white-space: nowrap; }
+  .run-chip .icon { width: 11px; height: 11px; }
+  .run-chip[data-tone="bad"] { background: var(--bad-soft); color: var(--bad); }
+  .link { flex: none; margin-left: auto; padding: 0; border: 0; background: transparent;
+          color: var(--accent); font-size: 11px; font-weight: 500; line-height: var(--normal); }
+  .output-body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  /* An install BandBridge could not take: what is wrong, what to do, and
+     Install again. */
+  .stop-card { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px;
+               border-radius: 8px; background: var(--bad-soft); }
+  .stop-card > .icon { width: 15px; height: 15px; color: var(--bad); }
+  .stop-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .stop-title { margin: 0; font: 600 12px/var(--normal) var(--ui); color: var(--bad); }
+  .stop-body { margin: 0; font: 400 11.5px/16px var(--ui); color: var(--ink); }
+  /* The log, ten lines tall at most, with the newest line in view. */
+  .log { max-height: 197px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px;
+         padding: 10px 12px; border-radius: 8px; background: var(--card-sunk);
+         outline: 1px solid var(--line); outline-offset: -.5px; }
+  .log-line { flex: none; display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+  .log-time { flex: none; font: 400 10.5px/var(--normal-mono) var(--mono); color: var(--faint);
+              white-space: nowrap; }
+  .log-text { flex: 1; min-width: 0; font: 400 10.5px/15px var(--mono); color: var(--dim);
+              white-space: pre-wrap; overflow-wrap: anywhere; }
+  .log-line[data-tone="step"] .log-text { font-weight: 500; color: var(--ink); }
+  .log-line[data-tone="good"] .log-text { font-weight: 500; color: var(--good); }
+  .log-line[data-tone="progress"] .log-text { font-weight: 500; color: var(--accent); }
+  .log-line[data-tone="bad"] .log-text { font-weight: 500; color: var(--bad); }
+
+  /* The Preview pane: the band's screen, what a click sends, and what the
+     preview found wrong with the page. */
+  .preview-head { flex: none; height: 22px; }
+  .scale-chip { flex: none; padding: 1px 5px; border-radius: 4px; background: var(--chip);
+                font: 500 9.5px/var(--normal-mono) var(--mono); color: var(--dim); }
+  .readout-hint { margin-left: auto; font-size: 10.5px; line-height: var(--normal); color: var(--faint);
+                  white-space: nowrap; }
+  .readout { margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+             padding: 3px 4px 3px 9px; border-radius: 99px; background: var(--accent-soft);
+             color: var(--accent); font-size: 11px; font-weight: 600; line-height: var(--normal); }
+  .readout .icon { width: 11px; height: 11px; }
+  .readout code { padding: 1px 7px; border-radius: 99px; background: var(--card);
+                  font: 600 10.5px/var(--normal-mono) var(--mono); }
+  /* The band's screen, 192 by 490 band pixels, drawn 1.3 times as large:
+     249.6 by 637 points, the design's box. A transform does not change the
+     room a box takes, so this box takes the drawn size, and the screen scales
+     from its corner inside it. Scaled from its center instead, with margins
+     for the room, WebKit counted the scaled margins as overflow, and the
+     pane showed scroll bars. The box is the screen's capsule too, so what
+     the preview draws over the screen stops at its curve. */
+  .band { position: relative; flex: none; width: 249.6px; height: 637px; border-radius: 124.8px;
+          overflow: hidden; }
+  /* The screen is a capsule: zmake's profile for mi_band7 gives a corner
+     radius of 96, which is half the 192 px width, so both ends are half
+     circles. overflow: hidden then cuts a widget at the curve, exactly as the
+     band does, because a pixel outside the capsule is not on the screen. */
+  #screen { position: relative; width: 192px; height: 490px; background: #000; border-radius: 96px;
+            transform: scale(1.3); transform-origin: top left; overflow: hidden; }
+  /* A label as the band shows it: Roboto Regular, as thin as the band's
+     letters look, with none of the smoothing that makes light text on a dark
+     screen heavier. Each "\n" is a new line, the lines 1.172 of the size apart
+     (Roboto's ascender and descender), centered, and never wrapped, since the
+     band cuts a line too long for the button. No kerning and no ligatures.
+     The editor measures in Roboto Medium, whose widths are within 2% of
+     Regular's (label.rs says why). */
+  .widget { position: absolute; display: flex; align-items: center; justify-content: center;
+            color: #fff; background-size: 100% 100%; cursor: pointer; overflow: hidden;
+            font-family: "Roboto", sans-serif; font-weight: 400; line-height: 1.171875;
+            font-kerning: none; font-variant-ligatures: none;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            text-align: center; white-space: pre; }
+  /* The screen is black in either theme, so what the preview draws on it
+     keeps one color: 3 points at the drawn size, a ring in the focus color
+     round the button last clicked, and one in red round buttons that send
+     the same signal. */
+  .widget.last { box-shadow: inset 0 0 0 calc(3px / 1.3) var(--focus-ring); }
+  .widget.shared { box-shadow: inset 0 0 0 calc(3px / 1.3) #ff6b61; }
+  /* The free strip, marked where it starts, in the design's gray. */
+  .strip-mark { position: absolute; left: 0; right: 0; pointer-events: none; }
+  .strip-line { display: block; height: 1.5px;
+                background: repeating-linear-gradient(to right, #8b8f97 0 6px, transparent 6px 10px); }
+  .strip-label { position: absolute; top: 14px; left: 0; right: 0; text-align: center;
+                 font: 400 10px/var(--normal-mono) var(--mono); color: #8b8f97; white-space: nowrap; }
+  .problems { flex: none; align-self: stretch; display: flex; flex-direction: column; gap: 4px; }
+  .problem { display: flex; align-items: flex-start; gap: 6px; margin: 0; color: var(--bad);
+             font-size: 11px; font-weight: 500; line-height: 15px; white-space: pre-wrap;
+             overflow-wrap: anywhere; }
+  .problem > .icon { flex: none; width: 12px; height: 12px; margin-top: 1.5px; }
+  .no-problems { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0;
+                 font-size: 11px; line-height: var(--normal); color: var(--faint); }
+  .no-problems > .icon { width: 12px; height: 12px; }
+</style>
+
+<!-- Icons from Lucide, as the design uses them, under the ISC license in
+     Lucide-LICENSE.txt. Those BandBridge's window also draws are its copies. -->
+<svg class="sprite" aria-hidden="true">
+  <symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></symbol>
+  <symbol id="i-folder-open" viewBox="0 0 24 24"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" /></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></symbol>
+  <symbol id="i-chevrons-up-down" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5" /><path d="m7 9 5-5 5 5" /></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="M12 5v14" /></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9" /><path d="m18 15 4-4" /><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5" /></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></symbol>
+  <symbol id="i-move-horizontal" viewBox="0 0 24 24"><path d="m18 8 4 4-4 4" /><path d="M2 12h20" /><path d="m6 8-4 4 4 4" /></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" /><circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" /><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" /><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" /><path d="m2 2 20 20" /></symbol>
+  <symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></symbol>
+  <symbol id="i-octagon-x" viewBox="0 0 24 24"><path d="m15 9-6 6" /><path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z" /><path d="m9 9 6 6" /></symbol>
+  <symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></symbol>
+  <symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+  <symbol id="i-loader" viewBox="0 0 24 24"><path d="M12 2v4" /><path d="m16.2 7.8 2.9-2.9" /><path d="M18 12h4" /><path d="m16.2 16.2 2.9 2.9" /><path d="M12 18v4" /><path d="m4.9 19.1 2.9-2.9" /><path d="M2 12h4" /><path d="m4.9 4.9 2.9 2.9" /></symbol>
+  <symbol id="i-plug-zap" viewBox="0 0 24 24"><path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z" /><path d="m2 22 3-3" /><path d="M7.5 13.5 10 11" /><path d="M10.5 16.5 13 14" /><path d="m18 3-4 4h6l-4 4" /></symbol>
+  <symbol id="i-rotate-cw" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></symbol>
+  <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+  <symbol id="i-mouse-pointer-click" viewBox="0 0 24 24"><path d="M14 4.1 12 6" /><path d="m5.1 8-2.9-.8" /><path d="m6 12-1.9 2" /><path d="M7.2 2.2 8 5.1" /><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z" /></symbol>
+</svg>
+
+<!-- The window is dragged by this bar, which is also where macOS puts its
+     window buttons. On Windows the page draws Windows' buttons at its right
+     end: minimize, maximize or restore, and close. -->
+<header class="titlebar" data-tauri-drag-region="deep">
+  <svg class="icon mark" aria-hidden="true"><use href="#i-layout-grid" /></svg>
+  <h1>Mi Band App Editor</h1>
+  <span class="pill" id="bridge" role="status" hidden><span class="dot"></span><span id="bridge-state"></span></span>
+  <button class="about-button" id="about" type="button" title="About Mi Band App Editor" aria-label="About Mi Band App Editor"><svg class="icon" aria-hidden="true"><use href="#i-info" /></svg></button>
+  <div class="caption-buttons">
+    <button class="caption" id="caption-minimize" type="button" tabindex="-1" title="Minimize" aria-label="Minimize">&#xE921;</button>
+    <button class="caption" id="caption-maximize" type="button" tabindex="-1" title="Maximize" aria-label="Maximize">&#xE922;</button>
+    <button class="caption close" id="caption-close" type="button" tabindex="-1" title="Close" aria-label="Close">&#xE8BB;</button>
+  </div>
+</header>
+
+<div class="toolbar" data-tauri-drag-region>
+  <button id="folder" class="iconic"><svg class="icon" aria-hidden="true"><use href="#i-folder-open" /></svg>Open folder…</button>
+  <span id="folder-path" class="folder-path none">No folder chosen</span>
+  <span class="vsep" aria-hidden="true"></span>
+  <label class="picker">
+    <span class="cap">App</span>
+    <span class="popup" id="app-picker">
+      <svg class="icon box" aria-hidden="true"><use href="#i-box" /></svg>
+      <span id="app-name" class="app-name none" aria-hidden="true">No apps</span>
+      <span id="app-count" class="app-count" aria-hidden="true">0</span>
+      <svg class="icon chevrons" aria-hidden="true"><use href="#i-chevrons-up-down" /></svg>
+      <select id="apps" disabled></select>
+    </span>
+  </label>
+  <span class="new-app">
+    <input id="new-name" placeholder="New app name" aria-label="New app name" disabled />
+    <button id="new-app" class="iconic" disabled><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>New app</button>
+  </span>
+  <span id="blocked" class="blocked" hidden></span>
+  <button id="build" class="iconic" disabled><svg class="icon" aria-hidden="true"><use href="#i-hammer" /></svg>Build</button>
+  <button id="install" class="iconic accent install" disabled><svg class="icon" aria-hidden="true"><use id="install-icon" href="#i-download" /></svg><span id="install-words">Install on band</span></button>
+</div>
+
+<main id="start" class="start" hidden>
+  <div class="empty">
+    <div class="tile" aria-hidden="true"><svg class="icon"><use href="#i-folder-open" /></svg></div>
+    <h2 class="empty-title">Open your apps folder</h2>
+    <p class="empty-lede">Each band app lives in its own folder, with a layout.json. Choose the folder that holds your apps. An empty folder is fine for a first app.</p>
+    <div class="empty-actions">
+      <button id="start-folder" class="iconic accent big"><svg class="icon" aria-hidden="true"><use href="#i-folder-open" /></svg>Open folder…</button>
+      <p class="empty-hint">The editor opens this folder again next time.</p>
+      <p id="start-note" class="empty-note" role="alert" hidden></p>
+    </div>
+    <ol class="steps">
+      <li><span class="step-head"><span class="step-num" aria-hidden="true">1</span>Design</span>
+          <span class="step-body">Add buttons. Each one sends one signal, from bb01 to bbff.</span></li>
+      <li><span class="step-head"><span class="step-num" aria-hidden="true">2</span>Build</span>
+          <span class="step-body">zmake turns layout.json into a .bin file.</span></li>
+      <li><span class="step-head"><span class="step-num" aria-hidden="true">3</span>Install</span>
+          <span class="step-body">Mi Band Bridge puts the app on the band.</span></li>
+    </ol>
+  </div>
+</main>
+
+<main id="tools" class="tools-view" hidden>
+  <section class="notice" aria-labelledby="tools-title">
+    <div class="notice-head">
+      <div class="notice-tile" aria-hidden="true"><svg class="icon"><use href="#i-wrench" /></svg></div>
+      <div class="notice-text">
+        <h2 id="tools-title" class="notice-title">Build tools are missing</h2>
+        <p class="notice-body">Mi Band App Editor needs Python 3, Pillow and zmake to build an app. Nothing else works until you install them.</p>
+      </div>
+    </div>
+    <div class="notice-part">
+      <span id="tools-system" class="cap"></span>
+      <div id="tool-rows" class="tool-rows"></div>
+    </div>
+    <div class="notice-part commands">
+      <div class="commands-head">
+        <span class="cap" id="tools-shell">Run in terminal</span>
+        <button id="copy-steps" class="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy" /></svg><span id="copy-words">Copy</span></button>
+      </div>
+      <div id="tool-steps" class="code"></div>
+    </div>
+    <div class="notice-foot">
+      <svg class="icon" aria-hidden="true"><use href="#i-rotate-ccw" /></svg>
+      <div class="notice-foot-text">
+        <p class="notice-foot-title">Then restart the editor.</p>
+        <p class="notice-foot-body">It checks the tools when it starts.</p>
+      </div>
+      <button id="quit" class="accent quit">Quit Mi Band App Editor</button>
+    </div>
+  </section>
+</main>
+
+<main id="main" class="panes" hidden>
+  <section class="pane app-pane" aria-labelledby="app-title">
+    <div class="pane-part">
+      <div class="pane-head"><h2 id="app-title">App</h2><span id="app-file" class="pane-file"></span></div>
+      <div class="settings">
+        <div class="setting">
+          <label class="setting-label" for="name">Name</label>
+          <span id="name-field" class="field push"><input id="name" spellcheck="false" /></span>
+        </div>
+        <div class="setting">
+          <div class="setting-text"><span class="setting-label">Color</span><span class="help">Theme color on the band</span></div>
+          <span id="color-well" class="push"></span>
+        </div>
+        <div class="setting icon-row">
+          <span class="setting-label">App icon</span>
+          <img id="icon-thumb" class="icon-thumb push" data-art="icon.png" alt="" />
+          <button id="icon-pick" class="btn">Choose image…</button>
+          <button id="icon-clear" class="btn dim">Remove</button>
+        </div>
+        <div class="setting">
+          <span id="columns-label" class="setting-label">Columns</span>
+          <span id="columns" class="seg push" role="group" aria-labelledby="columns-label">
+            <button type="button" data-value="1">1</button><button type="button" data-value="2">2</button>
+          </span>
+        </div>
+        <div class="setting">
+          <span id="corners-label" class="setting-label">Button shape</span>
+          <span id="corners" class="seg push" role="group" aria-labelledby="corners-label">
+            <button type="button" data-value="pill">Pill</button><button type="button" data-value="rounded">Rounded</button><button type="button" data-value="square">Square</button>
+          </span>
+        </div>
+        <div class="setting strip-setting">
+          <div class="strip-top">
+            <div class="setting-text"><label class="setting-label" for="strip">Free strip</label><span class="help">Empty space at the bottom</span></div>
+            <span class="number push"><input id="strip" type="number" min="0" max="484" /><span class="unit">px</span></span>
+          </div>
+          <div class="slider">
+            <input id="strip-slider" type="range" min="0" max="484" step="1" aria-label="Free strip, in px" />
+            <div class="scale" aria-hidden="true"><span>0</span><span>484</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pane-part checks">
+      <div class="pane-head"><h2>Checks</h2><span id="count-errors" class="count"></span><span id="count-warnings" class="count"></span></div>
+      <p class="help">Errors stop a build. Warnings are advice.</p>
+      <div id="findings" class="findings"></div>
+      <p id="check-status" class="check-status"></p>
+    </div>
+  </section>
+
+  <section class="pane buttons-pane" aria-labelledby="buttons-title">
+    <div class="pane-part buttons-part">
+      <div class="pane-head"><h2 id="buttons-title">Buttons</h2><span id="button-count" class="tag-count"></span><span class="hint push">In the order the band draws them</span></div>
+      <div id="buttons" class="list"></div>
+      <div class="add-row">
+        <button id="add-button" class="btn roomy"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Add a button</button>
+        <span id="next-hint" class="hint"></span>
+      </div>
+    </div>
+    <div id="drawer" class="output">
+      <div class="output-head">
+        <button id="drawer-toggle" class="output-toggle" aria-expanded="false" aria-controls="drawer-body"><svg class="icon" aria-hidden="true"><use href="#i-chevron-right" /></svg><span class="h2">Output</span></button>
+        <span id="run-chip" class="run-chip" hidden><svg class="icon" aria-hidden="true"><use id="run-icon" href="#i-loader" /></svg><span id="run-words"></span></span>
+        <span id="drawer-note" class="output-note"></span>
+        <button id="drawer-clear" class="link" hidden>Clear</button>
+        <button id="drawer-show" class="link">Show</button>
+      </div>
+      <div id="drawer-body" class="output-body" hidden>
+        <div id="stop-card" class="stop-card" role="alert" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-plug-zap" /></svg>
+          <div class="stop-text">
+            <p id="stop-title" class="stop-title"></p>
+            <p class="stop-body">Open Mi Band Bridge and connect the band, then install again.</p>
+          </div>
+          <button id="install-again" class="btn roomy"><svg class="icon" aria-hidden="true"><use href="#i-rotate-cw" /></svg>Install again</button>
+        </div>
+        <div id="log" class="log" role="log" aria-label="Output" aria-relevant="additions" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane preview-pane" aria-labelledby="preview-title">
+    <div class="pane-head preview-head">
+      <h2 id="preview-title">Preview</h2><span class="scale-chip">1.3×</span>
+      <span id="sent-hint" class="readout-hint">Click a button to see its signal</span>
+      <span id="sent" class="readout" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-mouse-pointer-click" /></svg>Sends<code id="sent-signal"></code></span>
+    </div>
+    <div class="band"><div id="screen"></div><div id="strip-mark" class="strip-mark" hidden><span class="strip-line"></span><span id="strip-label" class="strip-label"></span></div></div>
+    <div id="preview-problems" class="problems"></div>
+  </section>
+</main>
+
+<dialog class="about" id="about-dialog" aria-labelledby="about-title">
+  <h2 id="about-title">Mi Band App Editor <span id="about-version"></span></h2>
+  <p>Unofficial. Not made by or connected with Xiaomi.</p>
+  <p>The app is free to use, at work too. Its source code is under PolyForm Noncommercial 1.0.0.</p>
+  <p class="about-links">
+    <button class="link" type="button" data-page="app-license">App license</button>
+    <button class="link" type="button" data-page="source-license">Source code license</button>
+    <button class="link" type="button" data-page="notices">Third-party notices</button>
+  </p>
+  <p class="about-note" id="about-note" role="alert" hidden></p>
+  <form method="dialog"><button class="accent" id="about-close">Close</button></form>
+</dialog>
+
+<script src="colors.js"></script>
+<script src="toolbar.js"></script>
+<script src="preview.js"></script>
+<script src="app.js"></script>

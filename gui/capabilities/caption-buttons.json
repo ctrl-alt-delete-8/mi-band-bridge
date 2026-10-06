@@ -1,0 +1,11 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "caption-buttons",
+  "description": "On Windows the window has no frame (W8), so the page draws its minimize, maximize and close buttons. Minimize and close are Windows' own. Close puts the window away, as on the Mac. The middle button zooms, through the window's own zoom command. macOS draws its own buttons, so it gets none of this.",
+  "windows": ["main"],
+  "platforms": ["windows"],
+  "permissions": [
+    "core:window:allow-minimize",
+    "core:window:allow-close"
+  ]
+}

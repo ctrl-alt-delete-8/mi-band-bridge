@@ -1,0 +1,75 @@
+[workspace]
+members = ["gui", "editor"]
+
+[package]
+name = "bandbridge"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+name = "bandbridge"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bandbridge"
+path = "src/main.rs"
+
+[dependencies]
+aes = "0.9"
+btleplug = "0.13"
+clap = { version = "4", features = ["derive"] }
+crc32fast = "1"
+# The system's config folder, which holds BandBridge's own.
+dirs = "7"
+futures = "0.3"
+hex = "0.4"
+# The system's secret store, which holds the band's auth key. The v1 feature
+# is the Keychain on macOS and Credential Manager on Windows.
+keyring = { version = "4", features = ["v1"] }
+rand = "0.10"
+# Only what a webhook needs: the platform's own TLS, so no crypto library is
+# vendored and built here, and the machine's proxy settings. No cookie store,
+# no compression, no HTTP/2, none of which a webhook needs.
+reqwest = { version = "0.13", default-features = false, features = ["default-tls", "charset", "system-proxy"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "signal", "io-std", "io-util", "net", "sync", "process"] }
+toml = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = "1"
+serde_json = "1.0.151"
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# Posting keys: CGEvent for a key, NSEvent for a media key, and the
+# Accessibility check.
+objc2-app-kit = { version = "0.3", features = ["NSEvent", "NSGraphicsContext", "objc2-core-graphics"] }
+objc2-core-graphics = { version = "0.3", features = ["CGEvent", "CGEventSource", "CGRemoteOperation"] }
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSDictionary", "NSGeometry", "NSObject", "NSString", "NSValue"] }
+
+[target.'cfg(windows)'.dependencies]
+# SendInput for keys, the current user's SID for the pipe's name and
+# security, a file for what PowerShell writes to stderr, and ShellExecuteEx
+# for a script that opens as a double-click does. The version btleplug
+# already builds, so the crate is built once.
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Security_Authorization",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Com",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[build-dependencies]
+cc = "1"

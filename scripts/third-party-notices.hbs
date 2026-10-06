@@ -1,0 +1,24 @@
+THIRD-PARTY NOTICES
+
+Mi Band Bridge, for the Mac, Windows and Android, and the Mi Band App Editor
+include software that others made. This file gives their licenses: first the
+Rust crates of the Mac and Windows apps, then the fonts, the icons, one C
+file, and the Android app's libraries. The source of each crate is on
+crates.io, under its name and version.
+
+Licenses of the Rust crates:
+{{#each overview}}
+  {{{name}}}: {{count}}
+{{/each}}
+{{#each licenses}}
+
+================================================================================
+{{{name}}}
+
+Used by:
+{{#each used_by}}
+  {{{crate.name}}} {{{crate.version}}}
+{{/each}}
+
+{{{text}}}
+{{/each}}

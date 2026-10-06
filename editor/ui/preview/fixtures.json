@@ -1,0 +1,2433 @@
+{
+  "base": {
+    "tools_status": {
+      "ready": true,
+      "dir": "/Users/ada/.local/share/bandbridge-tools",
+      "system": "Mac",
+      "shell": "terminal",
+      "tools": [
+        {
+          "name": "Python 3",
+          "found": true,
+          "detail": "3.13.9 · ~/.local/share/bandbridge-tools/bin/python"
+        },
+        {
+          "name": "Pillow",
+          "found": true,
+          "detail": "12.3.0"
+        },
+        {
+          "name": "zmake",
+          "found": true,
+          "detail": "~/.local/share/bandbridge-tools/zmake-src"
+        }
+      ],
+      "steps": []
+    },
+    "bridge_status": "connected",
+    "pick_folder": null,
+    "shown_folder": "~/Documents/BandApps",
+    "list_apps": [],
+    "create_app": {
+      "$error": "Give the app a name."
+    },
+    "quit": null,
+    "version": "1.0.0",
+    "open_about_page": null
+  },
+  "start": {},
+  "not-connected": {
+    "bridge_status": "not_connected"
+  },
+  "not-running": {
+    "bridge_status": "not_running"
+  },
+  "busy": {
+    "bridge_status": "busy"
+  },
+  "tools-missing-windows": {
+    "$extends": "tools-missing",
+    "tools_status": {
+      "ready": false,
+      "dir": "C:\\Users\\Ada Lovelace\\.local\\share\\bandbridge-tools",
+      "system": "PC",
+      "shell": "PowerShell",
+      "tools": [
+        {
+          "name": "Python 3",
+          "found": true,
+          "detail": "3.12.3 · ~\\.local\\share\\bandbridge-tools\\Scripts\\python.exe"
+        },
+        {
+          "name": "Pillow",
+          "found": false,
+          "detail": "Converts the pictures"
+        },
+        {
+          "name": "zmake",
+          "found": false,
+          "detail": "Builds the .bin for the band"
+        }
+      ],
+      "steps": [
+        "& 'C:\\Users\\Ada Lovelace\\.local\\share\\bandbridge-tools\\Scripts\\python.exe' -m pip install Pillow qrcode",
+        "git clone https://github.com/melianmiko/zmake 'C:\\Users\\Ada Lovelace\\.local\\share\\bandbridge-tools\\zmake-src'"
+      ]
+    }
+  },
+  "tools-missing": {
+    "tools_status": {
+      "ready": false,
+      "dir": "/Users/ada/.local/share/bandbridge-tools",
+      "system": "Mac",
+      "shell": "terminal",
+      "tools": [
+        {
+          "name": "Python 3",
+          "found": true,
+          "detail": "3.12.4 · ~/.local/share/bandbridge-tools/bin/python"
+        },
+        {
+          "name": "Pillow",
+          "found": false,
+          "detail": "Converts the pictures"
+        },
+        {
+          "name": "zmake",
+          "found": false,
+          "detail": "Builds the .bin for the band"
+        }
+      ],
+      "steps": [
+        "\"/Users/ada/.local/share/bandbridge-tools/bin/pip\" install Pillow qrcode",
+        "git clone https://github.com/melianmiko/zmake \"/Users/ada/.local/share/bandbridge-tools/zmake-src\""
+      ]
+    }
+  },
+  "empty-folder": {
+    "$folder": "/Users/ada/Documents/BandApps"
+  },
+  "app": {
+    "$folder": "/Users/ada/Documents/BandApps",
+    "list_apps": [
+      {
+        "dir": "/Users/ada/Documents/BandApps/slides",
+        "name": "slides"
+      },
+      {
+        "dir": "/Users/ada/Documents/BandApps/timer",
+        "name": "timer"
+      },
+      {
+        "dir": "/Users/ada/Documents/BandApps/volume",
+        "name": "volume"
+      }
+    ],
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Previous",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f8a4c",
+          "label": "Next",
+          "signal": "bb02"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Blank",
+          "signal": "bb04"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "name": "slides",
+      "version": 1
+    },
+    "save_layout": null,
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:0:87x134:Previous",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Previous” does not fit"
+        },
+        {
+          "action": null,
+          "button": 2,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:2:#3a3d44",
+          "message": "Button 3 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "preview": {
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Previous\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\", textSize: 25, color: 0x1f8a4c, pressColor: 0x8fc4a5, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"Blank\", textSize: 25, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x04] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_3.png\", pressImage: \"button_3_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n",
+      "images": {
+        "button_0.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEZ0lEQVR4nO2dy3HTUBSGz1WyZAZ3gM1QgKggooKECnAqiFMB6QB3kCzZYSrAVBA1AA47hpVZsGCY6HKOLNlybNl63OOH9H8zseNXZvLl938fjuVTAlsJbn49m07/vDox0SN53r/HR/oZDnvTbY8zBGJeX0/OLFGHLPkUn9v4nK/z192fxY3JM8PwQ+9z3s9spVx/MPH5Nz+jKGJxxs8TWJAHY8xbTnL49IbGy2WRHf4tz+NEchpZZEDumbLgaxZ8l72ykXIXybT9mqksBQu+zApujFz/eiLpDKy1F3yxS/tBEvwmrYhTOmLihNroypK5sJHt0P7p8B/3E5/35MJRJpdT+o6f8oNdPuXLkAxwo6NJLqe0y2dXnIz+gaQ0H2uv+HR08MllqUH61KcjgtPbO9jkxkm10XtJ6rG218HJjeelRCJ1cNyTmSg4oQOCxYrUj6Qz0d8pXAt/DyK50qss9Za/utQg9vq8W66AxjHdm9zZAoDTeqBzVRd4tAd4ESDz1fsmixV2mty4Bnh5aBswYBVhZwOa1ACn9QvJRnRL2IncNooV1Ds3mWa1TqygKpfF9tsqVlCrhUTsLbUYFbkQO8O5XIhd4HSe29ZZQR7O5Mr+q6y6CGLnOKmFdOVFELuEm6mYjRq9AVOV2nL9wbebY3t9a1fU6txkALsnsJZ6nYsp10Yq18KsDtCzm6hUC6iDYlSrBdRBIUrXAuqgOKVqIVmFTQgUomQt2BsChSmcXKS2PCWSi9SWpVBykdpqFEwuUluFrclFaqtTILlIbVU2Jlc2wZPUYhO8AtuSK/u0EFuRzXJn70oBFcmtBQxk9dmwcRM18b+9d0puLVhrzgnUYm1yuRL2+ebkxpCTXItXcx2wVq61hEpwwEotxO+ywdzWCeuSGxBwwhq56FtXrMjlvj0j4ISlzk2mYMARTwa0KCDgjOVasAaV4JAlufhnD7fMayE+lgxwSja5SK1jMgNa1CXglExyDZLrmLlcLB7cE9dCcrQ54Jg0uagEBZIBLYJcBZLkYjDTIK0FbI4rEMvlmcILAs5Jk9sl4Jy9HLStLXjYsNEDyVVEOrdLQAUPu2F6oBYU4VowAQEVkFxFIFcRyFUEchWBXEUgV5FTvDCpB5KrCOQqArmKQK4ikKsI5CoCuYpAriKQqwjkKgK5ikCuIpCrCOQqArmKQK4ikKsI5CoCuYpAriKQqwjkKgK5ikCuIpCrCOQqArmKQK4ikKsI5CoCuYpAriJOPmsdrGIM/fb45CsBDULUgiIs14YEFLCSXA9yVfDGMqCNCWgQeuGw94BBzS3iU7wmA5q5I+AQM4xP04v+4PsDji9WH07tj3D4sivfZ6ZiBh9jUBNZOGQ9zuVyR4TGmEsCNTAD8ZheWlpE8A13EFweSax4E39L16+78+yTpewIHbwd6Vipgmxi57dteiBL7rPkPt7Zvsps+mqGLHWUex8qQHLY7WB2EOP5sXZ9lv6cWsBiHSBbBd6YvwllHrvtcf8BPV9+lndhQ6AAAAAASUVORK5CYII="
+        },
+        "button_0_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEwklEQVR4nO2dS1IbVxSGz2mpPEpVUDYQuSoL0A6QJ3YYgVcQMbHDSGQFeAmeEWcCw1QmJiMlmQArgB0YzzJJBCNLFrrX5+gtI4lW6x49uv+vihISiCq++vXfR0vdeQKP8se5/+a2dfuDb/k25V3ryZPcv/vPCrePPY8JdPjtn/q2c7TlPZWYndxyib3cZypNecoFM7/9+cfCn9P+ZiblisiSiNz23olALs0QGIebXI5fvnpeuP76B6mXe3Je3/rcoF3PrqRplIfKFBhJ+62k+JeDncLp6OOplNtPJjlfWTCVc8L7o4JTI/fXv+q7RK4s6dyTu0VaAZrgfJ6f9SsiTxuMJrTddlUV6r3fWnVWmGmr3fbv5dunnfu0gbyr1X8SmYfLfcnHJ4r45esXhbONSe5xrV6UKVLVOa44kpSucSyc81W5OVv75IrUMrOXlz7t0UbBT9c2uZpUycCRDBMVEbtxRBGV1k6uzkubTXeknbrJkxnXduUcrRGS1qNWy/8uUsu06TA31yK52qvy8j+RLxm0KDWs9F8ZVgAfUsroLIlpRXSWqPf+ZF3nqiGIaAXIUrUqK5mrNItVlppcrYFGo7M8LFMGWJpcrYH7e3+u62/KCEuZLWRRrGLeuTrNyqJYxVSuiK3IpCSTYhWzWuiJPaEMYyIXYrsElwuxQ4JOxbI6K5hGMLm6/yrbhFcQOyTIbEFXXuz9e4gdJ0jnNpvp3oBJysJyj2v/vdm841vLYaHO7b5vwF8RmMhCnav7sQSmkrgWOnVA6NlZJKoF1EE8EtUC6iAec9cC6iA+c9VC910w/gOBWMxZC+4NgdjETi5SOz9zJBepnZdYyUVqkxEzuUhtEh5NLlKbnBjJRWqTMjO5ugn+6ZP/gE3wZMxcoTUatAexyZlZC3LopkogMVNrAQPZ4kxPrnepe7f3spneucy7BBZiYnLf/V1f2YeT08REuc45HM0NwES53qMSQvBArh4fw9w2DA8GNO+y8WGQZfBArvMefRuISVOxbQJBGOvc3hQMBGJMrn6MnUAwxuQyMSohIGOdi/fYhmWQ3O45D0BIBnIjpDY4A7myn1AkEJRh5zIjuYEZHdAwUwhMpxa6h3RAaDpy9QRjBILTkSuDGeQa0OtcDGYW9Ac0bI4b0Jf7PYHg9OUWCQRnJSdtywoRNmzsQHIN0c4tEjBBkovdMCtQC4bkU3EK6zUFyTUEcg2BXEMg1xDINQRyDdEVGg5MGoHkGgK5hkCuIZBrCOQaArmGQK4hkGsI5BoCuYZAriGQawjkGgK5hkCuIZBrCOQaArmGQK4hkGsI5BoCuYZAriGQawjkGgK5hkCuIZBrCOQaArmGQK4hkGtIkMuBg4ncaXIvCVhwjVowJCLvrwmER7xGxBHkGhDlogsd0C4IBMc56dyDncINYVALzaV67Q1ofEogGFHEb/V2cD2049r/N4Tzi4Xg48HOd0X9ZjAVy+UYlzFYnLtRjwO5r54XZNbA+wQWgA+7HruMLSKkhE8hOBF36q3rb8jEa1DqlaXabX9G6OA4fNQqGE1sn5nX/T2u1Suy1JAvfLJ9Apc6K3j9onA27RfmuJA9lcm70siJ4/X2W8oG3XWALmll5aULhN76YCZfAGd8pkg6MZ49AAAAAElFTkSuQmCC"
+        },
+        "button_1.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEqElEQVR4nO2dvW7bVhTHz6XkKUPVJzC3jvUb1Es3qVGfIMpYdKgNJFrjtWoAJ08Qd+5Qps7WwfIThEuWIECYN1CAbJJ8c86V5NA29UHxHlki/z9An5Qs44ej//0geVWnFQhP2w0aUhjU7fhqZGoPHux9ePf7P18ILMQs2hg+/+URXV11LNHhnDfHfDMgY/jWDviZmCwNku75JYFsuWGvfUA0/teSDWn9Pxw72WT5Ur9MulFMFeOO3LDX4kq1r0gB/rC+q3K51ILXyXE0oBJzQ66m2DkfLtV8VtbKvpYrUWBp9JbuCUMm4auI7/aTp+evqQSk5LY+FslYzwxYNouuvdzlinZyNx0HeXDREQQvkif//U07xlRu82Jed2uLGBhjzqjO1XwcJbQDGB4ghHY4+kg7BFdExFcvk6dv+rTFBDQcH9KOwd+ytrV0wXH2SoqDtpSA/9UD2lG4nejIty78q3XqhuhbBsulnZU7w1p7NJHcfEZbREDlocFRcSJdSpZ8SFtAwPn1E5UI6au7POaooHvG7PealkrKZHhdf3xfA5EyxcIduGrckJ778X/QPVDqyk3jZuT26r9uciau1JWbRkagrkfh5qo3Q2XkTmlwTFxsSnDV5AoTwRvorlVRrtCYDp87pEhV5TpkmlVTcKXlCpqCKy9X0BIMuVNY8KnvXgTkfmPSi/A4dQm5N2nQ0J9gyL2FzEewYC87ayE3A9mNFP7ZPKGCQO4crKFnRRs4yF1IsXiA3AVI/haJB8hdQpF4gNyVWC8eIHcF1o0HyF0RFw85j+6B3DyMxid5Xg65ObDWPspTvZCblxzVC7k5yVO9kLsOK1Yv5K7BqtULueuyQvVC7ppw9T5cNqkOuevDey3G7UUvgNxC2IVHT0JuAdycw4KGDXKLMhwdzdsEuYUxD+dtgdyCyDkY4fNWZsMGuT6wlCm3TqAw0ufNeh6V64dG1n42yPWFuXsONeT6wto7uYvM9UTWmaioXI/c7pJBrk+u7GH6IWLBLzeiAXI9Ym+tXYFY8Ez65EHI9Y65rl7Egm/st4XvINc/qFwt0oMJZK4Cs10/kKvBeOyiAXI1GE8WwkPmamAM5Oph3ZE4kKuC2ZdryFVgtoI2GjRFULlKyAQOKlcRVK4W1oSQqwXPjiEWFEHlamEIDZomkKsI5CoCuYpAriKQqwi6YkrwjsofIVePBmJBEchVBHIVgVxFIFcRyFUEchWBXEUgVxHIVQRyFYFcRSBXEchVBHIVgVxFIFcRyFUEchWBXEUgVxHIVQRyFYFcRSBXEchVBHIVgVxFIFcRyFUEchXB8blKGDKfA0N0SUABGyMWFBG5MQENpHIN5GoQmH5Ae7U+Af/UanGQHEcJGjW/iE/xOm3QzBkBfwTmhdyY2eOw10ws0T6BQrDQT0n3TSj3U12xeptAIWTgkPZ4LTfpRjFvfEygCEficfaglt4y+P99/P3PP3ziu6jiHEjF8uW3pHt+dvP5DCa/kDSKkMHLkYyVKEhXbGrbfMJeq8Nj5E7W785UHdd95V5B8uQ8WvCa5bhloofyk1Ru0d3pgufmwJL9jipAahwQy8hLBgjSj132vq+wZm96hMJkpQAAAABJRU5ErkJggg=="
+        },
+        "button_1_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEjUlEQVR4nO3dwVITWRTG8e821FRZLob1bOz9LCazVJyazBOIS2BhWE/VQJ5A3qDNE8gsgkvxCQgF6tI8gFXgG8QqzUr6em6HxkQ6odN9D0k638/CoImW9fd6+nYnhlXkEH14vYZ+P1w19vKbNSu/rP328d/f//kCmshMurN1dvgsBhqArY95SFd+i15ya2wvkFtjTO+/R1snoOy40dt2DRav5dMQxXXdR2DRjQOcNNe3u1gyN+JK2IaEfQkVpgMXXD7i+/feNP982kOFjcTVDZvJreyDqq7s67hXo+ADZudC/jhHgbGd3fXtN6iAH3HP2ucoN2P9sejJn+xIPlqLvKKTuDMYB9OQGW1e7D7e+h8LZhD37PB4wnZrPiSr2RxgxbSaDzcvsABM9P5ViMv4HIvEyshA0Gr+tdnBHAsQx3UsGoMNmPhYjhMvk8Uxp2TLiRoWV8P9q5OxFiWn6HNGVu5Cx71i9/Clfy4H5ueYIwGqwmBNZvG+21JGp6/qmAOyy8HfqJZwMI8PI8yYkb9pi+qSq3XYmdWJSHXGQrbklL512t7FDFR95Q6RK3L37z29yytxVV+5Q+QMdLCjuLPd0RLFxWBHEeP4rgIvV1wnDXwH27Xli+u4wG675q4GKlrOuCm5zKoZeLnjOoqBGddRCsy4qRiR710E46bSXYTHS5eMO8wF/tr3Fphxb6rJmZyXJ2sZN4s8jRSdtvdREuOOY/C87AGOcScp+VoOxp2sVmY8MO5tSowHxs2j4Hhg3HwKjQfGzcuNhylf3cO407i0+9M8nHGnYp9Ns3oZd1pTrF7GnVr+1cu4ReRcvYxbSL7Vy7hF5Vi9jFuUtU9uu6jOuEW5Zy36/Y1JD2HcMiwmvnqSccupTTqwMW5Zcbw37i7GLcviybi7GLe8MHp3mHlgY1wfYmTGXQWVJ3verJ/myvVB9rxZz7Mxri/W1H/+Kcb1xdobc5cz15eM/4nKlevRz1syxvXJjr7bCseCT3Z0NDCuXyPbMY4Fz4b/8yDj+mbs9erlWPDN2DD9lHF9G3rPIMb1behkgjNXQfrUD+NqsIODGuNquBzE5czVYMC4aiySV+IwrgaDB+6GcXWE7jse0BRx5SpxF3C4chVx5WoJ4pBxtcQIORYUceXq4QFNE+MqYlxFjKuIcRUxriJuxfT8wbhaDNY4FhQxriLGVcS4ihhXEeMqYlxFjKuIcRUxriLGVcS4ihhXEeMqYlxFjKuIcRUxriLGVcS4ihhXEeMqYlxFjKuIcRUxriLGVcS4ihhXEeMqYlxFfH2uns8BLE5A/ll0ORYUBfKtC/JPurqZy7gajOnIyg06IP+M6QbNh5sXPKh5Jj1d18EBLcAByJ8V88LdmPTH0Vn7Qm4egMr61Hy8HbpPfmzFDDZAZX0e7ngdt7m+3ZU7dkDFGewlHa+MnETIHQcMXIhbsTtJvyEm65HJV0iyOAJncB6f3CgYXrEpM+lXSeQGYjSyvu7M0nPbV9kVNB9tHY17iEEOydtEx3Ed7otMpG94PniP2F+xDNLzAHepQM683AlCcn5wi+8SzFvSbfbTdgAAAABJRU5ErkJggg=="
+        },
+        "button_3.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAALQAAACGCAYAAAB0f6CUAAADrklEQVR4nO3avW7TUBiH8fe1HbFQEeACKDMDXhFSWkBIjHAFlCuAS+ECkGCGgY8Jia+0EmIkXAHuzBJUFpq4Bx8HhwD9Wqr2/PX8pMaOY2+PrLc+LuwQPt3qL29P6hUPobRg5eyoN9vQN+BoDNtPt5FlPuwV+Zcrr8fVQRf5fj+u31i66zthrdldNeD4DS33h4O3Wy/3OmHXoD/e7JfTaf3cLSwbcMIE86oo8jtX34xH//6W/Xtg4/rSWj2dfiZmnFSxzXpaf4it/v/bgvaEEB4bkAr3e4P3W0/mX7udOGbEO7MBSfFxXuTXuvFjPnLEmdmA5IT+Yrtt0HHUYGZGqmK7GzeWbsf92R06hLsGpGwn3I8bj4smk5/TrwYkrnequFhMtutVAwRMJnWZNfNHaYAAD2G1CPN3M4C0xZYzA4QUzd+KARL8cmGAjNBn5IAUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoaULJh/N0CCb2ZuYWSAhFAxckAKQUMKQUMKQUNKE7SPDZDg4yw4TzmgIbbMyAEpzXPojJEDEty8yjzbYeSABM9YWIGYrCiKygABsWWPOxvXTgcDEjf48MPbkYM37pC6ruE2aN64Q+q6hn//U+iVAUmbNTwbOTxUBiSsa3g2crgzciBpWWbDdhs/8iyvDEhY5kW74u3dAR7dIWXxkV3cLqwU+qYBafrS7SwufTNHI1F/ntL9Cdp9aECCPM9fdfvzoM+fP/XIgMTEFcJzZ3tPu+/zoC89+/ajuUvfMyAh7vagbfe3v14fHbzfekLUSEH77kbTatvsAt/t5I83+2U9rV80l10w4MTxzbzIb199M/7vQYbvd9nG9aU1C2Gt2V0x4PitNysoDwfvtl7sdYLbIXy61V+ebNerbqEMwcp4rLnll833MwYcjfX40czIo9A8gev18tGV1+PqoIt+AZ7G0BGzClrIAAAAAElFTkSuQmCC"
+        },
+        "button_3_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAALQAAACGCAYAAAB0f6CUAAADdUlEQVR4nO3bPW4TQRiH8XdWbgCJpKIE+wTsDWJuEBraeGsKKAmpk7Q5AJJDS0PgApgTxDmBNzcIEi0e3lnvGifkq4mS+ev5SfF+2d2j0XjG6dktzMb7/aKIGxatjGbl4m5Mx3UD7kSYNK9m0xCKyZ95PBlU2/WNn7ru4ennva0YbeTxDg24d2FShOLg+daHb1e+47Kbs/FuGYJ99dO+AQ9P7QPt60G1M734oLh4w2MeeczHRsx4uPre6I/U6sUH50boNuaxAZnwkbrykfqwu14G3U4zjg3Iy5lH/aqbfiynHO2cGcjN+mq7TdDtXKRvQJ76s/HeZjppgg4hbBmQMR+l3zXHtGkSwnxmQOZiLAY9s/nQAAmx9KC7rWwgd3FI0FBSFgYI6fm3ww0DBHjLL3sG6FhnygEpBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pRYz2ywAB3vJpGqGnBmiomXJACkFDCkFDCkFDSs//zgzQcMYqB5RMmXJAigcdmHJARVqHDkw5IKJgYwVa0ipHbYCGOjSvh7vRgMz1RzuhmXLwizvkrmu4m0PzxRC5axpugw61AVlbNNxbXMTagKwtGu5GaKYcyFwxSa+M0BAxb3a8Q3fJ0h1ylpbs0nG5U5j+wdCADMUYTrrz1a1v5tHI1L8p80rQYWJAhkJRfO/Ol0E/ebL2yYDMpB3Cx4+efumul0E/e/P2tz+sDMjL+9Rud3Hu56ODaueQqJGDNDKnVlOzq/fDZW+ejXdLPxyFYC8MeGDaFblNj/m/hYxw3Qc97JEfRh72hgH3zEP+6ckeDKqPR1e9J9gtzMb7fd+JGfpp2f4lpYe+ZsAdWMTbmC5W4MJ0UG3XN33uL2TCrgvgfnFqAAAAAElFTkSuQmCC"
+        },
+        "icon.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAFhElEQVR4nO2d8ZXiNhDGP/nl/5AK4k0KOFLBORXcXgXLVXBsBaEDSAXHVXBcBeer4EgBuXUqCGkARbJkEMbGspFlgef3Hu8Z2F3b8+3MSLI0ikAERQQiKH5A4EznLxPG8IoDMbh87acAm8jv8s/UyyRj4qUO+Q4s2oKpz74tH74icBgCQwogruq1sHYCzhNh9CkcIm5YCMRScZCKc3zdrh52CIggBNEivMF+/8jBHuERBr5BFG2EOJ9DEGdQQYQQwgv2T0KEGQJAiLMWIe6jECbFQAwiyPT55Ql7PncdjlyRh7WIrbbLh4/wjFdBpBB8zxc4T8ShkrGILXwK40UQFZr4MlSPaEI3BJ59hLJeBcmTNd8vQ8kR16JzzHOfyb83QYQYj5zzD+Jwgvtixxh7J0TZoAd66akLMZZCjE+4PzEkE3lv8h7RA049RFyk6EnzT7eaK9qic8tb4S0ZHOFMECHGVPznfMF9esUlZAj7XYiyhQOchCzZihqpGBIZwr7kLUkHXC2IuJDZiMUoKESZ4UquCllajA8gDugW2Bod6SyIEaaIEjqnpOhAJ0FGnMBt6ZzoWwsim7ZCjG8gMZqQovzWtkncPqnfb4fPNRNtq1a0EmQ6/3s1lk6fC6StpM3a/I51yNJjU60VJ/Ik/9Z27MtKEDlqK8R4AYWqrsh88mAzSmwZsrh0OxKjOxNtw0YaPYT6G+6w6Z80e4h40gfCDRa2vChIPjRCrSpnqFbX5fGui4KIUPUHCKc02bRWEK1kDMI18SUvqRWEvKNHOH9f91WlIPphSwyiF3QuSaq+q/EQPgPRM9U2PuuH6F75vyB6R/RLfir33qs8xOvs85FzZutzQTh/AuEJfibISciicOWfctgqe0gCwjeJ+aYkyD4B4ZlTm58u+uTsNQi/lGx+8JA8f9BAonfKNjdDFokxEGav3QxZMYihiIsDw0P2MYiBONre8BBGIWswjrY3QxZNYhiOg+2p+ExgHDyEc7wCMQjC9j8XxxSywiAuDihkBQYJEhgkSGAcBGEM/4EYBGH7f4pj00OcrLMmOpEVBxSyAsNs9gZVe3BkVD3C5RSyBuNoe0OQKAMxEEfbmyErAzEUWXFgCkIhayDMVVWR8eFOtIf/AuGVss1LzV6egvDMqc1LgkQpCM+c2rxcjD8F4ZvUfHPiITqPfAbhBWlri+UIrJfyp0QV57auGssiQfzRLIgOW96L0I8NaeOq2ic1o71sDaJnqm1cW+tkOv+embMhCHfIzuB29UvlxMQLz0PYAkRPsNrKQBerAZGXuEc+rhXeEdd93/DEkLzEPZdtalEv6/uWZjW64VLuKLB4ps7mIBzRbMtGQeRYPfVLrkf3O9Kmn7OcdcLmNG+rO8p2dpHGShDVo7yPfaSGgc1s962ynpcl684yxv8E0Qppszb7VXWo/U6tLltsWlVlOsxcZI+UT5rReaN1ZaXWgqhq/ywhUerRYiRdNgujDV16QG9T0WlaVefJ1qp/wt6BOEFvedR5jtvV2+bRPlRHrt1/Kv8bcICq1cE3ovX1I0ZIkcBdbF7sdGNJOelrbKIYCTycjSUl6oLYdEzTUdW9sqkrMfK/iR7It0bi7D3uGNUD/9X5SHiv23eLELa+txCmQ9TsprbvlqgLZvE9Dd2re2FxX2Lk54AHdCtsdatjYDpXzF20ohrPBY+obRr44lYmTqj142xxbd+i1TkxAFqYeageoz1i5VOIw7kxIDqUiZ4+gihvrnPE2kdoqr0GBIAsUYu8MD1/FOK8gUfU8ot8FvrG9qler9eDwNDiJKriM0tchzUVjuQysnzlUhqCCCbBCVLFcccfWb0zLxhZFFuLyw0EXcgl0293alF+vg48GzIU2XITgowJKj4TGP8Dlg0guJuvvIcAAAAASUVORK5CYII="
+        }
+      }
+    },
+    "next_signal": "bb06",
+    "pick_image": null,
+    "build_app": {
+      "$events": [
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Check: 0 errors, 2 warnings (1 dismissed)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Saved slides/layout.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Drew 5 buttons, 1 picture (laser.png)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "$ zmake ~/Documents/BandApps/slides/generated/slides",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Use config files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   /Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/zmake.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: We think that you want... build this project",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.json:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing assets:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   9 saved in TGA-P format",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Copying common files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.js:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing \"page\" JS files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Copied 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Post-processed 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Packaging:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Skip: /.gitignore",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Created BIN/ZIP files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Completed without error.",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.bin · 11.0 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.zip · 10.3 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Build finished in 0.3 s",
+          "tone": "good"
+        }
+      ],
+      "$then": {
+        "ok": true,
+        "at": "14:02:11"
+      }
+    },
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install stopped.",
+          "tone": "bad"
+        }
+      ],
+      "$then": "not_running"
+    }
+  },
+  "long-values": {
+    "$extends": "app",
+    "$folder": "/Users/ada/Documents/Band apps for the lecture series on long folder names/second term/BandApps",
+    "shown_folder": "~/Documents/Band apps for the lecture series on long folder names/second term/BandApps",
+    "list_apps": [
+      {
+        "dir": "/Users/ada/Documents/Band apps for the lecture series on long folder names/second term/BandApps/slides",
+        "name": "A slide clicker with a name far too long for any picker"
+      }
+    ],
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Slide 1",
+          "signal": "bb04"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Slide 2",
+          "signal": "bb05"
+        },
+        {
+          "color": "#d93a2f",
+          "label": "A label far too long for the band, which the row cuts short",
+          "signal": "bb06"
+        },
+        {
+          "color": "#c2410c",
+          "label": "Slide 4",
+          "signal": "bb07"
+        },
+        {
+          "color": "#7c3aed",
+          "label": "Slide 5",
+          "signal": "bb08"
+        },
+        {
+          "color": "#0e7490",
+          "label": "Slide 6",
+          "signal": "bb09"
+        },
+        {
+          "color": "#2f6fde",
+          "label": "Slide 7",
+          "signal": "bb0a"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Slide 8",
+          "signal": "bb0b"
+        },
+        {
+          "color": "#d93a2f",
+          "label": "Slide 9",
+          "signal": "bb0c"
+        },
+        {
+          "color": "#c2410c",
+          "label": "Slide 10",
+          "signal": "bb0d"
+        },
+        {
+          "color": "#7c3aed",
+          "label": "Slide 11",
+          "signal": "bb0e"
+        },
+        {
+          "color": "#0e7490",
+          "label": "Slide 12",
+          "signal": "bb0f"
+        },
+        {
+          "color": "#2f6fde",
+          "label": "Slide 13",
+          "signal": "bb10"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Slide 14",
+          "signal": "bb11"
+        },
+        {
+          "color": "#d93a2f",
+          "label": "Slide 15",
+          "signal": "bb12"
+        },
+        {
+          "color": "#c2410c",
+          "label": "Slide 16",
+          "signal": "bb13"
+        },
+        {
+          "color": "#7c3aed",
+          "label": "Slide 17",
+          "signal": "bb14"
+        },
+        {
+          "color": "#0e7490",
+          "label": "Slide 18",
+          "signal": "bb15"
+        },
+        {
+          "color": "#2f6fde",
+          "label": "Slide 19",
+          "signal": "bb16"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Slide 20",
+          "signal": "bb17"
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "name": "A slide clicker with a name far too long for any picker",
+      "version": 1
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": null,
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:0:87x33",
+          "message": "Button 1 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 1” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 1,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:1:87x33",
+          "message": "Button 2 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 2” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 2,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:2:87x33",
+          "message": "Button 3 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“A label far too long for the band, which the row cuts short” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 2,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:2:87x33:A label far too long for the band, which the row cuts short",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“A label far too long for the band, which the row cuts short” does not fit"
+        },
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:3:87x33",
+          "message": "Button 4 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 4” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 4,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:4:87x33",
+          "message": "Button 5 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 5” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 5,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:5:87x33",
+          "message": "Button 6 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 6” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 6,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:6:87x33",
+          "message": "Button 7 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 7” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 7,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:7:87x33",
+          "message": "Button 8 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 8” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 8,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:8:87x33",
+          "message": "Button 9 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 9” may be hard to press"
+        },
+        {
+          "action": null,
+          "button": 9,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:9:87x33",
+          "message": "Button 10 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 10” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 9,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:9:87x33:Slide 10",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 10” does not fit"
+        },
+        {
+          "action": null,
+          "button": 10,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:10:87x33",
+          "message": "Button 11 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 11” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 10,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:10:87x33:Slide 11",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 11” does not fit"
+        },
+        {
+          "action": null,
+          "button": 11,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:11:87x33",
+          "message": "Button 12 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 12” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 11,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:11:87x33:Slide 12",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 12” does not fit"
+        },
+        {
+          "action": null,
+          "button": 12,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:12:87x33",
+          "message": "Button 13 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 13” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 12,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:12:87x33:Slide 13",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 13” does not fit"
+        },
+        {
+          "action": null,
+          "button": 12,
+          "dismissed": false,
+          "field": "signal",
+          "firstNote": null,
+          "key": "signal-clash:12:bb10:timer",
+          "message": "Button 13 “Slide 13” and timer both send bb10. Mi Band Bridge cannot tell which one sent it.",
+          "note": null,
+          "sameSignal": [],
+          "title": "Another app sends bb10"
+        },
+        {
+          "action": null,
+          "button": 13,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:13:87x33",
+          "message": "Button 14 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 14” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 13,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:13:87x33:Slide 14",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 14” does not fit"
+        },
+        {
+          "action": null,
+          "button": 13,
+          "dismissed": false,
+          "field": "signal",
+          "firstNote": null,
+          "key": "signal-clash:13:bb11:timer",
+          "message": "Button 14 “Slide 14” and timer both send bb11. Mi Band Bridge cannot tell which one sent it.",
+          "note": null,
+          "sameSignal": [],
+          "title": "Another app sends bb11"
+        },
+        {
+          "action": null,
+          "button": 14,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:14:87x33",
+          "message": "Button 15 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 15” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 14,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:14:87x33:Slide 15",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 15” does not fit"
+        },
+        {
+          "action": null,
+          "button": 15,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:15:87x33",
+          "message": "Button 16 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 16” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 15,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:15:87x33:Slide 16",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 16” does not fit"
+        },
+        {
+          "action": null,
+          "button": 16,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:16:87x33",
+          "message": "Button 17 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 17” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 16,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:16:87x33:Slide 17",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 17” does not fit"
+        },
+        {
+          "action": null,
+          "button": 17,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:17:87x33",
+          "message": "Button 18 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 18” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 17,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:17:87x33:Slide 18",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 18” does not fit"
+        },
+        {
+          "action": null,
+          "button": 18,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:18:87x33",
+          "message": "Button 19 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 19” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 18,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:18:87x33:Slide 19",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 19” does not fit"
+        },
+        {
+          "action": null,
+          "button": 19,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-button:19:87x33",
+          "message": "Button 20 is 6.8 × 2.6 mm, and a finger needs 5 mm each way. Remove buttons, or make the free strip smaller.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 20” may be hard to press"
+        },
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 19,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:19:87x33:Slide 20",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Slide 20” does not fit"
+        }
+      ]
+    },
+    "next_signal": "bb18",
+    "preview": {
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 33, radius: 16, text: \"Slide 1\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x04] },\n  { x: 99, y: 6, w: 87, h: 33, radius: 16, text: \"Slide 2\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x05] },\n  { x: 6, y: 49, w: 87, h: 33, radius: 16, text: \"A label far too long for the band, which the row cuts short\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x06] },\n  { x: 99, y: 49, w: 87, h: 33, radius: 16, text: \"Slide 4\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_3.png\", pressImage: \"button_3_press.png\", bytes: [0xbb, 0x07] },\n  { x: 6, y: 92, w: 87, h: 33, radius: 16, text: \"Slide 5\", textSize: 25, color: 0x7c3aed, pressColor: 0xbd9cf6, image: null, pressImage: null, bytes: [0xbb, 0x08] },\n  { x: 99, y: 92, w: 87, h: 33, radius: 16, text: \"Slide 6\", textSize: 25, color: 0x0e7490, pressColor: 0x86b9c7, image: null, pressImage: null, bytes: [0xbb, 0x09] },\n  { x: 6, y: 135, w: 87, h: 33, radius: 16, text: \"Slide 7\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: null, pressImage: null, bytes: [0xbb, 0x0a] },\n  { x: 99, y: 135, w: 87, h: 33, radius: 16, text: \"Slide 8\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: null, pressImage: null, bytes: [0xbb, 0x0b] },\n  { x: 6, y: 178, w: 87, h: 33, radius: 16, text: \"Slide 9\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: null, pressImage: null, bytes: [0xbb, 0x0c] },\n  { x: 99, y: 178, w: 87, h: 33, radius: 16, text: \"Slide 10\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: null, pressImage: null, bytes: [0xbb, 0x0d] },\n  { x: 6, y: 221, w: 87, h: 33, radius: 16, text: \"Slide 11\", textSize: 25, color: 0x7c3aed, pressColor: 0xbd9cf6, image: null, pressImage: null, bytes: [0xbb, 0x0e] },\n  { x: 99, y: 221, w: 87, h: 33, radius: 16, text: \"Slide 12\", textSize: 25, color: 0x0e7490, pressColor: 0x86b9c7, image: null, pressImage: null, bytes: [0xbb, 0x0f] },\n  { x: 6, y: 264, w: 87, h: 33, radius: 16, text: \"Slide 13\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: null, pressImage: null, bytes: [0xbb, 0x10] },\n  { x: 99, y: 264, w: 87, h: 33, radius: 16, text: \"Slide 14\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: null, pressImage: null, bytes: [0xbb, 0x11] },\n  { x: 6, y: 307, w: 87, h: 33, radius: 16, text: \"Slide 15\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: null, pressImage: null, bytes: [0xbb, 0x12] },\n  { x: 99, y: 307, w: 87, h: 33, radius: 16, text: \"Slide 16\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: null, pressImage: null, bytes: [0xbb, 0x13] },\n  { x: 6, y: 350, w: 87, h: 33, radius: 16, text: \"Slide 17\", textSize: 25, color: 0x7c3aed, pressColor: 0xbd9cf6, image: null, pressImage: null, bytes: [0xbb, 0x14] },\n  { x: 99, y: 350, w: 87, h: 33, radius: 16, text: \"Slide 18\", textSize: 25, color: 0x0e7490, pressColor: 0x86b9c7, image: null, pressImage: null, bytes: [0xbb, 0x15] },\n  { x: 6, y: 393, w: 87, h: 33, radius: 16, text: \"Slide 19\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_18.png\", pressImage: \"button_18_press.png\", bytes: [0xbb, 0x16] },\n  { x: 99, y: 393, w: 87, h: 33, radius: 16, text: \"Slide 20\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_19.png\", pressImage: \"button_19_press.png\", bytes: [0xbb, 0x17] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n",
+      "images": {
+        "button_0.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACOElEQVR4nO2aT07CQBTG3xAO0KU7wRPgwrX1BOIJwBNQFq7ZuaU3wBuAJxBPYC9gwAOYQOKOMM/vtQUbA2Kg/6e/RWkLJeSXjzdvpq1TxUGuHmZnqxWd1dT6S9WZ16v6p+c2F4euU1Th03JmDaXonLFLTBYx2zht+cc7gLgp1ZTrDZvP+77TSLmX/dk1M9nEGuKUCLTpeOZKqTsk2fv9hhFyf2SyfaLIfSwguA/BT9GTpZSbgsydQPB9VHBp5KJmyt+8w6TaOLQoGyTBN5sSUacCI4MQ4nHLmh1mbuQgKxZ+xxivTTkoZHJb/VmHtG6HKc0d4QA3KUxy/ZSyHohQJNXKdS6Ye9hOcp/ciNQuFQikt5nb5EIqGnk9RA3rFrV65U6uL5WoB6mONPhUWLSdK7kQOwikUoGlblD5SK70qJA6Ctqp8pB5MYPYYZjWsrHITG7QBfB436pTGahRBkBsF2l9K7NYIdXkbturgvWsx5KaXIjFIjQGrZKndQMW3pepdAsiFmXghUrRYv0bL3G5hor1SXRAC/tXI8Vi9cZLTG7YERgqVqhNExnQQrEjMphEVsUqsX6n8IrF8nmsciG2bbrYAOX6W4oJmc7KrIuMrbEBSO2H5140ZD++5AY35kwXu6TIfb1YuoWW8+6aMvP6G+VEn7w5uSxUA9g2sU6sT9yYPPvaIDVWSsGuZ8WOrrnBCpefWCPFSrslXYE8n7DvM0fLVawfNe4TkQEEIgX2ZOaFHU/62EPXfQNAbwXYbFPn4wAAAABJRU5ErkJggg=="
+        },
+        "button_0_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACd0lEQVR4nO2aPVLbUBCAdyUPk3RWKrqYG/gGEU0CVcwJME0SKpwT0KXFHSGNUqaDNCHQGJ8AHwEO4BGeYcZmZL1l94FBw2A8YyTr5+mbsSX/yB59Wu3bfVIFSmbida6XgyBYtlRwHaolWnpL/a1V52rWdgglmv1jv2bb8F4pqBNBFYBc5CUh1KdscoaI7W9rzt9pv2mk3F+n/ocwBBeR7kWCC/NzYdu48eWj03v6gRFyJzIlGuF1Ip+FD9AVR/H37XXnd/T9QspNWuZ0cCsquDByOWe6AGqTCBuI+lRfOBLBlQquTlJEBXKMDEIs8jMRtXjXahIrmGK4yEENQzrk1RX9GnLIwbG/SUgNjpQGZBDLwo2vn5yj3ESuRCmf9rty2iugKhBkFqVohxdHmY/ciVQ+yZqQK3Als5HrdfzqaKT2OJc285i9LAvqmZN7JxV2hkNqce2YyqgfBypUrg0ZglPAbhDQHx511/jxBvIM4k0mIveuRiVPyiksUFuT+q78/N/f4wqgBQVDt8SQEroBIDp8YdYp91iQAiy2yV3VeZHFCguN3MfyKm8163wsTC7PVNXVmLyiR2uEwUKqBRE7HlMnrdmqlOglLtdQsZpEBzSpX00Vy7VYLzG5UhHwP5gplrFs6yyRAe1erAdGk8CsWClW0+VraRexpoWDE79RitVXItqyjC0tSDsrXZepOTbC5fb6u5qsxJYWZJ4ASrED28aH63qxyN3/128b1Hm9ALaid968Oi2UA5hmIGJjvePG5O4rwqWkgufuFZs7LcgM182QPIPFdqUqkPsTpn1hbrmjYfgD0DIlz3b1s7S03HkpBT2pY2dtdAu3aRG1KC+8WQAAAABJRU5ErkJggg=="
+        },
+        "button_1.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACX0lEQVR4nO2aPXLaQBTH/7tyR2aiOo11BHKC4BskhZh0Ec4BcoQkJwg5ABbpMqZAOQHyCeycwFu6pKHJjNi8J2EbjzGDQV+7618DDB/S/GZ5+z72CDsQxJF/pBdv9BL/Mg+vgM6NGoxv8MJWxLY3g7P+J0BHWqO38csaV5CYQ4sUUtMjvRadvyR+jhc2yw3isIulmGroAPv+sEBK0lkyCdepOp1cwDEeyQ1GYaSBGBWwEp66IvuB3CrFbrw4yxZI6OmFGkyuYBl3cjkU0IZ1ieaY080kFMN/2iL6Xu6of31IjC0TAaFogxwC3h81+K1gKLncusPBcyDRCYcOdXr+C4ZRyD0LZ0+lWy1iFTa876asZhHEHwO9zK5hECR5bIJkiWXWg2FQCIt4QVA4i7l6REuRtAy6MJRC8oIk97+2UbKkOzRW7gqfspxvueQ4/IIWIWEPPuXpQ04paR/poQVI+mu9g0Vwrk7xeEaSf6BhxPEo1LCUvGvneR+ayipsCguP0LRZ0yq+DOL+ezSA1XJXUCzW0ybSNhfk5nDahmwxy3vVNSGp2nGmiV2ECdQm2JmVu4Zfl2Cu0KxrUu9ALYJlPlR0k0IwtVtREZK6Syncxec+dlWCJSfYLm1qm6hK8O2GNobj5IJLLjbWZmihogscw23mQnpvyyqX5dqzRkrEluEjy6YoiTu5PM6mZTyA43ChQTPFIUqg1hM3JiGkoG7aeYID2HJWDInjMZjiL04OOaCy/ZRjkZ5EtjXUd6XoB3dO9j21KXb5EI/f8ykxDzPvZ25dkv4alsNjfPV5stde9B8/4/y1zKBOPAAAAABJRU5ErkJggg=="
+        },
+        "button_18.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAAB7UlEQVR4nO3asTYDQRQG4H/WnkMnpUNh8wS2UeMNaDXiCVB4CJW8AW+AJxCF0jFeQJZGS+tIrnsnO3uSiFh2VpP7FTI7WUX+c8/d2d2JUUJ62E1gsAFCCqJU5oin+aOBGWCAzmBgLB90+Mc/2HYzK/F/30uPunvoU4uD3IQa4QKPTNueNq+mnPMVV2pKRBc8TKB+khljdriS7fgX0fgEB9viYO+hwZaVcF7Xktv4FyOVmwd7BvUnXMH7XMHnxbEf5K3gHqqKVw54y7eIoi3kPVZV0xjO0YWb94sEKoSE89yWwaByifagwiE6kA+zftxden+nF6iguPc2496Hu9NS4aURwaxA1aC/GfPVrQdVA5NGULWJMSNPtv4bEdYkXAtVh4a2hRppuDVyD27WDh4JKihj8Bb5AVRo1rcFvajVwIebQQVGvnIpgwos6uThRtoWwrNxPsigguEFwo3sa3CVO+m1sKrCtOVvcRPBad9CVcY5PnGxXsq4CHdufmEXqpLB/YLZ9sdFuHcny8/y3h2qAnM43GJHni3IhgYN+PekYsc3hLj5SSfLBhFe+17yM8lVqKmkx0ormLQomL7L0e1noBaHvAE1QpZbsirwF6+J56AEtz/XbSPtp/JuyE9z6IuYAYMgBVm58+KBLbM/9xPZrKBeVCkPuwAAAABJRU5ErkJggg=="
+        },
+        "button_18_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACAklEQVR4nO3avVLbQBAH8P+erk+cKjMpojxB9AaQIl8dadNAmpBUyaPQMdDAGwCVBxrsghrxBoKGDuMZCmDQLbeyZEBjbI99pvH+ZmydPlx452bvQ2sxhvVmJzbAApNLmCmRa8xIiPAa86ElX0ScAqbl//vJ3++NbNSPaNjNjWZn2YFXfHMRqq5FRGt/vjX2nntgYHA3DzpJnvOOb8ZQo2RRRD9+f2mk9RumfsGngBUf2GNoYMcV393xocStfuNJz+09wFtQE6JfPhdv98+qRpkKjqEm5ge6S2vpU5Ui+mmhzLFqCjJ7ehzHIrhlvoihQog39jtL0ih7Li9DBeMc/5MjbR1evb2+vj2HCow+2JubPIEKzhgk1g9x76CCc7lbtAzOocIjSgzUzBgzPztbL8ovKD5ax0ihgpMFhaaFGdLgzlCxcbPevGCo0LpVz+1ChZZWwdVBbQaqjZsMKizm1JbNDCooE5lW0XONMZoWAnMOvZ7rJ7wZVEhtqWsoeu6g18Jqcn5PYa04Vhf8hPcIKoTT1a+NXWk8BNfiJ9S0ulFES9VJP7irn9+cyXt3qCnQ/8cp9sneQq+gQQM8gW69IEQMqxWTvPEeapRTSQWDJgVDqxzL8ib/wQJUXVtmBdXgNQhhDFKfCykjZZfIu6HyshxfYT60i2+/pJWVlywQxqnPvQcecap5v+puQQAAAABJRU5ErkJggg=="
+        },
+        "button_19.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAAB+klEQVR4nO2aTTIDURDH/+8ZihVbG2bhAHMD3IAFpSzIcACO4gJEWSgfC5xALKzFyo7HCThApnXPJEYiJmHerNK/quR9TbL4V1fP648AQxDWN0JQsghCBEOR7JHMgRmMAMagkU7INHnR4M+ji8/cwN8VHYZH69v8jzUWcglKF5ng9sDtnN/8+ky/zbC+FiExVwQKoRRiYBwsrbr4stl7Zns3wsO1GiV4UGGHQ3RivW5Ft96zLstNhQXqUP4Fixm73cvjb+sMcQVisVDK8G4sljsuIncL7GOhlGXmu46puJk7UB/rA9ExrK+vyDyzXINtKP4g2pPBSIBASesFilfY984GSFpLULxjEyxYdgkRFP/YsbkApOJWQQJMWCiVEXBEtgjFO5ZoKoBSCYkxT+oWKkQttzJa7ypuRUjyxnJa7A6KV1jTDxnVcquhnXI0aELxi+HSD8RyScX1DsHJYDkGbkDxi227Bam/60vNN4GT704QcQzFGy4+zWtoUrFk632FUhq+Idzn83y2AqUUcr8145ObnfWXuBJRSN0dShn2n7dO3jqLrsRN2z2owH8ktdiehpD2/k+yXjFcc653Hkoh6buKXWq/XrHiLses/6mmCfWfpNdXaw5cfHFd8Mxg0v5cqRJLMTOvuUUs+jRGgK84QFIF0p8L2xymP/cTO1ieYLPaUH8AAAAASUVORK5CYII="
+        },
+        "button_19_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAAB6UlEQVR4nO3aPU7DMBQH8P9zQxETrCyQgY2lPQFwACSQgIGFcoLSkxROADNCAk5AOjCnTIyknKCdS2OeE5fQqF9qnanvN9jOR5cn6zX2s4c5NMNnX2FwEGNQgaaKvW36LayGIGlJtxVUEMP7aFRPo1k/omkP78Knq1jHNR4eQuQFiui2Xj1/nfTC2OA2w0eeoXjmoQ8xS8RRPG1UL9r5Byp/gwNb48CGkMDOy+d4vSVxyxmZuTaw9xCLIVzzDH7ILi2bCkKIZXQ5okfDFJGlhTTHiuVs/Y9jElybL3wIF/xm+HRiBunM1biCcEfHddORWSBA978gnCqvY9sD+ocQzv30sacQowLhni7tePzpIMEtAO/DlBVEYTjn4gDCPa02PIhikP6UtFAgmbmF0V0JbkHM5o1JCy0I13qmkZlbDLvlqNGGcIwi03IxU4LrnI4j03HOXQsg3FKlNC3Y+rv8qTlVikybLiIIDxDO8ITNami2YtmBWBoR3ofjbPlLOIFYVo/KG5fDi7/gJuVgrrtDLI5wU98//h5ejmzcJOlBAryIXv5AiDHtrNgLD3chZumYlDrurNjUU472eFMNsqE+TgukbhvVs5dJLxDmkJTfTZXYFDOzmpvpN7Ea0nWA2SpQKuDv2PY853N/AXEZi4N57bzEAAAAAElFTkSuQmCC"
+        },
+        "button_1_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACT0lEQVR4nO2aT27aQBSHfzPU2bRSWXfT7LuB9gAl624aKWJbd12pESdoewLDCWiXdSNBT4BzgGScE4Rlll7HiidvbBIShSAL/G9m+BACCcugj6c3896bF8iBJybtlozftCSurzle7e29vPr27tMVdqyFrftwJE6+JDJx6W3vmUtCekZgLOCQEZMIb5hzMegeRtixWq4n/A4kJvR2H5sT0D0icBa2pAy+v++fwjKeyCWxLkkZoxwCFeW2yH4kt2Sxqwg4wzQBTgfdfgjDuJe7SAUC9RHR90/BMTJF9FLuuX+J7XJskcwpoocJnP+0OM6hKancGtJBfiiaOefT4+7RH2hGJvfcn+H57VZTWKQN55cu0cyoQNiHjC+hExK/dZDMgbgH3WBwVUB4Z/5YVY9oKBwJOtCVO8ni348mSub0A/WVm9GGlD+V5JHwj9EgOMyhnUgM1ZaSIrmHBqDkfoRZ0AItZ57466FmGP3TEuYSgjmHde0qTEoLq6CSPhaeOPmMGjBdroIWvGRSx7bNBrkZ2bZtljaoKkLJtamJrTp/lQm2J3KXtKsSTKMvGNekzkElgjk9bJSruBPsoiQoLTgB7EUJHpclmC822NZNZh9RkuBsQWPUH7WdVHCxxcbDGdqcXt7CbiIql7tFlcvLrRhDLSViw6AcHE9QEPdy03E2w1fs6FCpPEQBVH3iRh8Yp27a0RRbsO6smLqxzTmY8i8OtjmgsvaU4yKKXZjXUM+L6gcfbHpqk+W5KB2/qymxGmYuZ27q9TVMh8b4gw/9jdaiW6+X8P4i5E+2AAAAAElFTkSuQmCC"
+        },
+        "button_2.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACIElEQVR4nO2asU4bQRCG/zlbl3TJG8Q0CZ23Jom4B4gUUlDHeYLkTcIbJC8QhTxBjJDcsnRgCqCCDtEa+YaZRT6443w29lJ5Psla796ei9Hvf2d3p405OM1cZ3SDTQJcLh8dI7AD4zVWACbqa5sAPmf0X6Q4XOv7s1nvUeOPbm+nw4vhH+T4BKNECDhjZ33g/02b0xjc4YbrMfgXjCbOCPTl7cD76oOk6S0GvsOYRYeJ/6sQqw+mKlcmO1HtAYy5EQV/EwX/nvSblNuD8SREwT9VlJN+0jDxK4ynIdmT/Nv/Trq1wT3+6LZWJc16Bjohfpim3BxbMBaG87tEoHZBO37fvTLlLkea0toj5QZDtsAuzWgM164OSm5rlhABGiNr14x/hrE0egZTsgU5oBE7YAcjCiXl3ozMEmJBxN2ScpmQwYiDJAXtykAXRjQqC5r5bUwKWzj54DIYEaHrIrhjhqk2IrJf8IUtECy4sbn3XFvMopI8VK4tZnHhFvrBc20xi0/agg/BJSQvYUSDQXta1xBsIc/zSxjRoBZ2QjsZONpwcv/Ob2Ashaj2fH3gO/q9yHMTO8eNQNg4FHEsgqsVI3rvDmNhxAZ+PKy8KZ2KaUGDBXgR6LpaEBJG66bqPZqcpO+aB89GPVatoK5WbGYhngS5J0HehFFC0y3NCt7t+91pcwhzoPW5ckuRoVSfqy2/wgqggdRWt7S689INwjz1ubdhmaZdo9EqbwAAAABJRU5ErkJggg=="
+        },
+        "button_2_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACH0lEQVR4nO2aT27aQBTGvzeDqu5KJPalJ4hvEA5QqekJCm3UllV7k2ZV1JbKXUeqkpwg5AQhNyC7SHGE2GWB/TIzBAcDNk48O95vwTD+t/j06Zt/r4YSjMNeM47VHhMHxBzMrtqW6tgOBvaHiYZEGGjiy51Od7TpJSq6yUdHL6LJ7X/zwbcQlhlA0WHj49fTvAcKxY3+9tpghBCKGGmt3+90Pg+Xb6iit5jpG4RNmMicnjkjLpHr3HH4O4jj+AJCeQidxqfuv3k317lG2DaEp8H8w5py3i2IBf4A4YlQ3ZjyeN5bK27U/7W/RdMs3zRn+uU6N9mHUIHETQTWDmhR/+dYnFsNrfFmxbmzQBZhq2JWtMGKuNNpLJHghaS1mrlE7yBUhhlZ547DsE7gAIIXaoudOLmTSPAEEe9mxDWbNC0InqB6JhYYtAvBGxnnSt76JRX35k+vBcEnkzQWlFLiWo+Yqdiw9thJRFzPpM6Vwcwv5tzx0bkymPlGDZy4Mpj5R+tk6GJB1eglBG+Ywezc1jXMxIW6huANInXo2vmFqN8bmeY1hKpcNQ66TfsnnS1orWXTpjqTRR1TcV3FiDl3h/B8CN8XK28yGzeuoEEEfg6T5YIQy9oDyodqmxNIBpfhykbBulqxjYV4nKBtVht7EDLY6ZadFTQOvpzkPUMogavPTcxGujkXsmdD7kVy7StsAVZI29olrV152QVCmfrce7DMq74N6o6UAAAAAElFTkSuQmCC"
+        },
+        "button_3.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAACJUlEQVR4nO2awU7bQBCGZ9Z2e2lUv0FTqeq1vlZVk7S0EseIF0h4AngUzlzgDeDAAQkBSRDihAhvAHcOIN8S28OOkxg72MGJ98Z8h3i94738mszO7owNJbhad+ujcdhEIg8IvMks6ie58D7oxb8IQ1DYc2zr9ufx491bi3CRsb9W62BEXT1sgZAF8ej3t+8buHs9Lvwkb/Lyv+sFQXiAQHUQikHcbJz5+0VmNT8x+FvrhkFwI8K+DRFtLbJnPJeF1Sv2QCiN89H+WhR/E8/lUCDCLk8wCraLbIm4HGNBWBoi7BTZYnE5HEiMXRVyB2u1dp5l4rlEHRBWJ4J8cfmAAJLHVoIAmnnzajwKWyBUgkNqnBDMobTBA6EyYRi15ucUJXcFQiUoehV3FQimaN603cxFFovbBMEIvp/dv8RzTTKXktkgGIOAfqTfRVyD6FuwTHIgYcEwF/8+tWZjFrcPgjEoUon3SlgwDb0cyhRy0U0wRnpTUwQo4hokvakp54PVA8Eos01NTes/sqkZBAEDfk5SMcR9EIyhFDzwM6n+Dv7U7nQ4/gJCRfC+ce7XeZQcIizbaoNQCZ0cPKV1TMT9dfI45A4SEFZGp7XbsY5TMsffuDVHBF4a9ti81qbCXrEwCA8lBpcB7zkUpD02sSxaNm1v6oJcqOfR1+fbncapf1j0AUIJuPzOVWIuZs5qbvqv4On3z/A+iM8BfFVAiD3HsYZl+nOfAfL+riTL/THoAAAAAElFTkSuQmCC"
+        },
+        "button_3_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAAAhCAYAAACsszewAAAB/UlEQVR4nO2aPVLDMBCF34r0MMMBcHpmcEGPD0CRoaVIUlFCC9RACTdwOAEUHCCcADMcIKGnoaIALHYdxyjBzg9Wl/2K6Ged5s3Ok1ZSAwswiK8CY+weLEILhKNZK+0GVgLqZ79AQmT636l9bnZPh3P/NSv4envZthYdFjKCMgU9bG1vHtDu0WfVF42yyUF8ERLhzlobQKnA7g9f3g6506v6wkxPsLAdFvaJuwGUmbBOxzPj7iAXNoayMNaaZpX/FpmbW4EKuzTpSVWkEFc8FsrSsG7tqlgmrtgB1GP/y8YgvmyVBTJxiagNpQ7l4kqBoPvYehBxgVUCZ24aQalLIBuC6UmxhRCKByianlFxvWH/+K6B4gXeku0N4uuJgywjk1A88RG5I81cv0xYQwOKN3hLtuOOVVy/TGwO1BY8w0VZNO4bvml4hOIRW2Sv2oJ/CnHFFhIo3nAXNclcFdcvbuaaPhSvjBc1I/c/uqj5xazRV9bm4x4Ub6Tf6Zu0xe0vn0cO+ZxhC0ot2AVem93zQPpuEdGCUgsW9h2OjoW4rHbCwS6UOpyIjuPBRPnLgZ4KvDySsaKb6OfOlz7Ey++D7tWD5yMey03LzdgxM1855u8ZOnqg/pfR9pVumt2z+6pvCAswun7PbolD/FYg8vxpHSuAUwcko7e6lCzyPvcH3+2V9s83qyUAAAAASUVORK5CYII="
+        },
+        "icon.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAFhElEQVR4nO2d8ZXiNhDGP/nl/5AK4k0KOFLBORXcXgXLVXBsBaEDSAXHVXBcBeer4EgBuXUqCGkARbJkEMbGspFlgef3Hu8Z2F3b8+3MSLI0ikAERQQiKH5A4EznLxPG8IoDMbh87acAm8jv8s/UyyRj4qUO+Q4s2oKpz74tH74icBgCQwogruq1sHYCzhNh9CkcIm5YCMRScZCKc3zdrh52CIggBNEivMF+/8jBHuERBr5BFG2EOJ9DEGdQQYQQwgv2T0KEGQJAiLMWIe6jECbFQAwiyPT55Ql7PncdjlyRh7WIrbbLh4/wjFdBpBB8zxc4T8ShkrGILXwK40UQFZr4MlSPaEI3BJ59hLJeBcmTNd8vQ8kR16JzzHOfyb83QYQYj5zzD+Jwgvtixxh7J0TZoAd66akLMZZCjE+4PzEkE3lv8h7RA049RFyk6EnzT7eaK9qic8tb4S0ZHOFMECHGVPznfMF9esUlZAj7XYiyhQOchCzZihqpGBIZwr7kLUkHXC2IuJDZiMUoKESZ4UquCllajA8gDugW2Bod6SyIEaaIEjqnpOhAJ0FGnMBt6ZzoWwsim7ZCjG8gMZqQovzWtkncPqnfb4fPNRNtq1a0EmQ6/3s1lk6fC6StpM3a/I51yNJjU60VJ/Ik/9Z27MtKEDlqK8R4AYWqrsh88mAzSmwZsrh0OxKjOxNtw0YaPYT6G+6w6Z80e4h40gfCDRa2vChIPjRCrSpnqFbX5fGui4KIUPUHCKc02bRWEK1kDMI18SUvqRWEvKNHOH9f91WlIPphSwyiF3QuSaq+q/EQPgPRM9U2PuuH6F75vyB6R/RLfir33qs8xOvs85FzZutzQTh/AuEJfibISciicOWfctgqe0gCwjeJ+aYkyD4B4ZlTm58u+uTsNQi/lGx+8JA8f9BAonfKNjdDFokxEGav3QxZMYihiIsDw0P2MYiBONre8BBGIWswjrY3QxZNYhiOg+2p+ExgHDyEc7wCMQjC9j8XxxSywiAuDihkBQYJEhgkSGAcBGEM/4EYBGH7f4pj00OcrLMmOpEVBxSyAsNs9gZVe3BkVD3C5RSyBuNoe0OQKAMxEEfbmyErAzEUWXFgCkIhayDMVVWR8eFOtIf/AuGVss1LzV6egvDMqc1LgkQpCM+c2rxcjD8F4ZvUfHPiITqPfAbhBWlri+UIrJfyp0QV57auGssiQfzRLIgOW96L0I8NaeOq2ic1o71sDaJnqm1cW+tkOv+embMhCHfIzuB29UvlxMQLz0PYAkRPsNrKQBerAZGXuEc+rhXeEdd93/DEkLzEPZdtalEv6/uWZjW64VLuKLB4ps7mIBzRbMtGQeRYPfVLrkf3O9Kmn7OcdcLmNG+rO8p2dpHGShDVo7yPfaSGgc1s962ynpcl684yxv8E0Qppszb7VXWo/U6tLltsWlVlOsxcZI+UT5rReaN1ZaXWgqhq/ywhUerRYiRdNgujDV16QG9T0WlaVefJ1qp/wt6BOEFvedR5jtvV2+bRPlRHrt1/Kv8bcICq1cE3ovX1I0ZIkcBdbF7sdGNJOelrbKIYCTycjSUl6oLYdEzTUdW9sqkrMfK/iR7It0bi7D3uGNUD/9X5SHiv23eLELa+txCmQ9TsprbvlqgLZvE9Dd2re2FxX2Lk54AHdCtsdatjYDpXzF20ohrPBY+obRr44lYmTqj142xxbd+i1TkxAFqYeageoz1i5VOIw7kxIDqUiZ4+gihvrnPE2kdoqr0GBIAsUYu8MD1/FOK8gUfU8ot8FvrG9qler9eDwNDiJKriM0tchzUVjuQysnzlUhqCCCbBCVLFcccfWb0zLxhZFFuLyw0EXcgl0293alF+vg48GzIU2XITgowJKj4TGP8Dlg0guJuvvIcAAAAASUVORK5CYII="
+        }
+      }
+    }
+  },
+  "build-then-empty-folder": {
+    "$extends": "app",
+    "pick_folder": "/Users/ada/Documents/Empty",
+    "shown_folder": {
+      "$by": "folder",
+      "values": {
+        "/Users/ada/Documents/BandApps": "~/Documents/BandApps",
+        "/Users/ada/Documents/Empty": "~/Documents/Empty"
+      }
+    },
+    "list_apps": {
+      "$by": "folder",
+      "values": {
+        "/Users/ada/Documents/BandApps": [
+          {
+            "dir": "/Users/ada/Documents/BandApps/slides",
+            "name": "slides"
+          },
+          {
+            "dir": "/Users/ada/Documents/BandApps/timer",
+            "name": "timer"
+          },
+          {
+            "dir": "/Users/ada/Documents/BandApps/volume",
+            "name": "volume"
+          }
+        ],
+        "/Users/ada/Documents/Empty": []
+      }
+    },
+    "build_app": {
+      "$events": [
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Check: 0 errors, 2 warnings (1 dismissed)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Saved slides/layout.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Drew 5 buttons, 1 picture (laser.png)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "$ zmake ~/Documents/BandApps/slides/generated/slides",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Use config files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   /Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/zmake.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: We think that you want... build this project",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.json:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing assets:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   9 saved in TGA-P format",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Copying common files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.js:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing \"page\" JS files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Copied 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Post-processed 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Packaging:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Skip: /.gitignore",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Created BIN/ZIP files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Completed without error.",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.bin · 11.0 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.zip · 10.3 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Build finished in 0.3 s",
+          "tone": "good"
+        }
+      ],
+      "$then": {
+        "ok": true,
+        "at": "14:02:11"
+      }
+    }
+  },
+  "slides": {
+    "$extends": "app",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Previous",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Next",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "Laser",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Blank",
+          "signal": "bb04"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:0:87x134:Previous",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Previous” does not fit"
+        },
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb06",
+    "preview": {
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Previous\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"Blank\", textSize: 25, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x04] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n",
+      "images": {
+        "button_0.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEZ0lEQVR4nO2dy3HTUBSGz1WyZAZ3gM1QgKggooKECnAqiFMB6QB3kCzZYSrAVBA1AA47hpVZsGCY6HKOLNlybNl63OOH9H8zseNXZvLl938fjuVTAlsJbn49m07/vDox0SN53r/HR/oZDnvTbY8zBGJeX0/OLFGHLPkUn9v4nK/z192fxY3JM8PwQ+9z3s9spVx/MPH5Nz+jKGJxxs8TWJAHY8xbTnL49IbGy2WRHf4tz+NEchpZZEDumbLgaxZ8l72ykXIXybT9mqksBQu+zApujFz/eiLpDKy1F3yxS/tBEvwmrYhTOmLihNroypK5sJHt0P7p8B/3E5/35MJRJpdT+o6f8oNdPuXLkAxwo6NJLqe0y2dXnIz+gaQ0H2uv+HR08MllqUH61KcjgtPbO9jkxkm10XtJ6rG218HJjeelRCJ1cNyTmSg4oQOCxYrUj6Qz0d8pXAt/DyK50qss9Za/utQg9vq8W66AxjHdm9zZAoDTeqBzVRd4tAd4ESDz1fsmixV2mty4Bnh5aBswYBVhZwOa1ACn9QvJRnRL2IncNooV1Ds3mWa1TqygKpfF9tsqVlCrhUTsLbUYFbkQO8O5XIhd4HSe29ZZQR7O5Mr+q6y6CGLnOKmFdOVFELuEm6mYjRq9AVOV2nL9wbebY3t9a1fU6txkALsnsJZ6nYsp10Yq18KsDtCzm6hUC6iDYlSrBdRBIUrXAuqgOKVqIVmFTQgUomQt2BsChSmcXKS2PCWSi9SWpVBykdpqFEwuUluFrclFaqtTILlIbVU2Jlc2wZPUYhO8AtuSK/u0EFuRzXJn70oBFcmtBQxk9dmwcRM18b+9d0puLVhrzgnUYm1yuRL2+ebkxpCTXItXcx2wVq61hEpwwEotxO+ywdzWCeuSGxBwwhq56FtXrMjlvj0j4ISlzk2mYMARTwa0KCDgjOVasAaV4JAlufhnD7fMayE+lgxwSja5SK1jMgNa1CXglExyDZLrmLlcLB7cE9dCcrQ54Jg0uagEBZIBLYJcBZLkYjDTIK0FbI4rEMvlmcILAs5Jk9sl4Jy9HLStLXjYsNEDyVVEOrdLQAUPu2F6oBYU4VowAQEVkFxFIFcRyFUEchWBXEUgV5FTvDCpB5KrCOQqArmKQK4ikKsI5CoCuYpAriKQqwjkKgK5ikCuIpCrCOQqArmKQK4ikKsI5CoCuYpAriKQqwjkKgK5ikCuIpCrCOQqArmKQK4ikKsI5CoCuYpAriJOPmsdrGIM/fb45CsBDULUgiIs14YEFLCSXA9yVfDGMqCNCWgQeuGw94BBzS3iU7wmA5q5I+AQM4xP04v+4PsDji9WH07tj3D4sivfZ6ZiBh9jUBNZOGQ9zuVyR4TGmEsCNTAD8ZheWlpE8A13EFweSax4E39L16+78+yTpewIHbwd6Vipgmxi57dteiBL7rPkPt7Zvsps+mqGLHWUex8qQHLY7WB2EOP5sXZ9lv6cWsBiHSBbBd6YvwllHrvtcf8BPV9+lndhQ6AAAAAASUVORK5CYII="
+        },
+        "button_0_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEwklEQVR4nO2dS1IbVxSGz2mpPEpVUDYQuSoL0A6QJ3YYgVcQMbHDSGQFeAmeEWcCw1QmJiMlmQArgB0YzzJJBCNLFrrX5+gtI4lW6x49uv+vihISiCq++vXfR0vdeQKP8se5/+a2dfuDb/k25V3ryZPcv/vPCrePPY8JdPjtn/q2c7TlPZWYndxyib3cZypNecoFM7/9+cfCn9P+ZiblisiSiNz23olALs0QGIebXI5fvnpeuP76B6mXe3Je3/rcoF3PrqRplIfKFBhJ+62k+JeDncLp6OOplNtPJjlfWTCVc8L7o4JTI/fXv+q7RK4s6dyTu0VaAZrgfJ6f9SsiTxuMJrTddlUV6r3fWnVWmGmr3fbv5dunnfu0gbyr1X8SmYfLfcnHJ4r45esXhbONSe5xrV6UKVLVOa44kpSucSyc81W5OVv75IrUMrOXlz7t0UbBT9c2uZpUycCRDBMVEbtxRBGV1k6uzkubTXeknbrJkxnXduUcrRGS1qNWy/8uUsu06TA31yK52qvy8j+RLxm0KDWs9F8ZVgAfUsroLIlpRXSWqPf+ZF3nqiGIaAXIUrUqK5mrNItVlppcrYFGo7M8LFMGWJpcrYH7e3+u62/KCEuZLWRRrGLeuTrNyqJYxVSuiK3IpCSTYhWzWuiJPaEMYyIXYrsElwuxQ4JOxbI6K5hGMLm6/yrbhFcQOyTIbEFXXuz9e4gdJ0jnNpvp3oBJysJyj2v/vdm841vLYaHO7b5vwF8RmMhCnav7sQSmkrgWOnVA6NlZJKoF1EE8EtUC6iAec9cC6iA+c9VC910w/gOBWMxZC+4NgdjETi5SOz9zJBepnZdYyUVqkxEzuUhtEh5NLlKbnBjJRWqTMjO5ugn+6ZP/gE3wZMxcoTUatAexyZlZC3LopkogMVNrAQPZ4kxPrnepe7f3spneucy7BBZiYnLf/V1f2YeT08REuc45HM0NwES53qMSQvBArh4fw9w2DA8GNO+y8WGQZfBArvMefRuISVOxbQJBGOvc3hQMBGJMrn6MnUAwxuQyMSohIGOdi/fYhmWQ3O45D0BIBnIjpDY4A7myn1AkEJRh5zIjuYEZHdAwUwhMpxa6h3RAaDpy9QRjBILTkSuDGeQa0OtcDGYW9Ac0bI4b0Jf7PYHg9OUWCQRnJSdtywoRNmzsQHIN0c4tEjBBkovdMCtQC4bkU3EK6zUFyTUEcg2BXEMg1xDINQRyDdEVGg5MGoHkGgK5hkCuIZBrCOQaArmGQK4hkGsI5BoCuYZAriGQawjkGgK5hkCuIZBrCOQaArmGQK4hkGsI5BoCuYZAriGQawjkGgK5hkCuIZBrCOQaArmGQK4hkGtIkMuBg4ncaXIvCVhwjVowJCLvrwmER7xGxBHkGhDlogsd0C4IBMc56dyDncINYVALzaV67Q1ofEogGFHEb/V2cD2049r/N4Tzi4Xg48HOd0X9ZjAVy+UYlzFYnLtRjwO5r54XZNbA+wQWgA+7HruMLSKkhE8hOBF36q3rb8jEa1DqlaXabX9G6OA4fNQqGE1sn5nX/T2u1Suy1JAvfLJ9Apc6K3j9onA27RfmuJA9lcm70siJ4/X2W8oG3XWALmll5aULhN76YCZfAGd8pkg6MZ49AAAAAElFTkSuQmCC"
+        },
+        "button_1.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEnUlEQVR4nO2dP3IiRxTGv27JDqzAJI41N7BuYG6wcgDlbEE+gHWD1Q20Tpxpwdl6FVh7AqETmMSZq3Z8A1xlbbBbdG+/ASSEhj/D9JOA+X6BYBiQVL/6eP26Zxj2sQJJp1XD59vEfvX10OHT3sHBd//83fztf5CFmEU7kzfNl4BveY967os9+rAYwJt+2BzAyK0bpCeXNyD5cpNO4wjO/OnhE6z7i0W8yeSL+Ju0fdlHxXgkN7lotDzQgQLGoJelXKSbb96n7e4AO8wDuZpic/+4pHsPXexosu/kSinwDn/hmTAwabi5CvHupSd/vMcOcC/3ovmhTI2NzMCIaItftznRmdynLgdFGHUk5nV68u53bBkjuW8a1/ParQ0ipNl0YW1I89sUW4BJOj8l3g0/YIsIkq/GknvYYCzcsI4tI4wNxyEQ16GcdSQc2FBsiMERtpQwTrTkXRcG4/Nsir5h2PAfbq3cCSHJp97diuRX2CAsdodakHwmLWUoFXVsADa8tX7ADiG9+qgeN8/xzJjDi4bHjjKeXrefayKyS2XhET4M1jKlD1P7X/AM7HRyp8lW5MzBj0+5ErfTyZ1GZqBZRyFr1U9EZeSOqYUycf1UgqsmVxgL1m/XqihXqI2nzy0oUlW5GbLMqim40nIFTcGVlytoCabcMUHweewugnLvGXcR8ZYuKfchNQxvowmm3BlkPQLuY5SDtZSbgxxGCkuWZygJ5c4hCH5VdoCj3EUMy53LQbkLkPpbpjxQ7hLKlAfKXYU1ywPlrsC65YFyV2RUHoqd3UO5RfDurMjTKbcA3vuXRdJLuUUpkF7KLUiR9FLuOqyYXspdg1XTS7nrskJ6KXdNQnpfLFtUp9z1qcHdHi96AuWWwWPh2ZOUW4JszWHBwEa5ZfHD03m7KLcs3ryYt4tySyKfwUg6zdyBjXJj4JErdx+kNNLz5j3O5MahlnecjXJj4Wx99iHKjYZ7VHdZcyOR90lUJjcisy0Z5cbE+/r0JstCTNzD0kC5EfEzFwZhWYjM9IcHKTc2zt+ll2UhNsYlk7uUG5upawZRbmSmJxOsuQpMDv1QrgouKw2Uq4Eb1V3WXA28p1w1DLIzcShXBXMoPylXgckVtDmgKcLkKiELOEyuIkyuFm6YUK4aJmFZUITJVcNzQNOEchWhXEUoVxHKVYRyFWErpkQ4UPk95epRY1lQhHIVoVxFKFcRylWEchWhXEUoVxHKVYRyFaFcRShXEcpVhHIVoVxFKFcRylWEchWhXEUoVxHKVYRyFaFcRShXEcpVhHIVoVxFKFcRylWEchWhXEV4fq4SBvjPhh83IBr0WRYUsSG/fZD4BK/78JSrgjE9C7vXA1HA9m3afptyUIuL+BSvkwGtCxIPa17LjZlsJxeN1AOHIKUIQv9Nf75M5P59K2ZxDFIKmThMe7yTm7Yv+2FnG6QMp+JxsvFgEhHi3KXg4khixZv4m3n8Mdk3JDlcsQYvR2qslILpxE7tm08Y5FrhppX3vTNVJ2tfQ1eQtt9dLXjOcrLLRLthHfIlE/cXPD8K0r9FBbibB8hSQZh5yQRB+thlr/sCwUJ2vj9bzuIAAAAASUVORK5CYII="
+        },
+        "button_1_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAFcAAACGCAYAAACoqhbmAAAEaklEQVR4nO3dTW4TSRjG8afKIdvxZtbj/SzG5gLjOQGJBNnirEci8QnIDUxOQFhikAgniHMA4j4AEuEGRmJn0sVb3XZik7Zpd9cbfz0/icTBBqF/irer206ygxw6/Q9VYFjbucHNjwoqu7t/fv7/7/++g+Yy8+487b9/Hru4JTebMx4Sya8BjJP3dmDlY+Pc4MXjg0tQdtxOv1uHwwe5WUNxkfwdkbWIYuCy3TiIsGXuxZWwLYnyGjp6fpVbVCR45WO7sT/ABpuKqxw2S2QNzjZ1Zd/GHY2CPpbnWlb1uYXtHTWefcQGuIt71f2CcjM2pIF8os9hcbrOKzqJu4RxsAgZHfbVUePpG6yZNO5V9wKzt1urwm/5zoBdWc3711gDRk4QanDDL1gnycgwEvlZDytM9v3DJtaNwR6cu+h86r5OFseKsohRx7oyaPn/dZ3+2056ir5arPwD1zfumDPHaeR3L7FCLDZHVUbFid9SSuQmVoCP+y82Sy2ZxzIqsGRGPtMOmyuSsXe4rBORTRoLWZJT+tN+9whLsOkrd5JckXu0/5BX4jZ95U5qpjuK7oPtjrYpric7Clw8VOBti+uNAutv17YxrldNt2tyNVDRtsZNyWVWzcDbHddTDMy4nlJgxh1z6ITeRTDundEuItylS8adJoGHwQIz7n11xMMgT9YybhZ5Gqnz6e0JSmLcWYx5WfYAx7jzlHwtB+POVy8zHhj3d0qMB8bNo+B4YNx8Co0Hxs0rGQ+LvbqHcRfhfpws8nDGXYh7vsjqZdxFLbB6GXdh+Vcv4xaRc/UybiH5Vi/jFpVj9TJuYe7J7y6qM25x/ovN9+Y9gHHLcJj76knGLac+78DGuGXFw+NZdzFuWQZPZt3FuOXVOv33mQc2xg3Bucy4O6AAXOZo4MoNo5r1PBvjBmOav/4O44aSMXc5c8O595WoXLkB/bolY9yQ4rg5+SHHQkhmejQwblhT2zGOhcAmv3iQccO7Xb0cC6HFrja+ybihGa5cTbc7Bs5cBeOnfhhXxU0yGhhXQ5zG5czVYAzjKkpeicO4Ov7ybxhXR82/4QFNEVeuEn8BhytXEVeuGldjXC1ydYxjQRFXrhZjeEDTxLiKGFcR4ypiXEWMq4hbMT3/MK6eKseCIsZVxLiKGFcR4ypiXEWMq4hxFTGuIsZVxLiKGFcR4ypiXEWMq4hxFTGuIsZVxLiKGFcR4ypiXEWMq4hxFTGuIsZVxLiKGFcR4ypiXEWMq4ivz9Xzza/cS5CGiGNBkYVDBArP+ZVrGVeFtT0ZC496IAWVyLYb+9fgQS20S981PaAZnIHCMfZV8m78ceeqe43R98OiUr62Hx/U/I27rZjBHqisb5Mdb+O2GweR3HEIKs7gOOk4MnUSIXecMXAhfsUeJv0mmKxHJj8hyeEcnMF5fPWjYHLFjpl5f0oityRyCxk/d4Zk+yq7gnbj6fmsBxjkkH6b6GETMeoT3/Dcv/8D2yE9D/CXCuTMy58gjM4P5voJUkpUof6N5u4AAAAASUVORK5CYII="
+        },
+        "button_2.png": {
+          "$bytes": "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"
+        },
+        "button_2_press.png": {
+          "$bytes": "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"
+        },
+        "button_4.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAALQAAACGCAYAAAB0f6CUAAADrklEQVR4nO3avW7TUBiH8fe1HbFQEeACKDMDXhFSWkBIjHAFlCuAS+ECkGCGgY8Jia+0EmIkXAHuzBJUFpq4Bx8HhwD9Wqr2/PX8pMaOY2+PrLc+LuwQPt3qL29P6hUPobRg5eyoN9vQN+BoDNtPt5FlPuwV+Zcrr8fVQRf5fj+u31i66zthrdldNeD4DS33h4O3Wy/3OmHXoD/e7JfTaf3cLSwbcMIE86oo8jtX34xH//6W/Xtg4/rSWj2dfiZmnFSxzXpaf4it/v/bgvaEEB4bkAr3e4P3W0/mX7udOGbEO7MBSfFxXuTXuvFjPnLEmdmA5IT+Yrtt0HHUYGZGqmK7GzeWbsf92R06hLsGpGwn3I8bj4smk5/TrwYkrnequFhMtutVAwRMJnWZNfNHaYAAD2G1CPN3M4C0xZYzA4QUzd+KARL8cmGAjNBn5IAUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoYUgoaULJh/N0CCb2ZuYWSAhFAxckAKQUMKQUMKQUNKE7SPDZDg4yw4TzmgIbbMyAEpzXPojJEDEty8yjzbYeSABM9YWIGYrCiKygABsWWPOxvXTgcDEjf48MPbkYM37pC6ruE2aN64Q+q6hn//U+iVAUmbNTwbOTxUBiSsa3g2crgzciBpWWbDdhs/8iyvDEhY5kW74u3dAR7dIWXxkV3cLqwU+qYBafrS7SwufTNHI1F/ntL9Cdp9aECCPM9fdfvzoM+fP/XIgMTEFcJzZ3tPu+/zoC89+/ajuUvfMyAh7vagbfe3v14fHbzfekLUSEH77kbTatvsAt/t5I83+2U9rV80l10w4MTxzbzIb199M/7vQYbvd9nG9aU1C2Gt2V0x4PitNysoDwfvtl7sdYLbIXy61V+ebNerbqEMwcp4rLnll833MwYcjfX40czIo9A8gev18tGV1+PqoIt+AZ7G0BGzClrIAAAAAElFTkSuQmCC"
+        },
+        "button_4_press.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAALQAAACGCAYAAAB0f6CUAAADdUlEQVR4nO3bPW4TQRiH8XdWbgCJpKIE+wTsDWJuEBraeGsKKAmpk7Q5AJJDS0PgApgTxDmBNzcIEi0e3lnvGifkq4mS+ev5SfF+2d2j0XjG6dktzMb7/aKIGxatjGbl4m5Mx3UD7kSYNK9m0xCKyZ95PBlU2/WNn7ru4ennva0YbeTxDg24d2FShOLg+daHb1e+47Kbs/FuGYJ99dO+AQ9P7QPt60G1M734oLh4w2MeeczHRsx4uPre6I/U6sUH50boNuaxAZnwkbrykfqwu14G3U4zjg3Iy5lH/aqbfiynHO2cGcjN+mq7TdDtXKRvQJ76s/HeZjppgg4hbBmQMR+l3zXHtGkSwnxmQOZiLAY9s/nQAAmx9KC7rWwgd3FI0FBSFgYI6fm3ww0DBHjLL3sG6FhnygEpBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pBA0pRYz2ywAB3vJpGqGnBmiomXJACkFDCkFDCkFDSs//zgzQcMYqB5RMmXJAigcdmHJARVqHDkw5IKJgYwVa0ipHbYCGOjSvh7vRgMz1RzuhmXLwizvkrmu4m0PzxRC5axpugw61AVlbNNxbXMTagKwtGu5GaKYcyFwxSa+M0BAxb3a8Q3fJ0h1ylpbs0nG5U5j+wdCADMUYTrrz1a1v5tHI1L8p80rQYWJAhkJRfO/Ol0E/ebL2yYDMpB3Cx4+efumul0E/e/P2tz+sDMjL+9Rud3Hu56ODaueQqJGDNDKnVlOzq/fDZW+ejXdLPxyFYC8MeGDaFblNj/m/hYxw3Qc97JEfRh72hgH3zEP+6ckeDKqPR1e9J9gtzMb7fd+JGfpp2f4lpYe+ZsAdWMTbmC5W4MJ0UG3XN33uL2TCrgvgfnFqAAAAAElFTkSuQmCC"
+        },
+        "icon.png": {
+          "$bytes": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAIqUlEQVR4nO2df2wcxRXH35u9u8SJsWLRQtKmUnxO0gTHZxraqlVFaRCoLf8UmkLVSiWEJhUmsR1VqlrUqAkU/q4dO5DWqkJCWkocE/ijFP6ghJa2QSWlPjuExD8REr8cKY5tbOfudob31rHx/bLvzue5uWQ+0vnuZmfHu+97b+bN7OysD/JMVV1fjaPUt1BAtQJcjQCrFMA1iKoMAH1QlKiYUjhM5zJC5zJACd2U1iWj+ErXE8Ew5BGEPFC9o/cO4cAuKu0WFIGAUjE6XgVXNggofKBkJCIVngBXNXXur3wB5knOgtx9t3LOfK5/F3nDbnR8y5R04WoG6RepXPcCWfSxjvKKJtiLMciBnASp2dm/FYRsBCHKrnxPyBIkk0o5LCXs6mypPAhZkpUgNT/vXUu10fNCOOuUkmBJD6JDurhhwMg94aZ1ZzPdT2SasbquZzvE4CwiWjEyQCmXnSWEyv92qL57W6b7ZSRIdUPvAccX+IPnjpbsIJsJZ1FrqL73iYyyz5Whur73Waqi7gLrFfOD+gHU6D8bbq7cPGu22TaGGnrbEcX3bcOdJ8hblJTt4X2VP0iXJW2VRS62nxomK0Y+IVtSeLy5pr63JV2WlB4Squu7V/h8h5TMKZS2zAF3KKWMbQk3BQ8nbUtMWFv7TrAk4NLQQOYRmCV7qN6RArHy/40VAzPTk4y+OBBrAyvGgkOeIKj70J6YHmf4DTu6fyLQtxEsWqCqayNFsT+emRYniPA5v+MOjUUPPP5HHe19M9OmBamu7/kZhbjXgkUrbPOZPflpQaiB2Ws7fwXAs7nYM/XVE4TC3JtR+FeApSAIx7+yamfPN7zPXgrK7bbPUTjY9g7Adv58WRAaHrEUFkd4wylYVdd9g9+/+LRyo2ApHOj4IRqdqPIJdDbZ6qrwsAashQ9RVYEdPyw8PPBIWtAgvboBLEaASq0jDxFrwWIECsVqGuBSpWAxBFUm6BrWYrAYAVVZS3zUB/GDBiQFDiUBhLISAX4fQoBeoxMSTJs2wfFN6WIBkZiCKL2GxyWMRxRFQLDwkBZa5tqyGLXfXQa13ymHYuTAixfg8ReGQGi4SqTlQtSKcqdoxWAeoGO/ns5BB1oE+fy1WmrFBWWlpnPQIsh/uyfgzb4JKFb42N/o0XP8WNPQp6Wfzg3kLRuWwOMPLI9Lf/ofw3D63UtgAlVfWAQ/+mZZXNqDBz6AV7vGvEBEB9puoOET6hhINjz/8l4OfwwmMH5JJQnS0X9JmxiMnV1iGFYQw7CCGIYVxDCsIIZhBTEMK4hhWEEMwwpiGFYQw7CCGIYVxDCsIIZhBTEMK4hhWEEMwwpiGFYQw7CCGIbWRSnt4k5zo1WQqJs8wSXgN0emRSmOJSr13jyjtcoaHpNJiwvdGlqSUijd8DSl229cGpfGWoyM6b1VXKuH+ByEk+fG4etfLJlOu71mKTRtux5eOzMOsRyFKS+dnOZ5YTS3VSj4uG5eXwKbqpfEpZ88O+5t04lWQRzyxyMnLsYJwtxGovDLNA6/ctE7Zp1oj7J4FuCL/xsF0/nrG6PwrzNjoBvtgnAV8NBTg/Dqaf0nmyknOsdg958GyTv0Bxza5vYmwu3FHTeVwv23LYN1KwNgAm+9G4GDLw/B306Nam87piiYIFOwMG6GgQyvUnuoYQV8ZU1JRvlfpwBi6773M142ktuLQgkxRcEFyYaD9SvgS8HkWyIfPXree999z2eStvGtBPezKFAcFM3QyZNpxHis7TwcfW3Ee/HnRHifP9YVz0JHRSEIG/TGFGI8/Jfz8Mw/R7x7//jFn1OJsrGyeEQxXhA25E2VqcVo/89I3I2YU6LwtkS4jNYdy41fhthYQdhwbMBZxUjR/rIovC2VKBwMtO40WxQjBfHEIMOliqb2PD2YVowpeFs6Ub5KZf7+weUgDRXFOEE4DG7cdp1nuETYwMdPjmZ0E78nyr9H4LfPJIvyNRq6afzpdRAzUBXjBAkuD9AgX/K41mzVVDq4+mojUR5JIcqtoaWw6rPm3a5tnCDjl5J7ib/582DWYkzB+xwjUfZQGUn/K2I9ZE4+vOh6v2huR/g6ya8OfwTPvT46r7VGeN/jVMZDT33klclls8cNDpu3aLSRPXU2GFc3LhlP5HmAT8rJMvmkTbykzOtlmXHX/gx4zGpSlPybbKpME8VgLeh3iOaOg1914Bi3IUNgMYUhrk0HwGIErIWgvxk/9NCywCCcExLEOTuFzQAokpESu4SUsZfQKdKnal9BeA8KA/fvnmvU1PeNkZNkdl3UsiBQlP9xuClY6vXUlZLHwFJYLmtweehEtLLLWAoD296V0Op9nkqkIZT36M0+ZacAUHX1AVVXnu0/HVxU6hF+gK5FM2RzVOrh6a8zt5GXXKS3MrDoZKijKTi9qHGcS0g39gtEPQsGW7jr4bDNfxmXlpgp1NB7CgHt0z41oABPhZsqvjwzLanRiGCEH8BuH2i48MgITiQ9Vz1JkLcb1w+4LmyxYfDC4YW5AFvY1onbUoZVXS3BI1JGG9FGXXmHbcq27WoKHkm5fbadQ/W9x1CIzcZP9ysW+FKoVEc79gV/mDbLHEVAqK7nORp8/J59Tu48Yc9w5fOdzcE7Z8s2Z50Ubl59p5LuAdum5I5nOyn3zyWGlxcypKqu516fEAfBrv6QLZIql63h5uDhTDJndWWquvZcEP3OcSF8IaXMm9NkEl6nT7pvRl2468z+4DsZ7wc5UF3Xf59A2QxClNoGP4HJOUyjdPWvrrO54knIktyv3e5VvpoL/Q3U3fw1Ok45tTNwNYPCAeXGhlzER9e/V9HY1oY5GSQvF9NrdnZ/WwlxHxW2GZ2Af/Jhx1e455AnIPoo+IxGlFTtrpKHTreseQnmSd5nN2yo7QsJv9pERW+gr2voH6wiaa5BVDSKjEUaqqmYUjhM5zJC5zKAoHpcwA6U6kRnS2Un5JFPAIwXDr56DNGQAAAAAElFTkSuQmCC"
+        }
+      }
+    },
+    "image_thumbnail": {
+      "$by": "rel",
+      "values": {
+        "images/icon.png": {
+          "$bytes": "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"
+        },
+        "images/laser.png": {
+          "$bytes": "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"
+        }
+      }
+    }
+  },
+  "slides-error": {
+    "$extends": "slides",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Previous",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Next",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "Laser",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Blank",
+          "signal": "bb02"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "signal",
+          "firstNote": "bb02 is already used by button 4, “Blank”. Each button needs its own signal.",
+          "key": "same-signal:bb02",
+          "message": "Button 2 “Next” and button 4 “Blank” both send bb02. Mi Band Bridge cannot tell them apart.",
+          "note": "bb02 is already used by button 2, “Next”. Each button needs its own signal.",
+          "sameSignal": [
+            1,
+            3
+          ],
+          "title": "Two buttons send bb02"
+        }
+      ],
+      "settings": [],
+      "warnings": [
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:0:87x134:Previous",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Previous” does not fit"
+        },
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb04",
+    "preview": {
+      "$merge": true,
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Previous\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"Blank\", textSize: 25, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x02] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n"
+    }
+  },
+  "slides-three": {
+    "$extends": "slides",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Previous",
+          "signal": "bb02"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Next",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "Laser",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Blank",
+          "signal": "bb02"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [
+        {
+          "action": null,
+          "button": 1,
+          "dismissed": false,
+          "field": "signal",
+          "firstNote": "bb02 is already used by button 2, “Next”, and button 4, “Blank”. Each button needs its own signal.",
+          "key": "same-signal:bb02",
+          "message": "Button 1 “Previous”, button 2 “Next” and button 4 “Blank” all send bb02. Mi Band Bridge cannot tell them apart.",
+          "note": "bb02 is already used by button 1, “Previous”. Each button needs its own signal.",
+          "sameSignal": [
+            0,
+            1,
+            3
+          ],
+          "title": "Three buttons send bb02"
+        }
+      ],
+      "settings": [],
+      "warnings": [
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:0:87x134:Previous",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Previous” does not fit"
+        },
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb04",
+    "preview": {
+      "$merge": true,
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Previous\", textSize: 25, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x02] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\", textSize: 25, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 25, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"Blank\", textSize: 25, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x02] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 25, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n"
+    }
+  },
+  "state3": {
+    "$extends": "slides",
+    "load_layout": {
+      "$merge": true,
+      "dismissed": [
+        "dark-button:3:#3a3d44"
+      ]
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": {
+            "label": "Allow smaller text",
+            "smallText": true
+          },
+          "button": 0,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "label-fit:25:0:87x134:Previous",
+          "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Previous” does not fit"
+        },
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": true,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "build_app": {
+      "$events": [
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Check: 0 errors, 2 warnings (1 dismissed)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Saved slides/layout.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Drew 5 buttons, 1 picture (laser.png)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "$ zmake ~/Documents/BandApps/slides/generated/slides",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Use config files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   /Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/zmake.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: We think that you want... build this project",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.json:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing assets:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   9 saved in TGA-P format",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Copying common files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing app.js:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Done",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Processing \"page\" JS files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Copied 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Post-processed 1 files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Packaging:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Skip: /.gitignore",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   Created BIN/ZIP files",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Completed without error.",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.bin · 11.0 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Built slides/dist/slides.zip · 10.3 KB",
+          "tone": "good"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Build finished in 0.3 s",
+          "tone": "good"
+        }
+      ],
+      "$then": {
+        "ok": true,
+        "at": "14:02:11"
+      }
+    },
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:02:16",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 0,
+          "text": "Uploading to the band… 0% · 0.0 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 12,
+          "text": "Uploading to the band… 12% · 1.3 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 38,
+          "text": "Uploading to the band… 38% · 4.2 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 62,
+          "text": "Uploading to the band… 62% · 6.8 of 11.0 KB",
+          "tone": "progress"
+        }
+      ],
+      "$then": {
+        "$pending": true
+      }
+    }
+  },
+  "install-done": {
+    "$extends": "state3",
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:02:16",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 0,
+          "text": "Uploading to the band… 0% · 0.0 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 12,
+          "text": "Uploading to the band… 12% · 1.3 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 38,
+          "text": "Uploading to the band… 38% · 4.2 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 62,
+          "text": "Uploading to the band… 62% · 6.8 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:16",
+          "percent": 81,
+          "text": "Uploading to the band… 81% · 8.9 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:17",
+          "percent": 100,
+          "text": "Uploading to the band… 100% · 11.0 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:02:17",
+          "percent": null,
+          "text": "Install finished in 1.5 s",
+          "tone": "good"
+        }
+      ],
+      "$then": "installed"
+    }
+  },
+  "install-not-running": {
+    "$extends": "state3",
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install stopped.",
+          "tone": "bad"
+        }
+      ],
+      "$then": "not_running"
+    }
+  },
+  "install-not-connected": {
+    "$extends": "state3",
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install stopped.",
+          "tone": "bad"
+        }
+      ],
+      "$then": "not_connected"
+    }
+  },
+  "install-refused": {
+    "$extends": "state3",
+    "install_app": {
+      "$events": [
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Install: sending slides.bin to Mi Band Bridge",
+          "tone": "step"
+        },
+        {
+          "at": "14:05:02",
+          "percent": 0,
+          "text": "Uploading to the band… 0% · 0.0 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:05:02",
+          "percent": 12,
+          "text": "Uploading to the band… 12% · 1.3 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:05:02",
+          "percent": 38,
+          "text": "Uploading to the band… 38% · 4.2 of 11.0 KB",
+          "tone": "progress"
+        },
+        {
+          "at": "14:05:02",
+          "percent": null,
+          "text": "Mi Band Bridge: install failed: the band stopped replying",
+          "tone": "bad"
+        }
+      ],
+      "$then": "stopped"
+    }
+  },
+  "build-failed": {
+    "$extends": "slides",
+    "build_app": {
+      "$events": [
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Check: 0 errors, 2 warnings (1 dismissed)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Saved slides.bin/layout.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Drew 5 buttons, 1 picture (laser.png)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "$ zmake ~/Documents/BandApps/slides.bin/generated/slides.bin",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Use config files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   /Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/zmake.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: We think that you want to unpack this file",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Traceback (most recent call last):",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   File \"/Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/main.py\", line 33, in main",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     ctx.perform_auto()",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     ~~~~~~~~~~~~~~~~^^",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   File \"/Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/context.py\", line 84, in perform_auto",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     self.process_bin()",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     ~~~~~~~~~~~~~~~~^^",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   File \"/Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/context.py\", line 137, in process_bin",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     with ZipFile(self.path, \"r\") as f:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:          ~~~~~~~^^^^^^^^^^^^^^^^",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   File \"/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py\", line 1367, in __init__",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:     self.fp = io.open(file, filemode)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:               ~~~~~~~^^^^^^^^^^^^^^^^",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: IsADirectoryError: [Errno 21] Is a directory: '/Users/ada/Documents/BandApps/slides.bin/generated/slides.bin'",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: FAILED",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake did not make slides.bin.bin.",
+          "tone": "bad"
+        }
+      ],
+      "$then": {
+        "ok": false,
+        "at": "14:02:11"
+      }
+    }
+  },
+  "build-running": {
+    "$extends": "slides",
+    "build_app": {
+      "$events": [
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Check: 0 errors, 2 warnings (1 dismissed)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Saved slides/layout.json",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "Drew 5 buttons, 1 picture (laser.png)",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "$ zmake ~/Documents/BandApps/slides/generated/slides",
+          "tone": "step"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake: Use config files:",
+          "tone": "note"
+        },
+        {
+          "at": "14:02:11",
+          "percent": null,
+          "text": "zmake:   /Users/ada/.local/share/bandbridge-tools/zmake-src/zmake/zmake.json",
+          "tone": "note"
+        }
+      ],
+      "$then": {
+        "$pending": true
+      }
+    }
+  },
+  "tools-missing-folder": {
+    "$extends": "tools-missing",
+    "$folder": "/Users/ada/Documents/BandApps"
+  },
+  "slides-not-connected": {
+    "$extends": "slides",
+    "bridge_status": "not_connected"
+  },
+  "slides-connects": {
+    "$extends": "slides",
+    "bridge_status": {
+      "$each": [
+        "not_connected",
+        "connected"
+      ]
+    }
+  },
+  "install-stopped-then-not-running": {
+    "$extends": "install-not-running",
+    "bridge_status": {
+      "$each": [
+        "connected",
+        "not_running"
+      ]
+    }
+  },
+  "slides-small": {
+    "$extends": "slides",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Previous",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Next",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "Laser",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Blank",
+          "signal": "bb04"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "smallText": true,
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [
+        {
+          "action": {
+            "label": "Use 25 px",
+            "smallText": false
+          },
+          "button": null,
+          "dismissed": false,
+          "field": null,
+          "firstNote": null,
+          "key": "small-text:20",
+          "message": "Labels are 20 px, below the 25 px that is easy to read.",
+          "note": null,
+          "sameSignal": [],
+          "title": "Smaller text is allowed"
+        }
+      ],
+      "warnings": [
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Blank” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb06",
+    "preview": {
+      "$merge": true,
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Previous\", textSize: 20, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\", textSize: 20, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 20, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"Blank\", textSize: 20, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x04] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 20, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n"
+    }
+  },
+  "slides-lines": {
+    "$extends": "slides",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "Back",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "Next slide",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "Laser",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "Play next song",
+          "signal": "bb04"
+        },
+        {
+          "color": "#c2410c",
+          "label": "End show",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“Play next song” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb06",
+    "preview": {
+      "$merge": true,
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"Back\", textSize: 34, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"Next\\nslide\", textSize: 34, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 34, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"Play\\nnext\\nsong\", textSize: 34, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x04] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"End show\", textSize: 34, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n"
+    }
+  },
+  "slides-chinese": {
+    "$extends": "slides",
+    "load_layout": {
+      "appId": 201013444,
+      "bottomStrip": 60,
+      "buttons": [
+        {
+          "color": "#2f6fde",
+          "label": "上一页",
+          "signal": "bb01"
+        },
+        {
+          "color": "#1f9d55",
+          "label": "下一页",
+          "signal": "bb02"
+        },
+        {
+          "color": "#d93a2f",
+          "image": "images/laser.png",
+          "label": "激光笔",
+          "signal": "bb03"
+        },
+        {
+          "color": "#3a3d44",
+          "label": "黑屏",
+          "signal": "bb04"
+        },
+        {
+          "color": "#c2410c",
+          "label": "结束放映",
+          "signal": "bb05",
+          "span": true
+        }
+      ],
+      "color": "#2f6fde",
+      "columns": 2,
+      "corners": "rounded",
+      "format": 1,
+      "icon": "images/icon.png",
+      "name": "slides",
+      "version": 3
+    },
+    "check_layout": {
+      "errors": [],
+      "settings": [],
+      "warnings": [
+        {
+          "action": null,
+          "button": 3,
+          "dismissed": false,
+          "field": "color",
+          "firstNote": null,
+          "key": "dark-button:3:#3a3d44",
+          "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+          "note": null,
+          "sameSignal": [],
+          "title": "“黑屏” may be hard to see"
+        }
+      ]
+    },
+    "next_signal": "bb06",
+    "preview": {
+      "$merge": true,
+      "page": "var __$$app$$__ = __$$hmAppManager$$__.currentApp;\nvar __$$module$$__ = __$$app$$__.current;\n\n// Made by the Mi Band App Editor from layout.json. Do not edit this file. The\n// editor writes it again on every build.\n//\n// The rules this page follows are in skills/zepp-os-app-build.md. This page\n// uses var and plain functions only, because the band cannot read newer\n// JavaScript and shows a black screen with no error.\n\nvar BUTTONS = [\n  { x: 6, y: 6, w: 87, h: 134, radius: 16, text: \"上一页\", textSize: 26, color: 0x2f6fde, pressColor: 0x97b7ee, image: \"button_0.png\", pressImage: \"button_0_press.png\", bytes: [0xbb, 0x01] },\n  { x: 99, y: 6, w: 87, h: 134, radius: 16, text: \"下一页\", textSize: 26, color: 0x1f9d55, pressColor: 0x8fceaa, image: \"button_1.png\", pressImage: \"button_1_press.png\", bytes: [0xbb, 0x02] },\n  { x: 6, y: 150, w: 87, h: 134, radius: 16, text: \"\", textSize: 26, color: 0xd93a2f, pressColor: 0xec9c97, image: \"button_2.png\", pressImage: \"button_2_press.png\", bytes: [0xbb, 0x03] },\n  { x: 99, y: 150, w: 87, h: 134, radius: 16, text: \"黑屏\", textSize: 26, color: 0x3a3d44, pressColor: 0x9c9ea1, image: null, pressImage: null, bytes: [0xbb, 0x04] },\n  { x: 6, y: 294, w: 180, h: 134, radius: 16, text: \"结束放映\", textSize: 26, color: 0xc2410c, pressColor: 0xe0a085, image: \"button_4.png\", pressImage: \"button_4_press.png\", bytes: [0xbb, 0x05] }\n];\n\n// skills/band-app.md, \"Keep the screen lit\": the band stops at 15 seconds.\nvar SCREEN_ON_SECONDS = 120;\n\nvar bleReady = false;\n\nfunction holdScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreen) {\n      hmSetting.setBrightScreen(SCREEN_ON_SECONDS);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\n// Return to this page when the band wakes, not to the watch face.\nfunction keepPageOnWake() {\n  try {\n    if (typeof hmApp !== 'undefined' && hmApp.setScreenKeep) {\n      hmApp.setScreenKeep(true);\n    }\n  } catch (e) {\n    // A firmware without the call must not take the page down.\n  }\n}\n\nfunction releaseScreen() {\n  try {\n    if (typeof hmSetting !== 'undefined' && hmSetting.setBrightScreenCancel) {\n      hmSetting.setBrightScreenCancel();\n    }\n  } catch (e) {\n    // Throwing here helps nobody.\n  }\n}\n\n// skills/zepp-os-app-build.md, \"Open BLE lazily\": a throw during onInit\n// leaves the page half built.\nfunction ensureBle() {\n  if (bleReady) {\n    return true;\n  }\n  try {\n    if (typeof hmBle === 'undefined') {\n      return false;\n    }\n    hmBle.createConnect(function (index, data, size) {});\n    bleReady = true;\n  } catch (e) {\n    bleReady = false;\n  }\n  return bleReady;\n}\n\nfunction emit(bytes) {\n  try {\n    if (!ensureBle()) {\n      return false;\n    }\n    if (hmBle.connectStatus() !== true) {\n      return false;\n    }\n    var buf = new Uint8Array(bytes);\n    hmBle.send(buf.buffer, buf.byteLength);\n    return true;\n  } catch (e) {\n    return false;\n  }\n}\n\n// One function call per button, so each click handler keeps its own button.\nfunction makeButton(b) {\n  var props = {\n    x: b.x,\n    y: b.y,\n    w: b.w,\n    h: b.h,\n    radius: b.radius,\n    text: b.text,\n    text_size: b.textSize,\n    color: 0xffffff,\n    click_func: function () {\n      emit(b.bytes);\n      holdScreen();\n    }\n  };\n  if (b.image) {\n    props.normal_src = b.image;\n    props.press_src = b.pressImage;\n  } else {\n    props.normal_color = b.color;\n    props.press_color = b.pressColor;\n  }\n  return hmUI.createWidget(hmUI.widget.BUTTON, props);\n}\n\n__$$module$$__.module = DeviceRuntimeCore.Page({\n  onInit: function () {\n    for (var i = 0; i < BUTTONS.length; i++) {\n      makeButton(BUTTONS[i]);\n    }\n    holdScreen();\n    keepPageOnWake();\n  },\n  onDestroy: function () {\n    releaseScreen();\n  }\n});\n"
+    }
+  },
+  "slides-allow": {
+    "$extends": "slides",
+    "check_layout": {
+      "$each": [
+        {
+          "errors": [],
+          "settings": [],
+          "warnings": [
+            {
+              "action": {
+                "label": "Allow smaller text",
+                "smallText": true
+              },
+              "button": 0,
+              "dismissed": false,
+              "field": null,
+              "firstNote": null,
+              "key": "label-fit:25:0:87x134:Previous",
+              "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+              "note": null,
+              "sameSignal": [],
+              "title": "“Previous” does not fit"
+            },
+            {
+              "action": null,
+              "button": 3,
+              "dismissed": false,
+              "field": "color",
+              "firstNote": null,
+              "key": "dark-button:3:#3a3d44",
+              "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+              "note": null,
+              "sameSignal": [],
+              "title": "“Blank” may be hard to see"
+            }
+          ]
+        },
+        {
+          "errors": [],
+          "settings": [
+            {
+              "action": {
+                "label": "Use 25 px",
+                "smallText": false
+              },
+              "button": null,
+              "dismissed": false,
+              "field": null,
+              "firstNote": null,
+              "key": "small-text:20",
+              "message": "Labels are 20 px, below the 25 px that is easy to read.",
+              "note": null,
+              "sameSignal": [],
+              "title": "Smaller text is allowed"
+            }
+          ],
+          "warnings": [
+            {
+              "action": null,
+              "button": 3,
+              "dismissed": false,
+              "field": "color",
+              "firstNote": null,
+              "key": "dark-button:3:#3a3d44",
+              "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+              "note": null,
+              "sameSignal": [],
+              "title": "“Blank” may be hard to see"
+            }
+          ]
+        },
+        {
+          "errors": [],
+          "settings": [],
+          "warnings": [
+            {
+              "action": {
+                "label": "Allow smaller text",
+                "smallText": true
+              },
+              "button": 0,
+              "dismissed": false,
+              "field": null,
+              "firstNote": null,
+              "key": "label-fit:25:0:87x134:Previous",
+              "message": "Not even at 25 px, the smallest size that is easy to read on the band.",
+              "note": null,
+              "sameSignal": [],
+              "title": "“Previous” does not fit"
+            },
+            {
+              "action": null,
+              "button": 3,
+              "dismissed": false,
+              "field": "color",
+              "firstNote": null,
+              "key": "dark-button:3:#3a3d44",
+              "message": "Button 4 is dark gray on the black screen. Pick a lighter color so it stands out.",
+              "note": null,
+              "sameSignal": [],
+              "title": "“Blank” may be hard to see"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

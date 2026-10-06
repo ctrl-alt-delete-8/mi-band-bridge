@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "app": {
+    "windows": [
+      {
+        "title": "Mi Band App Editor",
+        "width": 1180,
+        "height": 820,
+        "minWidth": 960,
+        "minHeight": 600,
+        "resizable": true,
+        "decorations": false,
+        "scrollBarStyle": "fluentOverlay"
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "publisher": "ctrl-alt-delete-8",
+    "targets": ["nsis"],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerHooks": "./windows/hooks.nsh"
+      }
+    }
+  }
+}

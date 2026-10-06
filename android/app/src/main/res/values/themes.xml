@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The e-ink window: white, with no animation when it opens or closes, and
+      a white status bar with dark icons. Black is the accent, so the text
+      cursor and the selection handles are black, and selected text sits on
+      the hairline gray. The pages draw everything else themselves.
+    -->
+    <style name="Base.Theme.Relay" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorAccent">@android:color/black</item>
+        <item name="android:textColorHighlight">#FF999999</item>
+    </style>
+
+    <!--
+      Android 8.0 cannot draw dark icons on the navigation bar, so there it
+      keeps the platform's black bar. From 8.1 on, values-v27 makes it white.
+    -->
+    <style name="Theme.Relay" parent="Base.Theme.Relay" />
+</resources>

@@ -1,0 +1,770 @@
+{
+  "base": {
+    "connection": { "$json": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } },
+    "drain_lines": [],
+    "connect": null,
+    "disconnect": null,
+    "stop_trying": null,
+    "input_permission": true,
+    "request_input_permission": true,
+    "adjust_height": null,
+    "config_path": "~/Library/Application Support/BandBridge/config.toml",
+    "reveal_config": null,
+    "settings_get": { "auto_reconnect": true, "new_app_on_top": true, "appearance": "system" },
+    "settings_set": { "$merge": "change", "into": "settings_get" },
+    "actions_list": {
+      "actions": [
+        { "kind": "keystroke", "action": { "name": "Screenshot a region", "signal": "bb01", "keystroke": { "key_code": "4", "modifiers": ["left_command", "left_shift"] } } },
+        { "kind": "shortcut", "action": { "name": "Start a focus block", "signal": "bb02", "shortcut": "Start Focus" } },
+        { "kind": "shell", "action": { "name": "Open Music", "signal": "bb03", "shell": "open -a Music" } },
+        { "kind": "web_request", "action": { "name": "Turn on the desk lights", "signal": "bb04", "web_request": { "method": "POST", "url": "http://lights.local/webhook", "headers": ["Authorization: Bearer …"], "body": "{\"on\": true}" } } }
+      ],
+      "postsKeys": true
+    },
+    "actions_save": {
+      "actions": [
+        { "kind": "keystroke", "action": { "name": "Screenshot a region", "signal": "bb01", "keystroke": { "key_code": "4", "modifiers": ["left_command", "left_shift"] } } },
+        { "kind": "shortcut", "action": { "name": "Start a focus block", "signal": "bb02", "shortcut": "Start Focus" } },
+        { "kind": "shell", "action": { "name": "Open Music", "signal": "bb03", "shell": "open -a Music" } },
+        { "kind": "web_request", "action": { "name": "Turn on the desk lights", "signal": "bb04", "web_request": { "method": "POST", "url": "http://lights.local/webhook", "headers": ["Authorization: Bearer …"], "body": "{\"on\": true}" } } },
+        { "kind": "script", "action": { "name": "Toggle the desk lamp", "signal": "bb06", "script": "~/scripts/toggle-desk-lamp.sh" } }
+      ],
+      "postsKeys": true
+    },
+    "actions_delete": {
+      "actions": [
+        { "kind": "keystroke", "action": { "name": "Screenshot a region", "signal": "bb01", "keystroke": { "key_code": "4", "modifiers": ["left_command", "left_shift"] } } },
+        { "kind": "shortcut", "action": { "name": "Start a focus block", "signal": "bb02", "shortcut": "Start Focus" } },
+        { "kind": "web_request", "action": { "name": "Turn on the desk lights", "signal": "bb04", "web_request": { "method": "POST", "url": "http://lights.local/webhook", "headers": ["Authorization: Bearer …"], "body": "{\"on\": true}" } } }
+      ],
+      "postsKeys": true
+    },
+    "action_try": { "type": "exit", "ok": true, "code": 0 },
+    "learn": { "$pending": true },
+    "learn_stop": null,
+    "record_keys": { "$pending": true },
+    "record_keys_stop": null,
+    "pick_script": "~/scripts/toggle-desk-lamp.sh",
+    "shortcuts_list": ["Start Focus", "Stop Focus", "Toggle the lamp", "Dictate a note", "Open Today", "Play Morning Mix", "Log water", "Start a timer", "Text I am on my way", "Night mode", "Clean the desktop", "Resize for recording"],
+    "key_names": {"keys": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "return_or_enter", "tab", "spacebar", "delete_or_backspace", "escape", "hyphen", "equal_sign", "open_bracket", "close_bracket", "backslash", "semicolon", "quote", "grave_accent_and_tilde", "comma", "period", "slash", "non_us_backslash", "up_arrow", "down_arrow", "left_arrow", "right_arrow", "home", "end", "page_up", "page_down", "delete_forward", "help", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15", "f16", "f17", "f18", "f19", "f20", "keypad_0", "keypad_1", "keypad_2", "keypad_3", "keypad_4", "keypad_5", "keypad_6", "keypad_7", "keypad_8", "keypad_9", "keypad_period", "keypad_enter", "keypad_plus", "keypad_hyphen", "keypad_asterisk", "keypad_slash", "keypad_equal_sign", "keypad_comma", "keypad_num_lock", "left_control", "left_option", "left_shift", "left_command", "right_control", "right_option", "right_shift", "right_command", "caps_lock", "fn", "japanese_eisuu", "japanese_kana", "international1", "international3"], "mediaKeys": ["volume_increment", "volume_decrement", "mute", "play_or_pause", "scan_next_track", "scan_previous_track", "fast_forward", "rewind", "eject", "display_brightness_increment", "display_brightness_decrement", "illumination_increment", "illumination_decrement"], "modifiers": ["command", "shift", "option", "control", "fn"], "aliases": {"keys": {"clear": "keypad_num_lock", "lang1": "japanese_kana", "lang2": "japanese_eisuu", "left_alt": "left_option", "left_gui": "left_command", "prior": "page_up", "return": "return_or_enter", "right_alt": "right_option", "right_gui": "right_command"}, "mediaKeys": {"fastforward": "fast_forward"}, "modifiers": {"alt": "option", "cmd": "command", "ctrl": "control", "left_alt": "option", "left_cmd": "command", "left_command": "command", "left_control": "control", "left_ctrl": "control", "left_fn": "fn", "left_option": "option", "left_shift": "shift", "right_alt": "option", "right_cmd": "command", "right_command": "command", "right_control": "control", "right_ctrl": "control", "right_fn": "fn", "right_option": "option", "right_shift": "shift"}}},
+    "pick_app": "/Users/you/Projects/band-apps/slides/dist/slides.bin",
+    "install": ["/Users/you/Projects/band-apps/slides/dist/slides.bin: 41472 bytes", "Installed."],
+    "apps_list": {
+      "$json": {
+        "apps": [
+          { "id": "58E537B5", "number": 1491417013, "version": "1.0.12", "name": "BandBridge", "is_watchface": false, "in_use": false },
+          { "id": "58E538D5", "number": 1491417301, "version": "1.0.4", "name": "BandArrows", "is_watchface": false, "in_use": false },
+          { "id": "10BD37D4", "number": 280836052, "version": "1.0.2", "name": "testbandapp", "is_watchface": false, "in_use": false }
+        ],
+        "hidden": 2
+      }
+    },
+    "apps_remove": ["removed testbandapp (10BD37D4) version 1.0.2"],
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 12 },
+        "connectedSince": "2026-09-24T20:41:07-04:00"
+      }
+    },
+    "screens_list": {
+      "$by": "list",
+      "values": {
+        "menu": {
+          "$json": [
+            { "id": "58E537B5", "name": "BandBridge", "is_app": true, "installed_here": true, "shown": true, "position": 0 },
+            { "id": "10BD37D4", "name": "testbandapp", "is_app": true, "installed_here": true, "shown": true, "position": 1 },
+            { "id": "00000003", "name": "workout", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "00000002", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+            { "id": "00000023", "name": "sleep", "is_app": false, "installed_here": false, "shown": true, "position": 4 },
+            { "id": "00000004", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 5 },
+            { "id": "0000001C", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 },
+            { "id": "00000024", "name": "spo2", "is_app": false, "installed_here": false, "shown": false, "position": 1 }
+          ]
+        },
+        "shortcuts": {
+          "$json": [
+            { "id": "00000002", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 0 },
+            { "id": "00000001", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 1 },
+            { "id": "00000020", "name": "activity", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "00000016", "name": "alarm", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+            { "id": "0000000F", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 }
+          ]
+        }
+      }
+    },
+    "screens_apply": ["menu now shows, in order:"],
+    "saved_setup": {
+      "$json": {
+        "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" },
+        "actions": 4,
+        "settingsChanged": false
+      }
+    },
+    "pair": {
+      "$stream": [
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "looking for bands nearby, for up to 25 seconds" },
+        { "kind": "pair", "text": "found Xiaomi Smart Band 7 5301, connecting and checking the key" },
+        { "kind": "state", "text": "authenticating", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "you", "since": "2026-09-24T21:10:09-04:00" } },
+        { "kind": "pair", "text": "paired with Xiaomi Smart Band 7, 00:00:5E:00:53:01" }
+      ],
+      "then": null
+    },
+    "forget": {
+      "$by": "setup",
+      "values": {
+        "keep": ["forgot Xiaomi Smart Band 7. Its key is gone from the Keychain. The actions and settings are kept for the next band."],
+        "delete": ["forgot Xiaomi Smart Band 7. Its key is gone from the Keychain. The actions are deleted, and the settings are back to their defaults."]
+      }
+    },
+    "copy_key": null,
+    "open_key_help": null,
+    "open_about_page": null,
+    "version": "1.0.0",
+    "zoom": true,
+    "zoomed": false
+  },
+
+  "connected": {
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "started", "since": "2026-09-24T20:40:51-04:00" } },
+          { "kind": "state", "text": "authenticating", "connection": { "state": "connecting", "reason": "started", "since": "2026-09-24T20:40:51-04:00" } },
+          { "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } },
+          { "kind": "event", "event": { "kind": "app", "id": 1, "at": "2026-09-24T20:41:07-04:00", "change": "removed", "app": "BandArrows" } },
+          { "kind": "event", "event": { "kind": "press", "id": 2, "at": "2026-09-24T21:02:12-04:00", "signal": "bb03", "action": "Open Music", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 2, "at": "2026-09-24T21:02:12-04:00", "signal": "bb03", "action": "Open Music", "result": { "type": "exit", "ok": true, "code": 0 } } },
+          { "kind": "event", "event": { "kind": "app", "id": 3, "at": "2026-09-24T21:02:58-04:00", "change": "installed", "app": "testbandapp" } },
+          { "kind": "event", "event": { "kind": "press", "id": 4, "at": "2026-09-24T21:03:20-04:00", "signal": "bb02", "action": "Start a focus block", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 4, "at": "2026-09-24T21:03:20-04:00", "signal": "bb02", "action": "Start a focus block", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 5, "at": "2026-09-24T21:04:07-04:00", "signal": "bb01", "action": "Screenshot a region", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 6, "at": "2026-09-24T21:04:11-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 6, "at": "2026-09-24T21:04:11-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": { "type": "status", "ok": true, "code": 204 } } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "events": {
+    "$extends": "connected",
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } },
+          { "kind": "event", "event": { "kind": "app", "id": 1, "at": "2026-09-24T20:41:07-04:00", "change": "removed", "app": "BandArrows" } },
+          { "kind": "event", "event": { "kind": "app", "id": 2, "at": "2026-09-24T20:44:30-04:00", "change": "installed", "app": "slides.bin" } },
+          { "kind": "event", "event": { "kind": "press", "id": 3, "at": "2026-09-24T20:52:01-04:00", "signal": "bb09", "action": null, "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 4, "at": "2026-09-24T20:55:40-04:00", "signal": "bb01", "action": "Screenshot a region", "result": { "type": "error", "ok": false, "error": "macOS does not let this program post key events, so the keystroke went nowhere. Allow it in System Settings, Privacy & Security, Device Control and Data Access." } } },
+          { "kind": "event", "event": { "kind": "press", "id": 5, "at": "2026-09-24T20:58:13-04:00", "signal": "bb02", "action": "Start a focus block", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 5, "at": "2026-09-24T20:58:13-04:00", "signal": "bb02", "action": "Start a focus block", "result": { "type": "error", "ok": false, "error": "exit 1: The shortcut “Start Focus” could not be found." } } },
+          { "kind": "event", "event": { "kind": "press", "id": 6, "at": "2026-09-24T20:59:02-04:00", "signal": "bb06", "action": "Toggle the desk lamp", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 6, "at": "2026-09-24T20:59:02-04:00", "signal": "bb06", "action": "Toggle the desk lamp", "result": { "type": "exit", "ok": false, "code": 4, "error": "the lamp is away" } } },
+          { "kind": "event", "event": { "kind": "press", "id": 7, "at": "2026-09-24T21:00:45-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 7, "at": "2026-09-24T21:00:45-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": { "type": "error", "ok": false, "error": "failed: Connection refused (os error 61)" } } },
+          { "kind": "event", "event": { "kind": "press", "id": 8, "at": "2026-09-24T21:01:30-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 8, "at": "2026-09-24T21:01:30-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": { "type": "status", "ok": false, "code": 503 } } },
+          { "kind": "event", "event": { "kind": "press", "id": 9, "at": "2026-09-24T21:01:52-04:00", "signal": "bb03", "action": "Open Music", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 9, "at": "2026-09-24T21:01:52-04:00", "signal": "bb03", "action": "Open Music", "result": { "type": "error", "ok": false, "error": "gave up after 10 seconds" } } },
+          { "kind": "event", "event": { "kind": "press", "id": 10, "at": "2026-09-24T21:02:12-04:00", "signal": "bb03", "action": "Open Music", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 10, "at": "2026-09-24T21:02:12-04:00", "signal": "bb03", "action": "Open Music", "result": { "type": "exit", "ok": true, "code": 0 } } },
+          { "kind": "event", "event": { "kind": "app", "id": 11, "at": "2026-09-24T21:02:58-04:00", "change": "installed", "app": "testbandapp" } },
+          { "kind": "event", "event": { "kind": "press", "id": 12, "at": "2026-09-24T21:03:20-04:00", "signal": "bb02", "action": "Start a focus block", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 12, "at": "2026-09-24T21:03:20-04:00", "signal": "bb02", "action": "Start a focus block", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 13, "at": "2026-09-24T21:04:07-04:00", "signal": "bb01", "action": "Screenshot a region", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 14, "at": "2026-09-24T21:04:11-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": null } },
+          { "kind": "event", "event": { "kind": "press", "id": 14, "at": "2026-09-24T21:04:11-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": { "type": "status", "ok": true, "code": 204 } } },
+          { "kind": "event", "event": { "kind": "press", "id": 15, "at": "2026-09-24T21:04:30-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": null } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "no-config-folder": {
+    "$extends": "connected",
+    "reveal_config": { "$error": "/Users/you/Library/Application Support/BandBridge does not exist yet" }
+  },
+
+  "events-then-lost": {
+    "$extends": "connected",
+    "connection": { "$json": { "state": "disconnected", "reason": "dropped", "since": "2026-09-24T21:05:30-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 40 },
+        "connectedSince": null
+      }
+    },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } },
+          { "kind": "event", "event": { "kind": "app", "id": 1, "at": "2026-09-24T20:41:07-04:00", "change": "removed", "app": "BandArrows" } },
+          { "kind": "event", "event": { "kind": "press", "id": 2, "at": "2026-09-24T21:02:12-04:00", "signal": "bb03", "action": "Open Music", "result": { "type": "exit", "ok": true, "code": 0 } } },
+          { "kind": "event", "event": { "kind": "app", "id": 3, "at": "2026-09-24T21:02:58-04:00", "change": "installed", "app": "testbandapp" } },
+          { "kind": "event", "event": { "kind": "press", "id": 4, "at": "2026-09-24T21:03:20-04:00", "signal": "bb02", "action": "Start a focus block", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 5, "at": "2026-09-24T21:04:07-04:00", "signal": "bb01", "action": "Screenshot a region", "result": { "type": "done", "ok": true } } },
+          { "kind": "event", "event": { "kind": "press", "id": 6, "at": "2026-09-24T21:04:11-04:00", "signal": "bb04", "action": "Turn on the desk lights", "result": { "type": "status", "ok": true, "code": 204 } } },
+          { "kind": "error", "text": "link lost: the band stopped answering" },
+          { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "dropped", "since": "2026-09-24T21:05:30-04:00" } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "connecting": {
+    "connection": { "$json": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 3 },
+        "connectedSince": null
+      }
+    },
+    "drain_lines": { "$each": [[{ "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } }], []] }
+  },
+
+  "disconnected": {
+    "connection": { "$json": { "state": "disconnected", "reason": "you", "since": "2026-09-24T21:06:00-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 240 },
+        "connectedSince": null
+      }
+    },
+    "drain_lines": { "$each": [[{ "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "you", "since": "2026-09-24T21:06:00-04:00" } }], []] }
+  },
+
+  "reconnecting": {
+    "connection": { "$json": { "state": "retrying", "reason": "dropped", "since": "2026-09-24T21:02:13-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 480 },
+        "connectedSince": null
+      }
+    },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "error", "text": "link lost: the band stopped answering" },
+          { "kind": "state", "text": "backoff (attempt 2)", "connection": { "state": "retrying", "reason": "dropped", "since": "2026-09-24T21:02:13-04:00" } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "unpaired": {
+    "connection": { "$json": { "state": "disconnected", "reason": "started", "since": "2026-09-24T20:40:50-04:00" } },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "started", "since": "2026-09-24T20:40:50-04:00" } }
+        ],
+        []
+      ]
+    },
+    "saved_setup": { "$json": { "device": null, "actions": 4, "settingsChanged": true } },
+    "device": {
+      "$json": {
+        "name": null, "mac": null, "serial": null, "hardware": null, "firmware": null,
+        "battery": null, "connectedSince": null
+      }
+    },
+    "connect": { "$error": "no band is paired, so there is nothing to connect to. Pair a band first." },
+    "apps_list": { "$error": "apps: the band is not connected. Connect first." },
+    "apps_remove": { "$error": "apps: the band is not connected. Connect first." },
+    "screens_list": { "$error": "display list: the band is not connected. Connect first." },
+    "screens_apply": { "$error": "display list: the band is not connected. Connect first." },
+    "install": { "$error": "install failed: the band is not connected. Connect first." },
+    "copy_key": { "$error": "no band is paired, so there is no key to copy" }
+  },
+
+  "no-key": {
+    "$extends": "unpaired",
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "error", "text": "this Mac has no auth key for this band, so it cannot connect. Forget the band, then pair it again with the key from your account login." },
+          { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "started", "since": "2026-09-24T20:40:50-04:00" } }
+        ],
+        []
+      ]
+    },
+    "saved_setup": {
+      "$json": {
+        "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" },
+        "actions": 4,
+        "settingsChanged": false
+      }
+    },
+    "connect": {
+      "$stream": [
+        { "kind": "error", "text": "this Mac has no auth key for this band, so it cannot connect. Forget the band, then pair it again with the key from your account login." }
+      ],
+      "every": 50
+    },
+    "copy_key": { "$error": "the Keychain holds no key for 00:00:5E:00:53:01" },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": null, "serial": null, "hardware": null, "firmware": null,
+        "battery": null, "connectedSince": null
+      }
+    }
+  },
+
+  "connection-lost": {
+    "connection": { "$json": { "state": "disconnected", "reason": "dropped", "since": "2026-09-24T20:58:40-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": { "percent": 74, "charging": false, "secondsAgo": 1107 },
+        "connectedSince": null
+      }
+    },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "error", "text": "link lost: the band stopped answering" },
+          { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "dropped", "since": "2026-09-24T20:58:40-04:00" } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "just-connected": {
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": "00:00:5E:00:53:01",
+        "serial": "00000/EXAMPLE00000",
+        "hardware": "0.91.130.5",
+        "firmware": "2.2.0.1",
+        "battery": null,
+        "connectedSince": "2026-09-24T20:41:07-04:00"
+      }
+    }
+  },
+
+  "could-not-connect-retrying": {
+    "connection": { "$json": { "state": "retrying", "reason": "failed", "since": "2026-09-24T20:52:30-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": null, "serial": null, "hardware": null, "firmware": null,
+        "battery": null, "connectedSince": null
+      }
+    },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "error", "text": "band not found" },
+          { "kind": "state", "text": "backoff (attempt 3)", "connection": { "state": "retrying", "reason": "failed", "since": "2026-09-24T20:52:30-04:00" } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "could-not-connect": {
+    "connection": { "$json": { "state": "disconnected", "reason": "failed", "since": "2026-09-24T20:47:05-04:00" } },
+    "device": {
+      "$json": {
+        "name": "Xiaomi Smart Band 7",
+        "mac": null, "serial": null, "hardware": null, "firmware": null,
+        "battery": null, "connectedSince": null
+      }
+    },
+    "drain_lines": {
+      "$each": [
+        [
+          { "kind": "error", "text": "the band that answered is 00:00:5E:00:53:02, not the paired band, 00:00:5E:00:53:01. Mi Band Bridge let it go, and stopped trying. Connect to try again." },
+          { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "failed", "since": "2026-09-24T20:47:05-04:00" } }
+        ],
+        []
+      ]
+    }
+  },
+
+  "settings-off": {
+    "settings_get": { "auto_reconnect": false, "new_app_on_top": false, "appearance": "system" }
+  },
+
+  "settings-unreadable": {
+    "settings_get": { "$error": "config error: line 10: invalid type: string \"yes\", expected a boolean" },
+    "settings_set": { "$error": "config error: line 10: invalid type: string \"yes\", expected a boolean" }
+  },
+
+  "settings-not-saved": {
+    "settings_set": { "$error": "config error: cannot write /Users/you/Library/Application Support/BandBridge/config.toml: Permission denied (os error 13)" }
+  },
+
+  "no-permission": {
+    "$extends": "connected",
+    "input_permission": false,
+    "request_input_permission": false
+  },
+
+  "fresh": {
+    "$extends": "unpaired",
+    "saved_setup": {
+      "$each": [
+        { "$json": { "device": null, "actions": 0, "settingsChanged": false } },
+        { "$json": { "device": null, "actions": 0, "settingsChanged": false } },
+        { "$json": { "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" }, "actions": 0, "settingsChanged": false } }
+      ]
+    }
+  },
+
+  "pairing": {
+    "$extends": "fresh",
+    "pair": {
+      "$stream": [
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "looking for bands nearby, for up to 25 seconds" },
+        { "kind": "pair", "text": "found Xiaomi Smart Band 7 5301, connecting and checking the key" },
+        { "kind": "state", "text": "authenticating", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } }
+      ],
+      "every": 200,
+      "then": { "$pending": true }
+    }
+  },
+
+  "pair-refused": {
+    "$extends": "fresh",
+    "pair": {
+      "$stream": [
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "looking for bands nearby, for up to 25 seconds" },
+        { "kind": "pair", "text": "found Xiaomi Smart Band 7 5301, connecting and checking the key" },
+        { "kind": "state", "text": "authenticating", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "Xiaomi Smart Band 7 5301 refused the key" },
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "failed", "since": "2026-09-24T21:10:30-04:00" } }
+      ],
+      "every": 120,
+      "then": { "$error": "no band nearby accepts this key: 1 band refused it. Check that this is the key the account login gave for this band." }
+    }
+  },
+
+  "pair-nobody": {
+    "$extends": "fresh",
+    "pair": {
+      "$stream": [
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "looking for bands nearby, for up to 25 seconds" },
+        { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "failed", "since": "2026-09-24T21:10:30-04:00" } }
+      ],
+      "every": 120,
+      "then": { "$error": "no band is nearby. Wake the band and keep it close to this Mac. If your phone is connected to it, turn off the phone's Bluetooth, then try again." }
+    }
+  },
+
+  "pair-unreachable": {
+    "$extends": "fresh",
+    "pair": {
+      "$stream": [
+        { "kind": "state", "text": "scanning", "connection": { "state": "connecting", "reason": "you", "since": "2026-09-24T21:10:02-04:00" } },
+        { "kind": "pair", "text": "looking for bands nearby, for up to 25 seconds" },
+        { "kind": "pair", "text": "found Xiaomi Smart Band 7 5301, connecting and checking the key" },
+        { "kind": "pair", "text": "Xiaomi Smart Band 7 5301 could not be asked: it did not answer in 30 seconds" },
+        { "kind": "state", "text": "disconnected", "connection": { "state": "disconnected", "reason": "failed", "since": "2026-09-24T21:10:30-04:00" } }
+      ],
+      "every": 120,
+      "then": { "$error": "a band is nearby, but Mi Band Bridge could not ask it for the key: it did not answer in 30 seconds. Try again." }
+    }
+  },
+
+  "pair-bad-key": {
+    "$extends": "fresh",
+    "pair": { "$error": "invalid auth key: a key is 32 hex digits, with or without 0x in front, and this one has 31" }
+  },
+
+  "pair-name-like-a-key": {
+    "$extends": "fresh",
+    "pair": { "$error": "the name looks like a key. Give the band a name to know it by, such as Xiaomi Smart Band 7." }
+  },
+
+  "forget": {
+    "$extends": "disconnected",
+    "saved_setup": {
+      "$json": {
+        "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" },
+        "actions": 4,
+        "settingsChanged": true
+      }
+    }
+  },
+
+  "forget-nothing-kept": {
+    "$extends": "forget",
+    "saved_setup": {
+      "$json": {
+        "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" },
+        "actions": 0,
+        "settingsChanged": false
+      }
+    }
+  },
+
+  "forget-refused": {
+    "$extends": "forget",
+    "forget": { "$error": "the Keychain cannot delete the key for 00:00:5E:00:53:01: Platform secure storage failure: User canceled the operation." }
+  },
+
+  "config-unreadable-at-start": {
+    "$extends": "base",
+    "connection": { "$json": { "state": "disconnected", "reason": "started", "since": "2026-09-24T20:40:50-04:00" } },
+    "drain_lines": { "$each": [
+      [
+        { "kind": "config", "text": "the config file could not be read, so no action fires until it is fixed: config error: line 10: invalid type: string \"yes\", expected a boolean" },
+        { "kind": "permission", "text": "This program cannot post key events, so presses will not become keystrokes. Open System Settings, Privacy & Security, Device Control and Data Access, and switch Mi Band Bridge on." }
+      ],
+      []
+    ] },
+    "saved_setup": { "$error": "config error: line 10: invalid type: string \"yes\", expected a boolean" },
+    "actions_list": { "$error": "config error: line 10: invalid type: string \"yes\", expected a boolean" },
+    "settings_get": { "$error": "config error: line 10: invalid type: string \"yes\", expected a boolean" },
+    "input_permission": false,
+    "device": { "$json": { "name": null, "mac": null, "serial": null, "hardware": null, "firmware": null, "battery": null, "connectedSince": null } },
+    "connect": { "$stream": [
+      { "kind": "error", "text": "the config file could not be read, so Mi Band Bridge cannot connect until it is fixed: line 10: invalid type: string \"yes\", expected a boolean" }
+    ], "every": 50 }
+  },
+
+  "editor-heard": {
+    "$extends": "connected",
+    "record_keys": { "$stream": [{ "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } }], "every": 700, "then": { "heard": { "key_code": "4", "modifiers": ["command", "shift"] } } },
+    "learn": { "$stream": [{ "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } }], "every": 700, "then": "bb06" }
+  },
+
+  "record-media": {
+    "$extends": "connected",
+    "record_keys": { "$stream": [{ "kind": "state", "text": "ready", "connection": { "state": "connected", "reason": "started", "since": "2026-09-24T20:41:07-04:00" } }], "every": 500, "then": { "heard": { "consumer_key_code": "volume_increment" } } }
+  },
+
+  "record-page": {
+    "$extends": "no-permission",
+    "record_keys": { "page": "permission" }
+  },
+
+  "record-secure-input": {
+    "$extends": "connected",
+    "record_keys": { "page": "secure_input" }
+  },
+
+  "learn-away": {
+    "$extends": "disconnected",
+    "learn": { "$error": "the band is not connected, so it cannot send a press. Connect it, then try again." }
+  },
+
+  "save-refused": {
+    "$extends": "connected",
+    "actions_save": { "$error": { "errors": [
+      { "field": "name", "message": "the action needs a name, which the window and the event log show" },
+      { "field": "shell", "message": "shell is empty" }
+    ] } }
+  },
+
+  "try-keystroke": {
+    "$extends": "connected",
+    "action_try": { "type": "done", "ok": true }
+  },
+
+  "try-failed": {
+    "$extends": "connected",
+    "action_try": { "type": "exit", "ok": false, "code": 4, "error": "the lamp is away" }
+  },
+
+  "shortcuts-failed": {
+    "$extends": "connected",
+    "shortcuts_list": { "$error": "the shortcuts could not be listed: cannot run shortcuts: No such file or directory (os error 2)" }
+  },
+
+  "no-actions": {
+    "$extends": "connected",
+    "actions_list": { "actions": [], "postsKeys": false }
+  },
+
+  "config-broken": {
+    "$extends": "connected",
+    "actions_list": { "$each": [
+      { "actions": [
+        { "kind": "keystroke", "action": { "name": "Screenshot a region", "signal": "bb01", "keystroke": { "key_code": "4", "modifiers": ["left_command", "left_shift"] } } },
+        { "kind": "shortcut", "action": { "name": "Start a focus block", "signal": "bb02", "shortcut": "Start Focus" } },
+        { "kind": "shell", "action": { "name": "Open Music", "signal": "bb03", "shell": "open -a Music" } },
+        { "kind": "web_request", "action": { "name": "Turn on the desk lights", "signal": "bb04", "web_request": { "method": "POST", "url": "http://lights.local/webhook", "headers": ["Authorization: Bearer …"], "body": "{\"on\": true}" } } }
+      ], "postsKeys": true },
+      { "$error": "config error: action \"Open Music\": shell is empty" }
+    ] }
+  },
+
+  "band-starting": {
+    "$extends": "connected",
+    "saved_setup": { "$each": [
+      { "$error": "the band is not running yet" },
+      { "$error": "the band is not running yet" },
+      { "$json": { "device": { "name": "Xiaomi Smart Band 7", "mac": "00:00:5E:00:53:01" }, "actions": 4, "settingsChanged": false } }
+    ] }
+  },
+
+  "apps-design": {
+    "$extends": "connected",
+    "settings_get": { "auto_reconnect": true, "new_app_on_top": false, "appearance": "system" }
+  },
+
+  "apps-none": {
+    "$extends": "apps-design",
+    "apps_list": { "$json": { "apps": [], "hidden": 3 } }
+  },
+
+  "apps-unreadable": {
+    "$extends": "apps-design",
+    "apps_list": { "$error": "apps: the band did not answer with its app list" },
+    "screens_list": { "$error": "display list: the band did not report its menu" }
+  },
+
+  "removing": {
+    "$extends": "apps-design",
+    "apps_remove": { "$pending": true }
+  },
+
+  "remove-refused": {
+    "$extends": "apps-design",
+    "apps_remove": { "$error": "apps: the band still lists testbandapp (10BD37D4) version 1.0.2. It refused the removal." }
+  },
+
+  "installing": {
+    "$extends": "apps-design",
+    "install": { "$pending": true }
+  },
+
+  "install-failed": {
+    "$extends": "apps-design",
+    "install": { "$error": "install failed: the install did not finish in time" }
+  },
+
+  "arrange-moved": {
+    "$extends": "apps-design",
+    "screens_list": {
+      "$by": "list",
+      "values": {
+        "menu": { "$each": [
+          { "$json": [
+            { "id": "58E537B5", "name": "BandBridge", "is_app": true, "installed_here": true, "shown": true, "position": 0 },
+            { "id": "10BD37D4", "name": "testbandapp", "is_app": true, "installed_here": true, "shown": true, "position": 1 },
+            { "id": "00000003", "name": "workout", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "00000002", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+            { "id": "00000023", "name": "sleep", "is_app": false, "installed_here": false, "shown": true, "position": 4 },
+            { "id": "00000004", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 5 },
+            { "id": "0000001C", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 },
+            { "id": "00000024", "name": "spo2", "is_app": false, "installed_here": false, "shown": false, "position": 1 }
+          ] },
+          { "$json": [
+            { "id": "58E537B5", "name": "BandBridge", "is_app": true, "installed_here": true, "shown": true, "position": 0 },
+            { "id": "00000003", "name": "workout", "is_app": false, "installed_here": false, "shown": true, "position": 1 },
+            { "id": "00000002", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "10BD37D4", "name": "testbandapp", "is_app": true, "installed_here": true, "shown": true, "position": 3 },
+            { "id": "00000023", "name": "sleep", "is_app": false, "installed_here": false, "shown": true, "position": 4 },
+            { "id": "00000004", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 5 },
+            { "id": "0000001C", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 },
+            { "id": "00000024", "name": "spo2", "is_app": false, "installed_here": false, "shown": false, "position": 1 }
+          ] }
+        ] },
+        "shortcuts": { "$each": [
+          { "$json": [
+            { "id": "00000002", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 0 },
+            { "id": "00000001", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 1 },
+            { "id": "00000020", "name": "activity", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "00000016", "name": "alarm", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+            { "id": "0000000F", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 }
+          ] },
+          { "$json": [
+            { "id": "00000002", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 0 },
+            { "id": "00000001", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 1 },
+            { "id": "00000020", "name": "activity", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+            { "id": "0000000F", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 },
+            { "id": "00000016", "name": "alarm", "is_app": false, "installed_here": false, "shown": false, "position": 1 }
+          ] }
+        ] }
+      }
+    }
+  },
+
+  "arrange-refused": {
+    "$extends": "apps-design",
+    "screens_apply": { "$error": "display list: the band did not report its menu" }
+  },
+
+  "arrange-limits": {
+    "$extends": "apps-design",
+    "screens_list": {
+      "$by": "list",
+      "values": {
+        "menu": { "$json": [
+          { "id": "58E537B5", "name": "BandBridge", "is_app": true, "installed_here": true, "shown": true, "position": 0 },
+          { "id": "10BD37D4", "name": "testbandapp", "is_app": true, "installed_here": true, "shown": true, "position": 1 },
+          { "id": "00000003", "name": "workout", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+          { "id": "00000002", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+          { "id": "00000023", "name": "sleep", "is_app": false, "installed_here": false, "shown": true, "position": 4 },
+          { "id": "00000004", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 5 },
+          { "id": "00000013", "name": "settings", "is_app": false, "installed_here": false, "shown": true, "position": 6 },
+          { "id": "0000001C", "name": "stress", "is_app": false, "installed_here": false, "shown": false, "position": 0 },
+          { "id": "00000024", "name": "spo2", "is_app": false, "installed_here": false, "shown": false, "position": 1 }
+        ] },
+        "shortcuts": { "$json": [
+          { "id": "00000002", "name": "weather", "is_app": false, "installed_here": false, "shown": true, "position": 0 },
+          { "id": "00000001", "name": "hr", "is_app": false, "installed_here": false, "shown": true, "position": 1 },
+          { "id": "00000020", "name": "activity", "is_app": false, "installed_here": false, "shown": true, "position": 2 },
+          { "id": "00000016", "name": "alarm", "is_app": false, "installed_here": false, "shown": true, "position": 3 },
+          { "id": "00000005", "name": "sleep", "is_app": false, "installed_here": false, "shown": true, "position": 4 },
+          { "id": "00000013", "name": "spo2", "is_app": false, "installed_here": false, "shown": true, "position": 5 },
+          { "id": "0000000F", "name": "stress", "is_app": false, "installed_here": false, "shown": true, "position": 6 },
+          { "id": "00000017", "name": "calendar", "is_app": false, "installed_here": false, "shown": true, "position": 7 },
+          { "id": "0000001B", "name": "compass", "is_app": false, "installed_here": false, "shown": true, "position": 8 },
+          { "id": "00000019", "name": "todo", "is_app": false, "installed_here": false, "shown": true, "position": 9 },
+          { "id": "00000012", "name": "breathing", "is_app": false, "installed_here": false, "shown": false, "position": 0 }
+        ] }
+      }
+    }
+  },
+
+  "lists-loading": {
+    "$extends": "apps-design",
+    "apps_list": { "$pending": true },
+    "screens_list": { "$pending": true }
+  }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- A white navigation bar with dark icons, which Android draws from 8.1 on. -->
+    <style name="Theme.Relay" parent="Base.Theme.Relay">
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

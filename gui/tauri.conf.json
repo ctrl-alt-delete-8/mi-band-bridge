@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Mi Band Bridge",
+  "version": "1.0.0",
+  "identifier": "com.ellengu.bandbridge.gui",
+  "build": {
+    "frontendDist": "ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Mi Band Bridge",
+        "width": 700,
+        "height": 640,
+        "resizable": true,
+        "visible": true,
+        "focus": false,
+        "minWidth": 700,
+        "maxWidth": 700,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 12, "y": 21 }
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": false,
+    "targets": "app",
+    "resources": {
+      "../LICENSE": "LICENSE",
+      "../LICENSE-APP.md": "LICENSE-APP.md",
+      "../THIRD-PARTY-NOTICES": "THIRD-PARTY-NOTICES"
+    }
+  }
+}

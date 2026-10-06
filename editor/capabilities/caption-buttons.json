@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "caption-buttons",
+  "description": "On Windows the window has no frame (W8), so the page draws its minimize, maximize and close buttons, as BandBridge's window does. Maximize asks whether the window is maximized, to draw the restore glyph. Close quits the editor. macOS draws its own buttons, so it gets none of this.",
+  "windows": ["main"],
+  "platforms": ["windows"],
+  "permissions": [
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-is-maximized",
+    "core:window:allow-close"
+  ]
+}

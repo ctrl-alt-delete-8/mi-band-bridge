@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Mi Band App Editor",
+  "version": "1.0.0",
+  "identifier": "dev.bandbridge.editor",
+  "build": {
+    "frontendDist": "ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Mi Band App Editor",
+        "width": 1180,
+        "height": 820,
+        "minWidth": 960,
+        "minHeight": 600,
+        "resizable": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 12, "y": 21 }
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'; img-src 'self' blob: data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app"],
+    "icon": ["icons/icon.png", "icons/icon.ico"],
+    "macOS": {
+      "hardenedRuntime": true
+    },
+    "resources": {
+      "../LICENSE": "LICENSE",
+      "../LICENSE-APP.md": "LICENSE-APP.md",
+      "../THIRD-PARTY-NOTICES": "THIRD-PARTY-NOTICES"
+    }
+  }
+}

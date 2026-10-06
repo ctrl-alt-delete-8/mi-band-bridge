@@ -1,0 +1,1288 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Mi Band Bridge</title>
+<script src="system.js"></script>
+<style>
+  /* The design's tokens, from the pen.dev frame "BandBridge Window — Light"
+     and its dark theme. Each token holds its light and its dark value, and
+     the root's color scheme picks one. The window follows the system, unless
+     a class on the root forces one: .light or .dark. The Band App Editor
+     builds separately and carries a copy of these tokens and components in
+     editor/ui/index.html, so a change here belongs there too. */
+  :root {
+    color-scheme: light dark;
+    --bg: light-dark(#edeef1, #34373e);
+    --card: light-dark(#ffffff, #3e424a);
+    --card-sunk: light-dark(#f7f7f9, #383b43);
+    --chip: light-dark(#eff0f3, #484c55);
+    --hairline: light-dark(#ecedf0, #474a53);
+    --line: light-dark(#e2e3e7, #4f535d);
+    --line-strong: light-dark(#cdcfd5, #5e636e);
+    --ink: light-dark(#111318, #edeef1);
+    --dim: light-dark(#5b5f67, #aeb2ba);
+    --faint: light-dark(#8b8f97, #9da1a9);
+    --accent: light-dark(#0a6bce, #6bb0f5);
+    --accent-soft: light-dark(#e9f1fc, #2d4a6b);
+    --accent-ink: light-dark(#ffffff, #0b1a2c);
+    --good: light-dark(#137a3a, #3ecd75);
+    --good-soft: light-dark(#e4f4ea, #24402c);
+    --warn: light-dark(#8a5a07, #e4a32b);
+    --warn-soft: light-dark(#fcf3df, #443218);
+    --bad: light-dark(#b3261e, #ff8b82);
+    --bad-soft: light-dark(#fce9e7, #4a2823);
+    --focus-ring: light-dark(#0a6bce, #4c9df0);
+    --chip-raised: light-dark(#ffffff, #565b65);
+    --bad-ink: light-dark(#ffffff, #2e1613);
+    /* Windows' caption buttons, in Windows 11's own tints: one under the
+       pointer, a lighter one while pressed. Close turns red. */
+    --caption-hover: light-dark(rgba(0, 0, 0, 0.0373), rgba(255, 255, 255, 0.0605));
+    --caption-press: light-dark(rgba(0, 0, 0, 0.0241), rgba(255, 255, 255, 0.0419));
+    --caption-close: #c42b1c;
+    /* The design draws in Inter and JetBrains Mono. The window uses the
+       faces macOS ships, so it loads nothing. */
+    --ui: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  }
+  :root.light { color-scheme: light; }
+  :root.dark { color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  /* The title bar and the status bar stay put, and the sections scroll
+     between them. */
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; overflow: hidden;
+         font: 12px/1.5 var(--ui); color: var(--ink); background: var(--bg); }
+  /* An id rule beats the browser's [hidden] display:none, so say it here too.
+     Without this the banner stays on screen however the attribute is set. */
+  [hidden] { display: none !important; }
+
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .icon { flex: none; fill: none; stroke: currentColor; stroke-width: 2;
+          stroke-linecap: round; stroke-linejoin: round; }
+
+  /* macOS draws its three window buttons over the left end of the bar, where
+     tauri.conf.json puts them: 14 points each, from x 12 to 72, centered on
+     the bar, as measured on macOS 27. The mark sits 26 points past them, the
+     gap the design leaves. */
+  .titlebar { flex: none; height: 38px; display: flex; align-items: center; gap: 10px;
+              padding: 0 14px 0 98px; background: var(--bg);
+              /* A line drawn inside the bar, so the bar's content centers on
+                 the same line as the window buttons. */
+              box-shadow: inset 0 -1px 0 var(--hairline);
+              cursor: default; user-select: none; -webkit-user-select: none; }
+  .titlebar .mark { width: 14px; height: 14px; color: var(--dim); }
+  /* On Windows the window has no frame, so the page draws the whole bar
+     (W8): the Mac's row, with Windows' caption buttons in place of the
+     traffic lights. With no buttons before it, the mark starts at the bar's
+     14 points of padding. The caption buttons sit in the window's top right
+     corner, 46 by 32 points each, with Windows' own glyphs, and the pill
+     stops 14 points short of them, as it stops short of the Mac's edge. */
+  :root[data-system="windows"] .titlebar { padding: 0 0 0 14px; }
+  .caption-buttons { display: none; }
+  :root[data-system="windows"] .caption-buttons { display: flex; align-self: flex-start;
+                                                  margin-left: 4px; }
+  button.caption { width: 46px; height: 32px; padding: 0; border: 0; border-radius: 0;
+                   background: transparent; color: var(--ink); cursor: default;
+                   font: 10px/32px "Segoe Fluent Icons", "Segoe MDL2 Assets"; }
+  button.caption:focus-visible { outline: none; }
+  button.caption:hover { background: var(--caption-hover); }
+  button.caption:active { background: var(--caption-press); }
+  button.caption.close:hover { background: var(--caption-close); color: #ffffff; }
+  button.caption.close:active { background: rgb(196 43 28 / 0.9); color: rgb(255 255 255 / 0.7); }
+  /* A window that is not in front has its buttons dimmed, as Windows does. */
+  :root.window-inactive button.caption:not(:hover) { color: var(--faint); }
+  /* Words that differ between the systems: each place holds both, and the
+     root's system picks one. */
+  :root[data-system="windows"] .on-mac,
+  :root:not([data-system="windows"]) .on-windows { display: none !important; }
+  h1 { margin: 0; font-size: 12.5px; font-weight: 600; line-height: 15px; }
+  .pill { margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+          padding: 3px 9px 3px 7px; border-radius: 99px;
+          font-size: 11px; font-weight: 500; line-height: 13px;
+          font-variant-numeric: tabular-nums;
+          background: var(--chip); color: var(--faint); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill[data-tone="good"] { background: var(--good-soft); color: var(--good); }
+  .pill[data-tone="warn"] { background: var(--warn-soft); color: var(--warn); }
+  .pill[data-tone="bad"] { background: var(--bad-soft); color: var(--bad); }
+  /* The setup screen's pill: the idle chip, with its words a step darker. */
+  .pill[data-tone="unpaired"] { color: var(--dim); }
+  .pill[data-tone="unpaired"] .dot { background: var(--faint); }
+
+  #permission { flex: none; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+                padding: 8px 16px; font-size: 11.5px;
+                background: var(--warn-soft); color: var(--warn);
+                border-bottom: 1px solid var(--hairline); }
+  #permission button { background: transparent; border-color: currentColor; color: inherit; }
+
+  /* A config.toml that does not load: the loader's reason, which names the
+     action and the field, and Reveal in Finder, so a file edited by hand can
+     be fixed. The one place the window says it. */
+  #config-banner { flex: none; display: flex; gap: 10px; align-items: flex-start;
+                   padding: 8px 16px; font-size: 11.5px; line-height: 1.45;
+                   background: var(--bad-soft); color: var(--bad);
+                   border-bottom: 1px solid var(--hairline); }
+  #config-banner > .icon { width: 13px; height: 13px; margin-top: 2px; }
+  #config-banner .words { flex: 1; min-width: 0; }
+  #config-reason { display: block; margin-top: 2px; font: 11px/1.45 var(--mono);
+                   overflow-wrap: anywhere; }
+  #config-banner button { flex: none; background: transparent; border-color: currentColor;
+                          color: inherit; }
+
+  main { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+         background: var(--card); }
+  .section { padding: 14px 16px; background: var(--card); min-width: 0; }
+  .section + .section { border-top: 1px solid var(--hairline); }
+  .section > summary { display: flex; align-items: center; gap: 8px; list-style: none;
+                       cursor: default; user-select: none; -webkit-user-select: none; }
+  .section > summary::-webkit-details-marker { display: none; }
+  .section > summary:focus-visible { outline: 2px solid var(--focus-ring);
+                                     outline-offset: 2px; border-radius: 4px; }
+  .section .chevron { width: 12px; height: 12px; color: var(--faint);
+                      transition: transform .12s; }
+  .section:not([open]) .chevron { transform: rotate(-90deg); }
+  h2 { margin: 0; font-size: 11px; font-weight: 600; line-height: 13px;
+       letter-spacing: .4px; color: var(--dim); }
+  .body { margin-top: 10px; min-width: 0; }
+  .body > :first-child { margin-top: 0; }
+
+  .statusbar { flex: none; display: flex; align-items: center; gap: 7px;
+               padding: 9px 14px 10px; background: var(--bg);
+               border-top: 1px solid var(--hairline);
+               font-size: 10.5px; line-height: 14px; color: var(--faint);
+               white-space: nowrap; }
+  .statusbar > .icon { width: 12px; height: 12px; }
+  #config-path { min-width: 0; overflow: hidden; text-overflow: ellipsis;
+                 font-family: var(--mono); color: var(--dim); }
+  #config-path.bad { color: var(--bad); }
+  /* Why Reveal in Finder did not, in place of the path for a moment. */
+  #status-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .statusbar.failed #config-lead, .statusbar.failed #config-path { display: none; }
+  button.link { display: inline-flex; align-items: center; gap: 5px;
+                padding: 0; border: 0; background: none; font-size: inherit;
+                line-height: inherit; color: var(--accent); }
+  button.link .icon { width: 10px; height: 10px; }
+  /* About: the name and version, what the app is not, and its licenses,
+     which open in the browser. */
+  .about-name { margin: 0; font-weight: 600; }
+  .about-links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; }
+  .statusbar button.link { margin-left: auto; }
+
+  button { font: inherit; font-size: 11.5px; font-weight: 500; line-height: 14px;
+           padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line-strong);
+           background: var(--card); color: var(--ink); cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button:disabled { opacity: .5; cursor: default; border-color: var(--line); }
+  button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  button.accent { border-color: var(--accent); background: var(--accent);
+                  color: var(--accent-ink); font-weight: 600; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-width: 0; }
+
+  /* The event log, from the design frame "BandBridge Window — Light": one
+     row for each press and each app installed or removed, newest first, in
+     alternate shades, six in view. The design strokes the box inside its
+     edge, over the rows, so the stroke is drawn on top here, and the rows
+     span the box. Each row keeps to one line: a long action name or result
+     is cut short, and its tooltip holds the rest. */
+  .log-frame { position: relative; border-radius: 8px; overflow: hidden;
+               background: var(--card-sunk); }
+  .log-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+                      border: 1px solid var(--line); border-radius: inherit; }
+  /* A person reading further down keeps their place when a row arrives on
+     top. app.js moves the view for that, so the browser must not as well. */
+  #log { height: 174px; overflow-y: auto; overflow-x: hidden; overflow-anchor: none; }
+  #log:empty::after { content: "No events yet."; display: flex; height: 100%;
+                      align-items: center; justify-content: center;
+                      font-size: 11.5px; color: var(--faint); }
+  .log-frame + .row { margin-top: 10px; }
+  .event { display: flex; align-items: center; gap: 8px; height: 29px; padding: 0 10px;
+           white-space: nowrap; background: var(--card-sunk); }
+  .event:nth-child(even) { background: var(--card); }
+  .event .at { flex: none; font: 10px/13px var(--mono); color: var(--faint); }
+  .event .tag { flex: none; padding: 0 4px; border-radius: 3px;
+                font: 500 9.5px/13px var(--mono); background: var(--accent-soft); color: var(--accent); }
+  .event[data-kind="app"] .tag { background: var(--chip); color: var(--dim); }
+  .event .signal { flex: none; font: 500 11px/15px var(--mono); }
+  .event .arrow { width: 10px; height: 10px; color: var(--faint); }
+  .event .action, .event .unset, .event .app { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .event .action { font-size: 11px; line-height: 13px; }
+  .event .unset { font-size: 11px; line-height: 13px; color: var(--dim); }
+  /* The design sets the app's name a space and a gap after the words. */
+  .event .change { flex: none; margin-right: 3px; font-size: 11.5px; line-height: 14px; }
+  .event .app { font: 500 11px/15px var(--mono); }
+  /* How the action went: green when it worked, and red when it did not. A
+     chip takes at most about half the row, so the action keeps its name. */
+  .event .result { margin-left: auto; flex: 0 1 auto; min-width: 0; max-width: 45%;
+                   display: flex; align-items: center; gap: 4px; padding: 1px 5px;
+                   border-radius: 3px; font: 500 9.5px/13px var(--mono);
+                   background: var(--good-soft); color: var(--good); }
+  .event .result[data-tone="bad"] { background: var(--bad-soft); color: var(--bad); }
+  .event .result .icon { width: 9px; height: 9px; }
+  .event .result span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* The action still runs: its chip fills in when it ends. */
+  .event .running { margin-left: auto; flex: none; display: flex; color: var(--faint); }
+  .event .running .icon { width: 10px; height: 10px; animation: spin 1.2s linear infinite; }
+  /* The design's Clear: a small button, 23 points tall. */
+  #clear { padding: 4px 9px; font-size: 11px; line-height: 13px; }
+  /* Live: the window hears the band's presses as they come, while the band
+     is connected. Otherwise the mark stays, dimmed, and the head keeps its
+     shape. */
+  .live { margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+          font-size: 10.5px; font-weight: 500; line-height: 13px; letter-spacing: .3px;
+          color: var(--dim); }
+  .live .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
+  .live[data-live="false"] { color: var(--faint); }
+  .live[data-live="false"] .dot { background: var(--faint); }
+
+  select { font: inherit; padding: 5px 7px; border-radius: 6px;
+           border: 1px solid var(--line-strong); background: var(--card); color: var(--ink); }
+  a { color: var(--accent); cursor: pointer; }
+  .hint { color: var(--dim); margin: 8px 0 0; }
+  .bad { color: var(--bad); }
+  button.quiet-bad { color: var(--bad); }
+
+  /* The connection card, from the design frame "State variations —
+     Connection": the band on the left, and on the right the buttons for
+     where its connection stands. The pill that goes with each card is the
+     title bar's. The id this Mac uses to reach the band is never shown. */
+  .device-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .device { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .device-id { display: flex; align-items: center; gap: 7px; min-width: 0; height: 16px; }
+  .device-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                 font-size: 13px; font-weight: 600; line-height: 16px; color: var(--ink); }
+  .mac { flex: none; padding: 1px 5px; border-radius: 4px; background: var(--chip);
+         font: 500 10px/13px var(--mono); color: var(--dim); }
+  /* Copy key reads as an action beside what names the band, not as part of
+     its name. After a copy it says where the key went, for a moment. */
+  button.copy-key { flex: none; font-size: 11px; font-weight: 500; line-height: 13px; }
+  .device-id button.copy-key { margin-left: 3px; }
+  button.copy-key .icon { width: 11px; height: 11px; }
+  button.copy-key.copied { color: var(--good); }
+  .standing { margin: 0; display: flex; align-items: center; gap: 6px; min-width: 0;
+              font-size: 11px; font-weight: 500; line-height: 13px; color: var(--dim); }
+  .standing .icon { width: 12px; height: 12px; }
+  .standing span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .standing[data-tone="warn"] { color: var(--warn); }
+  .standing[data-tone="bad"] { color: var(--bad); }
+  .standing[data-icon="loader"] .icon { animation: spin 1.2s linear infinite; }
+  /* The design draws these 26 points tall, with 11 points either side of the
+     words, the border included. */
+  .connection-buttons { flex: none; display: flex; gap: 6px; align-items: center; }
+  .connection-buttons button { padding: 5px 10px; }
+  #connection-note { margin-top: 10px; }
+
+  /* Settings, from the design frame "BandBridge Window — Light": three rows
+     in a sunken box. The design strokes the box inside its edge, and a
+     border adds to it, so the rows at the box's top and bottom edges have a
+     point less padding there. */
+  .setting-rows { overflow: hidden; border: 1px solid var(--line); border-radius: 8px;
+                  background: var(--card-sunk); }
+  .setting { display: flex; align-items: center; gap: 12px; padding: 10px 11px; }
+  .setting:first-child { padding-top: 9px; }
+  .setting:last-child { padding-bottom: 9px; }
+  .setting + .setting { border-top: 1px solid var(--hairline); }
+  .setting-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .setting-label { font-size: 12px; font-weight: 600; line-height: 15px; color: var(--ink); }
+  .setting-help { margin: 0; font-size: 11px; line-height: 13px; color: var(--faint); }
+  /* A switch. The design draws it on: the accent, with the knob to the
+     right. Off, the track is the faint gray, which keeps the white knob and
+     the track apart from the box at three to one. */
+  input.switch { appearance: none; -webkit-appearance: none; position: relative; flex: none;
+                 width: 32px; height: 18px; margin: 0; border-radius: 99px;
+                 background: var(--faint); cursor: pointer; transition: background .12s; }
+  input.switch::after { content: ""; position: absolute; top: 2px; left: 2px;
+                        width: 14px; height: 14px; border-radius: 50%; background: #ffffff;
+                        transition: transform .12s; }
+  input.switch:checked { background: var(--accent); }
+  input.switch:checked::after { transform: translateX(14px); }
+  input.switch:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  input.switch:disabled { opacity: .5; cursor: default; }
+  /* Appearance: three segments on a chip. The chosen one is raised, with a
+     stroke, which the others carry unseen, so the choice never moves them.
+     Each keeps the width of its bold words for the same reason. */
+  .segments { flex: none; display: flex; gap: 2px; padding: 3px; border-radius: 7px;
+              background: var(--chip); }
+  .segment { position: relative; display: flex; }
+  .segment input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0;
+                   pointer-events: none; }
+  .segment span { display: flex; flex-direction: column; align-items: center;
+                  padding: 3px 9px; border: 1px solid transparent; border-radius: 5px;
+                  font-size: 10.5px; font-weight: 500; line-height: 13px; color: var(--dim);
+                  cursor: pointer; user-select: none; -webkit-user-select: none; }
+  .segment span::after { content: attr(data-label); height: 0; overflow: hidden;
+                         visibility: hidden; font-weight: 600; }
+  .segment input:checked + span { background: var(--chip-raised); border-color: var(--line-strong);
+                                  font-weight: 600; color: var(--ink); }
+  .segment input:focus-visible + span { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  .segment input:disabled + span { opacity: .5; cursor: default; }
+
+  /* What each button does, from the design frame "BandBridge Window —
+     Light": the actions in a sunken box, one row each, and the editor under
+     them, whose four tabs are the frame "State variations — Action kinds".
+     The design strokes its boxes inside their edge, so a padding here is
+     the design's less the border. */
+  #actions .body { margin-top: 11px; display: flex; flex-direction: column; gap: 11px; }
+  .count { margin-left: auto; padding: 1px 7px; border-radius: 99px; background: var(--chip);
+           font-size: 10.5px; font-weight: 500; line-height: 13px; color: var(--dim);
+           font-variant-numeric: tabular-nums; }
+  .lede { margin: 0; font-size: 11.5px; line-height: 1.5; color: var(--dim); }
+  .action-list { overflow: hidden; border: 1px solid var(--line); border-radius: 8px;
+                 background: var(--card-sunk); }
+  .action-row { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; }
+  .action-row:first-child { padding-top: 7px; }
+  .action-row:last-child { padding-bottom: 7px; }
+  .action-row + .action-row { border-top: 1px solid var(--hairline); }
+  .action-row .sig { flex: none; padding: 1px 6px; border: 1px solid var(--line); border-radius: 5px;
+                     background: var(--card); font: 500 11px/15px var(--mono); color: var(--ink); }
+  .action-row .stack { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .action-row .action-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                             font-size: 12px; font-weight: 600; line-height: 15px; color: var(--ink); }
+  .action-row .mech { display: flex; align-items: center; gap: 7px; min-width: 0; }
+  .action-row .kind-word { flex: none; font-size: 10px; font-weight: 500; line-height: 12px;
+                           letter-spacing: .4px; text-transform: uppercase; color: var(--faint); }
+  .action-row .value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                       font-size: 11px; line-height: 13px; color: var(--dim); }
+  .action-row .value.mono { font-family: var(--mono); line-height: 15px; }
+  .row-buttons { flex: none; display: flex; align-items: center; gap: 6px; }
+  /* The row the editor below it changes. */
+  .action-row.editing { background: var(--accent-soft); }
+  .action-row.editing .sig { border-color: var(--accent); }
+  .action-row.empty { justify-content: center; min-height: 46px;
+                      font-size: 11.5px; line-height: 15px; color: var(--dim); }
+  .action-row.confirming { background: var(--bad-soft); }
+  .confirm-words { flex: 1; min-width: 0; font-size: 11.5px; line-height: 15px; color: var(--bad); }
+  button.danger { border-color: var(--bad); background: var(--bad); color: var(--bad-ink); font-weight: 600; }
+  /* A small button that is only its icon. The hit area reaches past the
+     icon, and takes no room from the row. */
+  button.icon-button { display: inline-flex; margin: -2px; padding: 2px; border: 0; border-radius: 4px;
+                       background: none; color: var(--faint); }
+  button.icon-button .icon { width: 13px; height: 13px; }
+  button.icon-button:hover { color: var(--ink); }
+  button.icon-button:disabled { opacity: .35; }
+  .add-divider { height: 1px; margin: 0; border: 0; background: var(--hairline); }
+  .actions-foot { display: flex; align-items: center; gap: 8px; padding-top: 2px; }
+  #add-action { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 7px; }
+  #add-action .icon { width: 11px; height: 11px; color: var(--dim); }
+
+  .editor { overflow: hidden; border: 1px solid var(--accent); border-radius: 9px;
+            background: var(--accent-soft); }
+  .editor-head { display: flex; align-items: center; gap: 8px; padding: 7px 11px 8px; }
+  .editor-head .dot { width: 8px; height: 8px; color: var(--accent); }
+  .editor-title { flex: 1; font-size: 11px; font-weight: 700; line-height: 13px; letter-spacing: .4px;
+                  color: var(--accent); }
+  .editor-head button.icon-button { color: var(--accent); }
+  .editor-body { display: flex; flex-direction: column; gap: 10px; padding: 6px 11px 11px;
+                 background: var(--card); }
+  .sentence { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding-top: 8px; }
+  .sentence.do { padding-top: 4px; }
+  .editor-rule { height: 1px; margin: 0; border: 0; background: var(--hairline); }
+  /* A field in the editor: a white box with a stroke, an icon, and what is
+     typed or chosen in it. */
+  .efield { position: relative; display: flex; align-items: center; gap: 7px; min-width: 0;
+            padding: 6px 9px; border: 1px solid var(--line-strong); border-radius: 6px;
+            background: var(--card); }
+  .efield:focus-within { border-color: var(--accent); box-shadow: 0 0 0 .5px var(--accent); }
+  .efield > .icon { flex: none; width: 12px; height: 12px; color: var(--faint); }
+  .efield input, .efield textarea, .efield select {
+    flex: 1; min-width: 0; margin: 0; padding: 0; border: 0; outline: none; background: transparent;
+    color: var(--ink); font: 500 12.5px/15px var(--ui); }
+  .efield input::placeholder, .efield textarea::placeholder { font-family: var(--ui); font-weight: 400;
+                                                               color: var(--faint); opacity: 1; }
+  .efield .mono { font: 400 11.5px/15px var(--mono); }
+  .efield select { appearance: none; -webkit-appearance: none; padding-right: 18px; cursor: pointer; }
+  .efield .chevron-down { position: absolute; right: 9px; width: 12px; height: 12px; color: var(--dim);
+                          pointer-events: none; }
+  .efield.invalid, .caps.invalid, .signal-field.invalid, .tabs.invalid {
+    border-color: var(--bad); box-shadow: 0 0 0 .5px var(--bad); }
+  .field-error { margin: 0; font-size: 10.5px; line-height: 1.4; color: var(--bad); }
+
+  .when-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .signal-field { flex: none; display: flex; align-items: center; padding: 5px 9px;
+                  border: 1px solid var(--line-strong); border-radius: 7px; background: var(--card); }
+  .signal-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 .5px var(--accent); }
+  .signal-field input { width: 6ch; margin: 0; padding: 0; border: 0; outline: none; background: transparent;
+                        font: 600 13px/17px var(--mono); color: var(--ink); caret-color: var(--accent); }
+  .signal-field input::placeholder { font-weight: 400; color: var(--faint); opacity: 1; }
+  .when-words { font-size: 11.5px; line-height: 14px; color: var(--dim); }
+  .when-range { margin-left: auto; font: 10.5px/14px var(--mono); color: var(--faint); }
+  /* "or" between two ways to fill the same thing. */
+  .or { display: flex; align-items: center; gap: 8px; padding: 2px 0;
+        font-size: 10.5px; line-height: 13px; color: var(--faint); }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .learn-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  button.learn { flex: none; display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px;
+                 border-color: var(--accent); border-radius: 7px; color: var(--accent);
+                 font-weight: 600; line-height: 14px; }
+  button.learn .icon { width: 13px; height: 13px; }
+  button.learn[aria-pressed="true"] { background: var(--accent-soft); }
+  button.learn[aria-pressed="true"] .icon { animation: pulse 1.2s ease-in-out infinite; }
+  .learn-hint { min-width: 0; font-size: 10.5px; line-height: 13px; color: var(--faint); }
+  @keyframes pulse { 50% { opacity: .3; } }
+
+  .tabs { display: flex; gap: 2px; padding: 3px; border-radius: 7px; background: var(--chip); }
+  .tabs button { flex: 1; min-width: 0; padding: 3px; border: 1px solid transparent; border-radius: 5px;
+                 background: transparent; font-size: 10.5px; font-weight: 500; line-height: 13px;
+                 color: var(--dim); }
+  .tabs button:hover { border-color: transparent; color: var(--ink); }
+  .tabs button[aria-selected="true"] { border-color: var(--line-strong); background: var(--chip-raised);
+                                       font-weight: 600; color: var(--ink); }
+  /* The fields under the tabs: a label, then what it names. The labels
+     share a column, so the fields start in one line. */
+  .kind-grid { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 6px;
+               row-gap: 8px; align-items: center; }
+  .kind-grid > .span { grid-column: 2; }
+  .kind-grid > .whole { grid-column: 1 / -1; }
+  .row-label { font-size: 9.5px; font-weight: 700; line-height: 11px; letter-spacing: 1.2px;
+               text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+  .fill-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .fill-row > .grow { flex: 1; }
+  /* The command and the script are two ways to say what the Shell tab
+     runs. The one not in use reads as the design draws the script. */
+  .kind-grid [data-alt].unused .efield { border-color: var(--line); }
+  .kind-grid [data-alt].unused input { color: var(--dim); }
+  .efield.script { padding: 5px 5px 5px 9px; }
+  .efield.script input { font-size: 11px; }
+  button.mini { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px;
+                border-radius: 5px; font-size: 10.5px; line-height: 13px; }
+  button.mini .icon { width: 10px; height: 10px; color: var(--dim); }
+  .caps { display: flex; align-items: center; gap: 5px; min-height: 34px; padding: 5px 7px;
+          border: 1px solid var(--line); border-radius: 6px; background: var(--card-sunk); }
+  .caps.listening { border-color: var(--accent); background: var(--accent-soft); }
+  .cap { min-width: 24px; padding: 2px 7px; border: 1px solid var(--line-strong); border-radius: 4px;
+         background: var(--card); text-align: center; white-space: nowrap;
+         font: 600 12px/16px var(--mono); color: var(--ink); }
+  /* The marks for the modifiers are in the system face, which draws them
+     at the size of a letter. */
+  .cap.mark { font-family: var(--ui); }
+  .caps .none { padding: 0 3px; font-size: 11px; line-height: 22px; color: var(--faint); }
+  button.record { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px;
+                  border-color: var(--accent); color: var(--accent); font-weight: 600; line-height: 14px; }
+  button.record .icon { width: 12px; height: 12px; }
+  button.record[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  button.record[aria-pressed="true"] .icon { animation: pulse 1.2s ease-in-out infinite; }
+  .record-note { margin: 0; font-size: 10.5px; line-height: 1.45; color: var(--dim); }
+  .record-note.after { color: var(--warn); }
+  .efield.pick { flex: 0 1 230px; padding: 5px 8px; }
+  .efield.pick select { font: 400 11.5px/15px var(--mono); }
+  .efield.pick select.empty { font: 400 12px/15px var(--ui); color: var(--faint); }
+  .modifier-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  button.chip-toggle { padding: 3px 7px; border-radius: 5px; font-size: 10.5px; line-height: 13px;
+                       color: var(--dim); }
+  button.chip-toggle[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft);
+                                            font-weight: 600; color: var(--accent); }
+  .keys-warning { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-radius: 6px;
+                  background: var(--warn-soft); color: var(--warn); font-size: 11px; line-height: 13px; }
+  .keys-warning > .icon { flex: none; width: 12px; height: 12px; }
+  .keys-warning > span { flex: 1; min-width: 0; }
+  .keys-warning button { flex: none; padding: 2px 7px; border-radius: 5px; font-size: 10.5px;
+                         line-height: 13px; }
+  .efield.shortcut > .icon { color: var(--accent); }
+  .efield.shortcut select { font-size: 12px; }
+  .note-row { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 10.5px;
+              line-height: 13px; color: var(--faint); }
+  .note-row > span:first-child { min-width: 0; }
+  .note-row .grow { flex: 1; }
+  .note-row button.link { font-weight: 500; }
+  .note-row .bad { color: var(--bad); }
+  .efield.method { flex: none; padding: 6px 8px; }
+  .efield.method select { width: 62px; font-size: 11.5px; font-weight: 600; }
+  .efield.method .chevron-down { right: 8px; width: 10px; height: 10px; }
+  .efield > .icon.small { width: 11px; height: 11px; }
+  .efield.url { flex: 1; }
+  .hb { display: flex; gap: 6px; min-width: 0; }
+  .hb .efield { flex: 1; align-items: flex-start; gap: 6px; padding: 5px 9px; border-color: var(--line); }
+  .inline-label { flex: none; padding-top: 2px; font-size: 9.5px; font-weight: 700; line-height: 11px;
+                  letter-spacing: .5px; text-transform: uppercase; color: var(--faint); }
+  .hb textarea { height: 15px; overflow: hidden; resize: none; font: 400 11px/15px var(--mono);
+                 color: var(--dim); }
+  .hb .efield:focus-within textarea { color: var(--ink); }
+
+  .save-row { display: flex; align-items: center; gap: 8px; min-width: 0; padding-top: 4px; }
+  button.save { padding: 7px 14px; border: 0; border-radius: 7px; font-size: 12px; line-height: 15px; }
+  button.try { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px;
+               border-color: var(--accent); border-radius: 7px; color: var(--accent);
+               font-size: 12px; font-weight: 600; line-height: 15px; }
+  button.try .icon { width: 12px; height: 12px; }
+  button.try[aria-pressed="true"] { background: var(--accent-soft); }
+  button.try[aria-pressed="true"] .icon { display: none; }
+  .try-note { min-width: 0; font-size: 11px; line-height: 14px; color: var(--warn); }
+  /* How Try it now went, in the event log's chip. */
+  .try-result { min-width: 0; max-width: 45%; display: flex; align-items: center; gap: 4px; padding: 1px 5px;
+                border-radius: 3px; background: var(--good-soft); color: var(--good);
+                font: 500 9.5px/13px var(--mono); }
+  .try-result[data-tone="bad"] { background: var(--bad-soft); color: var(--bad); }
+  .try-result[data-tone="idle"] { background: var(--chip); color: var(--dim); }
+  .try-result .icon { width: 9px; height: 9px; }
+  .try-result span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .try-result .spin { animation: spin 1.2s linear infinite; }
+  button.text-button { flex: none; margin-left: auto; padding: 0; border: 0; background: none;
+                       font-size: 11.5px; font-weight: 500; line-height: 14px; color: var(--faint); }
+  button.text-button:hover { color: var(--ink); }
+
+  /* Install or remove an app, from the design frame "BandBridge Window —
+     Light": the apps in a sunken box, one row each, and Install under
+     them. The design strokes the box inside its edge, so a padding at the
+     box's edge is the design's less the border. */
+  #apps .body { margin-top: 11px; display: flex; flex-direction: column; gap: 11px; }
+  .app-list { overflow: hidden; border: 1px solid var(--line); border-radius: 8px;
+              background: var(--card-sunk); }
+  .app-row { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; }
+  .app-row:first-child { padding-top: 7px; }
+  .app-row:last-child { padding-bottom: 7px; }
+  .app-row + .app-row { border-top: 1px solid var(--hairline); }
+  .app-badge { flex: none; display: flex; padding: 5px; border-radius: 6px; background: var(--chip);
+               color: var(--dim); }
+  .app-badge .icon { width: 13px; height: 13px; }
+  .app-row .stack { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .app-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+              font-size: 12px; font-weight: 600; line-height: 15px; color: var(--ink); }
+  .app-meta { display: flex; align-items: center; gap: 5px; min-width: 0; white-space: nowrap;
+              font-size: 10px; line-height: 13px; color: var(--faint); }
+  .app-meta .mono { font-family: var(--mono); }
+  button.remove { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px;
+                  font-size: 11px; line-height: 13px; color: var(--bad); }
+  button.remove .icon { width: 11px; height: 11px; }
+  .app-row.confirming { background: var(--bad-soft); }
+  .app-row .row-buttons button { padding: 4px 9px; font-size: 11px; line-height: 13px; }
+  /* A removal that runs: the row waits, with the event log's spinner. */
+  .app-row.removing .stack { opacity: .6; }
+  .app-row .working { flex: none; display: flex; align-items: center; gap: 5px;
+                      font-size: 11px; line-height: 13px; color: var(--dim); }
+  .app-row .working .icon { width: 11px; height: 11px; animation: spin 1.2s linear infinite; }
+  /* What the box says when it has no rows: the device away, the list on
+     its way, no app, or why the list could not be read. */
+  .list-state { display: flex; align-items: center; justify-content: center; gap: 7px;
+                min-height: 45px; padding: 8px 12px; text-align: center;
+                font-size: 11.5px; line-height: 15px; color: var(--dim); }
+  .list-state .icon { flex: none; width: 12px; height: 12px; }
+  .list-state.loading .icon { animation: spin 1.2s linear infinite; }
+  .list-state.bad { color: var(--bad); }
+  .list-state button.link { flex: none; font-weight: 500; white-space: nowrap; }
+  #apps .body > .hint { margin: 0; }
+  #arrange .hint { margin-top: 10px; }
+  .apps-foot { display: flex; align-items: center; gap: 10px; min-width: 0; padding-top: 2px; }
+  button.install { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px;
+                   border: 0; border-radius: 7px; font-size: 12px; line-height: 15px; }
+  button.install .icon { width: 12px; height: 12px; }
+  button.install[aria-busy="true"] .icon { animation: pulse 1.2s ease-in-out infinite; }
+  .install-status { min-width: 0; display: flex; align-items: flex-start; gap: 6px;
+                    font-size: 11px; line-height: 14px; color: var(--dim); }
+  .install-status .icon { flex: none; width: 11px; height: 11px; margin-top: 1.5px; }
+  .install-status[data-tone="busy"] .icon { animation: spin 1.2s linear infinite; }
+  .install-status[data-tone="good"] { color: var(--good); }
+  .install-status[data-tone="bad"] { color: var(--bad); }
+
+  /* Arrange what the device shows, from the same frame: two columns, the
+     app menu and the shortcuts. Each is a sunken box of rows, the shown
+     ones in the band's order, then what the band keeps out of view, under
+     a bar that folds. A row is dragged by any part of it. */
+  #arrange .body { margin-top: 11px; margin-bottom: 14px; }
+  .section > summary .aside { margin-left: auto; font-size: 10.5px; font-weight: 400; line-height: 13px;
+                              color: var(--faint); }
+  .columns { display: flex; align-items: flex-start; gap: 16px; min-width: 0; }
+  .column { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .column-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .column-title { font-size: 11px; font-weight: 600; line-height: 13px; color: var(--dim); }
+  .column-count { margin-left: auto; white-space: nowrap; font-size: 10.5px; line-height: 13px;
+                  color: var(--faint); font-variant-numeric: tabular-nums; }
+  .column-help { margin: 0; font-size: 10.5px; line-height: 1.45; color: var(--faint); }
+  .screens { position: relative; display: flex; flex-direction: column; gap: 1px; padding: 4px;
+             border: 1px solid var(--line); border-radius: 8px; background: var(--card-sunk); }
+  .screens[aria-busy="true"] .screen { opacity: .6; }
+  .screen { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 6px 8px;
+            border: 1px solid transparent; border-radius: 6px; font-size: 12px; font-weight: 500;
+            line-height: 15px; color: var(--ink); cursor: grab; touch-action: none;
+            user-select: none; -webkit-user-select: none; }
+  .screen:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -1px; }
+  .screen .grip { width: 12px; height: 12px; color: var(--faint); }
+  .screen-badge { flex: none; display: flex; padding: 4px; border-radius: 5px; background: var(--chip);
+                  color: var(--dim); }
+  .screen-badge .icon { width: 12px; height: 12px; }
+  .screen-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .custom { flex: none; padding: 1px 5px; border-radius: 3px; background: var(--accent-soft);
+            font-size: 9.5px; font-weight: 500; line-height: 11px; color: var(--accent); }
+  .screen.off .screen-badge { opacity: .55; }
+  .screen.off .screen-name { color: var(--dim); }
+  /* The row being moved, lifted from the list, and where it would land. */
+  .screen.dragging { position: relative; z-index: 2; border-color: var(--accent); background: var(--card);
+                     box-shadow: 0 3px 10px rgba(0, 0, 0, .15); cursor: grabbing; }
+  /* Lifted, the row's stroke marks it, as the design draws it. */
+  .screen.dragging:focus-visible { outline: none; }
+  .screen.dragging .grip { color: var(--accent); }
+  .screen.dragging .screen-badge { opacity: 1; background: var(--accent-soft); color: var(--accent); }
+  .screen.dragging .screen-name { font-weight: 600; color: var(--ink); }
+  .screens.sorting .screen:not(.dragging) { cursor: grabbing; }
+  .drop-line { position: absolute; left: 4px; right: 4px; height: 2px; border-radius: 99px;
+               background: var(--accent); pointer-events: none; }
+  button.hidden-bar { display: flex; align-items: center; gap: 7px; width: 100%; padding: 7px 9px 5px 7px;
+                      border: 0; border-radius: 6px; background: none; color: var(--faint);
+                      font-size: 9.5px; font-weight: 700; line-height: 12px; cursor: default; }
+  button.hidden-bar:hover { border: 0; color: var(--dim); }
+  button.hidden-bar .fold { width: 12px; height: 12px; }
+  button.hidden-bar .eye { width: 11px; height: 11px; }
+  button.hidden-bar .word { letter-spacing: 1.2px; text-transform: uppercase; }
+  button.hidden-bar .rule { flex: 1; height: 1px; background: var(--line); }
+  button.hidden-bar.target { background: var(--accent-soft); color: var(--accent); }
+  button.hidden-bar.target .rule { background: var(--accent); }
+  button.hidden-bar.target.refused { background: var(--bad-soft); color: var(--bad); }
+  button.hidden-bar.target.refused .rule { background: var(--bad); }
+  .drop-line.refused { background: var(--bad); }
+  .screens .list-state { min-height: 34px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+             clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+  /* Two views. With no band paired the window shows the setup screen, and
+     with one it shows the sections. Until the page knows which, it shows
+     neither, so a window with no band never flashes the sections first. */
+  body[data-view="loading"] main, body[data-view="loading"] .statusbar,
+  body[data-view="setup"] main, body[data-view="setup"] .statusbar,
+  body[data-view="setup"] #permission, body[data-view="setup"] #config-banner,
+  body[data-view="loading"] #config-banner { display: none; }
+  body:not([data-view="setup"]) #setup { display: none; }
+
+  /* The setup screen, from the design frame "BandBridge Window — Setup". */
+  #setup { flex: 1; min-height: 0; overflow-y: auto; background: var(--card); }
+  .setup-body { display: flex; flex-direction: column; align-items: center;
+                padding: 40px 40px 34px; }
+  .setup-badge { width: 54px; height: 54px; flex: none; border-radius: 50%;
+                 display: grid; place-items: center;
+                 background: var(--accent-soft); color: var(--accent); }
+  .setup-badge .icon { width: 26px; height: 26px; }
+  .setup-title { margin: 16px 0 0; font-size: 22px; font-weight: 700; line-height: 27px;
+                 letter-spacing: -0.3px; color: var(--ink); }
+  .setup-sub { margin: 7px 0 0; max-width: 440px; font-size: 12.5px; line-height: 1.5;
+               text-align: center; color: var(--dim); }
+  #key-help { margin: 8px 0 0; display: inline-flex; align-items: center; gap: 5px;
+              padding: 0; border: 0; background: none; font-size: 12px; font-weight: 500;
+              line-height: 15px; color: var(--accent); }
+  #key-help .icon { width: 12px; height: 12px; }
+  #key-help .icon:last-child { width: 11px; height: 11px; }
+  #key-help:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .setup-form, .pair-status { width: 420px; max-width: 100%; }
+  .setup-form { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-label { font-size: 9.5px; font-weight: 700; line-height: 11px; letter-spacing: 1.2px;
+                 text-transform: uppercase; color: var(--faint); }
+  .field { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 8px;
+           background: var(--card-sunk); border: 1px solid var(--line-strong); }
+  .field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 .5px var(--accent); }
+  .field input { flex: 1; min-width: 0; margin: 0; padding: 0; border: 0; outline: none;
+                 background: transparent; font: 500 12.5px/15px var(--ui); color: var(--ink); }
+  /* The mono face sets a taller line, as the design draws the key field. */
+  .field input.mono { font-family: var(--mono); line-height: 17px; }
+  .field input::placeholder { font-family: var(--ui); font-weight: 400; color: var(--faint);
+                              opacity: 1; }
+  .field input:disabled { color: var(--dim); }
+  .field input::-webkit-credentials-auto-fill-button { display: none !important; }
+  .field .icon { width: 13px; height: 13px; color: var(--faint); }
+  .field .ok { color: var(--good); }
+  .field-help { margin: 0; font-size: 10.5px; line-height: 1.4; color: var(--faint); }
+  button.primary { width: 100%; display: inline-flex; align-items: center; justify-content: center;
+                   gap: 8px; padding: 10px 16px; border: 0; border-radius: 8px;
+                   background: var(--accent); color: var(--accent-ink);
+                   font-size: 13px; font-weight: 600; line-height: 16px; }
+  button.primary:disabled { opacity: .45; }
+  button.primary[aria-busy="true"] { opacity: .85; }
+  .spinner { width: 12px; height: 12px; flex: none; border-radius: 50%;
+             border: 1.5px solid currentColor; border-right-color: transparent;
+             animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* What the pair says as it goes: one line each, the newest with a spinner
+     while the pair runs. */
+  .pair-status { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .pair-status:not(:has(li, .alert:not([hidden]))) { display: none; }
+  #pair-progress { margin: 0; padding: 0; list-style: none; }
+  #pair-progress:empty { display: none; }
+  #pair-progress li { display: flex; gap: 8px; align-items: flex-start; padding: 1px 0; border: 0;
+                      font-size: 11.5px; line-height: 17px; color: var(--dim); }
+  /* The rule on * does not reach a pseudo-element, so the spinner's border
+     would widen it, and push its line's words to the right. */
+  #pair-progress li::before { content: ""; flex: none; box-sizing: border-box;
+                              width: 5px; height: 5px; margin: 6px 2px 0;
+                              border-radius: 50%; background: var(--faint); }
+  #pair-progress li.now { color: var(--ink); }
+  #pair-progress li.now::before { width: 9px; height: 9px; margin: 4px 0 0; background: none;
+                                  border: 1.5px solid var(--accent); border-right-color: transparent;
+                                  animation: spin .8s linear infinite; }
+
+  /* A named error, and the warning before something that cannot be undone.
+     A caution is the same box in the warn colors, for a loss that can be
+     made good. */
+  .alert { display: flex; gap: 8px; align-items: flex-start; padding: 9px 11px; border-radius: 7px;
+           background: var(--bad-soft); color: var(--bad); font-size: 11.5px; line-height: 1.45; }
+  .alert > .icon { width: 13px; height: 13px; flex: none; margin-top: 2px; }
+  .alert.caution { background: var(--warn-soft); color: var(--warn); }
+
+  /* The sheets, from the design frame "State variations — Forget and
+     re-pair". Each one hangs below the title bar, as a sheet does. The
+     design draws a stroke inside the box, and a border adds to it, so the
+     padding here is the design's less the border. */
+  dialog.sheet { width: 540px; max-width: calc(100vw - 32px); margin: 54px auto auto;
+                 padding: 21px 23px 17px; border: 1px solid var(--line); border-radius: 12px;
+                 background: var(--card); color: var(--ink);
+                 box-shadow: 0 8px 28px rgba(0, 0, 0, .14); }
+  dialog.sheet::backdrop { background: rgba(0, 0, 0, .18); }
+  .sheet-head { display: flex; gap: 12px; }
+  .sheet-badge { width: 34px; height: 34px; flex: none; border-radius: 50%;
+                 display: grid; place-items: center;
+                 background: var(--warn-soft); color: var(--warn); }
+  .sheet-badge .icon { width: 18px; height: 18px; }
+  .sheet-text { flex: 1; min-width: 0; padding-top: 1px; display: flex; flex-direction: column; gap: 5px; }
+  .sheet-title { margin: 0; font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+  .sheet-body { margin: 0; font-size: 12px; line-height: 1.5; color: var(--dim); }
+  .options { margin: 16px 0 0; padding: 0 0 0 46px; border: 0; min-width: 0;
+             display: flex; flex-direction: column; gap: 12px; }
+  .option { display: flex; gap: 9px; align-items: flex-start; }
+  .option input { appearance: none; -webkit-appearance: none; flex: none; width: 15px; height: 15px;
+                  margin: 1px 0 0; border-radius: 50%; border: 1px solid var(--line-strong);
+                  background: var(--card); display: grid; place-items: center; }
+  .option input:checked { background: var(--accent); border-color: var(--accent); }
+  .option input:checked::after { content: ""; width: 5px; height: 5px; border-radius: 50%;
+                                 background: #ffffff; }
+  .option input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .option-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .option-title { font-size: 12.5px; font-weight: 500; line-height: 15px; }
+  .option input:checked + .option-text .option-title { font-weight: 600; }
+  .option-desc { font-size: 11.5px; line-height: 1.45; color: var(--dim); }
+  .sheet .alert { margin-top: 12px; }
+  /* With nothing to keep, the key's caution follows the text at the gap the
+     options would have had. */
+  .sheet .options[hidden] + .alert { margin-top: 16px; }
+  /* In the caution, Copy key is the last words of its sentence. Its mark
+     shows once the key is on the clipboard. */
+  .alert button.copy-key { font-size: inherit; line-height: inherit; vertical-align: top; }
+  .alert button.copy-key:not(.copied) .icon { display: none; }
+  .sheet-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 8px; }
+  .sheet-actions button { padding: 7px 15px; border-radius: 7px; font-size: 12.5px; line-height: 15px; }
+  .sheet-actions button.destructive { border-color: var(--bad); background: var(--bad);
+                                      color: var(--bad-ink); font-weight: 600; }
+</style>
+
+<!-- Icons from Lucide (ISC license), as the design uses them. -->
+<svg class="sprite" aria-hidden="true">
+  <symbol id="i-watch" viewBox="0 0 24 24"><path d="M12 10v2.2l1.6 1" /><path d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05" /><path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05" /><circle cx="12" cy="12" r="6" /></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+  <symbol id="i-file-code" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 12.5 8 15l2 2.5" /><path d="m14 12.5 2 2.5-2 2.5" /></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></symbol>
+  <symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></symbol>
+  <symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" /><circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+  <symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></symbol>
+  <symbol id="i-battery-full" viewBox="0 0 24 24"><path d="M10 10v4" /><path d="M14 10v4" /><path d="M22 14v-4" /><path d="M6 10v4" /><rect x="2" y="6" width="16" height="12" rx="2" /></symbol>
+  <symbol id="i-battery-medium" viewBox="0 0 24 24"><path d="M10 14v-4" /><path d="M22 14v-4" /><path d="M6 14v-4" /><rect x="2" y="6" width="16" height="12" rx="2" /></symbol>
+  <symbol id="i-battery-low" viewBox="0 0 24 24"><path d="M22 14v-4" /><path d="M6 14v-4" /><rect x="2" y="6" width="16" height="12" rx="2" /></symbol>
+  <symbol id="i-battery-charging" viewBox="0 0 24 24"><path d="m11 7-3 5h4l-3 5" /><path d="M14.856 6H16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.935" /><path d="M22 14v-4" /><path d="M5.14 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.936" /></symbol>
+  <symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></symbol>
+  <symbol id="i-loader" viewBox="0 0 24 24"><path d="M12 2v4" /><path d="m16.2 7.8 2.9-2.9" /><path d="M18 12h4" /><path d="m16.2 16.2 2.9 2.9" /><path d="M12 18v4" /><path d="m4.9 19.1 2.9-2.9" /><path d="M2 12h4" /><path d="m4.9 4.9 2.9 2.9" /></symbol>
+  <symbol id="i-circle-slash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="9" x2="15" y1="15" y2="9" /></symbol>
+  <symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></symbol>
+  <symbol id="i-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+  <symbol id="i-pencil-line" viewBox="0 0 24 24"><path d="M13 21h8" /><path d="m15 5 4 4" /><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="M12 5v14" /></symbol>
+  <symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><path d="M16.247 7.761a6 6 0 0 1 0 8.478" /><path d="M19.075 4.933a10 10 0 0 1 0 14.134" /><path d="M4.925 19.067a10 10 0 0 1 0-14.134" /><path d="M7.753 16.239a6 6 0 0 1 0-8.478" /><circle cx="12" cy="12" r="2" /></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><path d="M12 19h8" /><path d="m4 17 6-6-6-6" /></symbol>
+  <symbol id="i-folder-open" viewBox="0 0 24 24"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" /></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></symbol>
+  <symbol id="i-circle-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="1" /></symbol>
+  <symbol id="i-shield-alert" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="M12 8v4" /><path d="M12 16h.01" /></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol>
+  <!-- The apps and the band's screens. -->
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" /></symbol>
+  <symbol id="i-alarm-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M5 3 2 6" /><path d="m22 6-3-3" /><path d="M6.38 18.7 4 21" /><path d="M17.64 18.67 20 21" /></symbol>
+  <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0" /><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742" /><path d="m2 2 20 20" /><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05" /></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" /></symbol>
+  <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 18V5" /><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /><path d="M18 18a4 4 0 0 0 2-7.464" /><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /><path d="M6 18a4 4 0 0 1-2-7.464" /><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></symbol>
+  <symbol id="i-calculator" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2" /><line x1="8" x2="16" y1="6" y2="6" /><line x1="16" x2="16" y1="14" y2="18" /><path d="M16 10h.01" /><path d="M12 10h.01" /><path d="M8 10h.01" /><path d="M12 14h.01" /><path d="M8 14h.01" /><path d="M12 18h.01" /><path d="M8 18h.01" /></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></symbol>
+  <symbol id="i-calendar-clock" viewBox="0 0 24 24"><path d="M16 14v2.2l1.6 1" /><path d="M16 2v4" /><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" /><path d="M3 10h5" /><path d="M8 2v4" /><circle cx="16" cy="16" r="6" /></symbol>
+  <symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></symbol>
+  <symbol id="i-calendar-range" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M16 2v4" /><path d="M3 10h18" /><path d="M8 2v4" /><path d="M17 14h-6" /><path d="M13 18H7" /><path d="M7 14h.01" /><path d="M17 18h.01" /></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><path d="M12 6v6l4 2" /><circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-cloud-sun" viewBox="0 0 24 24"><path d="M12 2v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="M20 12h2" /><path d="m19.07 4.93-1.41 1.41" /><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128" /><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" /></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /><circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-credit-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z" /><path d="m2.5 21.5 1.4-1.4" /><path d="m20.1 3.9 1.4-1.4" /><path d="M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z" /><path d="m9.6 14.4 4.8-4.8" /></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" /><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" /><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" /><path d="m2 2 20 20" /></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528" /></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" /></symbol>
+  <symbol id="i-flashlight" viewBox="0 0 24 24"><path d="M12 13v1" /><path d="M17 2a1 1 0 0 1 1 1v4a3 3 0 0 1-.6 1.8l-.6.8A4 4 0 0 0 16 12v8a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-8a4 4 0 0 0-.8-2.4l-.6-.8A3 3 0 0 1 6 7V3a1 1 0 0 1 1-1z" /><path d="M6 6h12" /></symbol>
+  <symbol id="i-flower-2" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1" /><circle cx="12" cy="8" r="2" /><path d="M12 10v12" /><path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z" /><path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z" /></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32 0" /></symbol>
+  <symbol id="i-glass-water" viewBox="0 0 24 24"><path d="M5.116 4.104A1 1 0 0 1 6.11 3h11.78a1 1 0 0 1 .994 1.105L17.19 20.21A2 2 0 0 1 15.2 22H8.8a2 2 0 0 1-2-1.79z" /><path d="M6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0" /></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></symbol>
+  <symbol id="i-grip-vertical" viewBox="0 0 24 24"><circle cx="9" cy="12" r="1" /><circle cx="9" cy="5" r="1" /><circle cx="9" cy="19" r="1" /><circle cx="15" cy="12" r="1" /><circle cx="15" cy="5" r="1" /><circle cx="15" cy="19" r="1" /></symbol>
+  <symbol id="i-hard-drive" viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /><line x1="6" x2="6.01" y1="16" y2="16" /><line x1="10" x2="10.01" y1="16" y2="16" /></symbol>
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" /></symbol>
+  <symbol id="i-heart-pulse" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" /><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" /></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" /></symbol>
+  <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14" /><path d="M5 2h14" /><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></symbol>
+  <symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></symbol>
+  <symbol id="i-list-todo" viewBox="0 0 24 24"><path d="M13 5h8" /><path d="M13 12h8" /><path d="M13 19h8" /><path d="m3 17 2 2 4-4" /><rect x="3" y="4" width="6" height="6" rx="1" /></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></symbol>
+  <symbol id="i-notebook-pen" viewBox="0 0 24 24"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" /><path d="M2 6h4" /><path d="M2 10h4" /><path d="M2 14h4" /><path d="M2 18h4" /><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" /></symbol>
+  <symbol id="i-podcast" viewBox="0 0 24 24"><path d="M13 17a1 1 0 1 0-2 0l.5 4.5a0.5 0.5 0 0 0 1 0z" fill="currentColor" /><path d="M16.85 18.58a9 9 0 1 0-9.7 0" /><path d="M8 14a5 5 0 1 1 8 0" /><circle cx="12" cy="11" r="1" fill="currentColor" /></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18" /><path d="m19 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" /><path d="m5 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M7 21h10" /></symbol>
+  <symbol id="i-scan-heart" viewBox="0 0 24 24"><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><path d="M7.828 13.07A3 3 0 0 1 12 8.764a3 3 0 0 1 4.172 4.306l-3.447 3.62a1 1 0 0 1-1.449 0z" /></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /><circle cx="12" cy="12" r="3" /></symbol>
+  <symbol id="i-smartphone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></symbol>
+  <symbol id="i-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2" /><path d="M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715" /><path d="M16 12a4 4 0 0 0-4-4" /><path d="m19 5-1.256 1.256" /><path d="M20 12h2" /></symbol>
+  <symbol id="i-thermometer" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" /></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" /><line x1="12" x2="15" y1="14" y2="11" /><circle cx="12" cy="14" r="8" /></symbol>
+  <symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></symbol>
+  <symbol id="i-weight" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3" /><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z" /></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M12.8 19.6A2 2 0 1 0 14 16H2" /><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" /><path d="M9.8 4.4A2 2 0 1 1 11 8H2" /></symbol>
+</svg>
+
+<!-- The window is dragged by this bar, which is also where macOS puts its
+     window buttons. On Windows the page draws Windows' buttons at its right
+     end: minimize, maximize or restore, and close. -->
+<header class="titlebar" data-tauri-drag-region="deep">
+  <svg class="icon mark" aria-hidden="true"><use href="#i-watch" /></svg>
+  <h1>Mi Band Bridge</h1>
+  <span class="pill" id="pill" data-tone="idle"><span class="dot"></span><span id="state">Starting</span></span>
+  <div class="caption-buttons">
+    <button class="caption" id="caption-minimize" type="button" tabindex="-1" title="Minimize" aria-label="Minimize">&#xE921;</button>
+    <button class="caption" id="caption-maximize" type="button" tabindex="-1" title="Maximize" aria-label="Maximize">&#xE922;</button>
+    <button class="caption close" id="caption-close" type="button" tabindex="-1" title="Close" aria-label="Close">&#xE8BB;</button>
+  </div>
+</header>
+
+<div id="permission" hidden>
+  <strong>Key events are blocked.</strong>
+  <span>Band presses will not become keystrokes until macOS allows this app.</span>
+  <button id="grant">Allow</button>
+</div>
+
+<!-- config.toml does not load: why, as the loader says it, and where the
+     file is. It goes away once the file loads again. -->
+<div id="config-banner" role="alert" hidden>
+  <svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg>
+  <div class="words"><strong>config.toml could not be read.</strong> <span id="config-consequence"></span><span id="config-reason"></span></div>
+  <button id="config-reveal" type="button"><span class="on-mac">Reveal in Finder</span><span class="on-windows">Show in File Explorer</span></button>
+</div>
+
+<!-- With no band paired, this is the whole window. The key field hides what
+     is typed, and the page empties it the moment a pair starts. -->
+<section id="setup" aria-labelledby="setup-title">
+  <div class="setup-body">
+    <div class="setup-badge"><svg class="icon" aria-hidden="true"><use href="#i-watch" /></svg></div>
+    <h2 class="setup-title" id="setup-title">Pair a device to begin.</h2>
+    <p class="setup-sub">Enter the device's auth key and give it a name.</p>
+    <button id="key-help" type="button"><svg class="icon" aria-hidden="true"><use href="#i-circle-help" /></svg>How do I find my device's auth key?<svg class="icon" aria-hidden="true"><use href="#i-external-link" /></svg></button>
+    <form class="setup-form" id="pair-form" autocomplete="off">
+      <div class="field-group">
+        <label class="field-label" for="pair-key">Auth key</label>
+        <div class="field">
+          <input class="mono" id="pair-key" type="password" placeholder="32 hex digits"
+                 autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+                 aria-describedby="pair-key-help" />
+          <svg class="icon ok" id="pair-key-ok" role="img" aria-label="32 hex digits" hidden><use href="#i-check" /></svg>
+        </div>
+        <p class="field-help" id="pair-key-help">From logging in to your Zepp or Xiaomi account, for example with huami-token.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="pair-name">Name</label>
+        <div class="field">
+          <svg class="icon" aria-hidden="true"><use href="#i-tag" /></svg>
+          <input id="pair-name" type="text" placeholder="Xiaomi Smart Band 7" autocomplete="off"
+                 spellcheck="false" />
+        </div>
+      </div>
+      <button class="primary" id="pair-submit" type="submit" disabled><span class="spinner" hidden></span><span class="label">Pair device</span></button>
+    </form>
+    <div class="pair-status" aria-live="polite">
+      <ol id="pair-progress"></ol>
+      <div class="alert" id="pair-error" role="alert" hidden><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg><span></span></div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <details class="section" id="connection" open>
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>Connection</h2></summary>
+    <div class="body">
+      <div class="device-row">
+        <div class="device">
+          <div class="device-id">
+            <span class="device-name" id="device-name"></span>
+            <span class="mac" id="device-mac" hidden></span>
+            <button class="link copy-key" id="copy-key" type="button"><svg class="icon" aria-hidden="true"><use href="#i-key-round" /></svg><span aria-live="polite">Copy key</span></button>
+          </div>
+          <p class="standing" id="standing" data-tone="dim"><svg class="icon" aria-hidden="true"><use href="#i-circle-slash" /></svg><span id="standing-text">&nbsp;</span></p>
+        </div>
+        <!-- Each state shows its own buttons. Forget only while the band is
+             idle, as the design draws it. -->
+        <div class="connection-buttons">
+          <button class="accent" id="connect" hidden>Connect</button>
+          <button id="disconnect" hidden>Disconnect</button>
+          <button id="cancel-connect" hidden>Cancel</button>
+          <button id="stop-trying" hidden>Stop trying</button>
+          <button class="quiet-bad" id="forget" hidden>Forget</button>
+        </div>
+      </div>
+      <p class="hint" id="connection-note" hidden></p>
+    </div>
+  </details>
+
+  <details class="section" id="settings">
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>Settings</h2></summary>
+    <div class="body">
+      <!-- Each change is written to config.toml at once, and takes effect
+           with no restart. The controls wait for the file to be read. -->
+      <div class="setting-rows">
+        <div class="setting">
+          <div class="setting-text">
+            <label class="setting-label" for="auto-reconnect">Auto reconnect</label>
+            <p class="setting-help" id="auto-reconnect-help">Try again when the connection drops.</p>
+          </div>
+          <input class="switch" id="auto-reconnect" type="checkbox" role="switch"
+                 aria-describedby="auto-reconnect-help" disabled />
+        </div>
+        <div class="setting">
+          <div class="setting-text">
+            <label class="setting-label" for="new-app-on-top">New app on top</label>
+            <p class="setting-help" id="new-app-on-top-help">When you install a new app here, put it first in the device's menu.</p>
+          </div>
+          <input class="switch" id="new-app-on-top" type="checkbox" role="switch"
+                 aria-describedby="new-app-on-top-help" disabled />
+        </div>
+        <div class="setting">
+          <div class="setting-text">
+            <span class="setting-label" id="appearance-label">Appearance</span>
+          </div>
+          <div class="segments" role="radiogroup" aria-labelledby="appearance-label">
+            <label class="segment"><input type="radio" name="appearance" value="light" disabled /><span data-label="Light">Light</span></label>
+            <label class="segment"><input type="radio" name="appearance" value="dark" disabled /><span data-label="Dark">Dark</span></label>
+            <label class="segment"><input type="radio" name="appearance" value="system" disabled /><span data-label="Follow system">Follow system</span></label>
+          </div>
+        </div>
+      </div>
+      <p class="hint bad" id="settings-note" hidden></p>
+    </div>
+  </details>
+
+  <details class="section" id="events" open>
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>Events from the device</h2><span class="live" id="live" data-live="false"><span class="dot"></span>Live</span></summary>
+    <div class="body">
+      <!-- A row for each press and each app installed or removed, newest
+           first, and nothing else. events.js says what each row shows. -->
+      <div class="log-frame"><div id="log" role="log" aria-label="Events from the device"></div></div>
+      <div class="row">
+        <button id="clear">Clear</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="section" id="actions">
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>What each button does</h2><span class="count" id="action-count" hidden></span></summary>
+    <div class="body">
+      <p class="lede">A signal from the device, and what this <span class="on-mac">Mac</span><span class="on-windows">PC</span> does.</p>
+      <!-- One row for each action, in the file's order. actions.js says
+           what each row shows. -->
+      <div class="action-list" id="action-list" role="list" aria-label="Actions"></div>
+      <p class="hint bad" id="actions-note" hidden></p>
+      <hr class="add-divider" id="editor-divider" hidden />
+
+      <!-- The editor: a new action, or the one whose row is marked above.
+           Each tab keeps what was typed in it, and a save sends the tab in
+           front. -->
+      <div class="editor" id="editor" hidden>
+        <div class="editor-head">
+          <svg class="icon dot" aria-hidden="true"><use href="#i-circle" /></svg>
+          <span class="editor-title" id="editor-title">New action</span>
+          <button class="icon-button" id="editor-close" type="button" aria-label="Close the editor"><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg></button>
+        </div>
+        <form class="editor-body" id="editor-form" autocomplete="off" novalidate>
+          <div class="sentence">
+            <label class="field-label" for="action-name">Name</label>
+            <div class="efield" data-slot="name">
+              <svg class="icon" aria-hidden="true"><use href="#i-tag" /></svg>
+              <input id="action-name" type="text" placeholder="What it does, such as Open Music" spellcheck="false" />
+            </div>
+            <p class="field-error" data-error="name" hidden></p>
+          </div>
+          <hr class="editor-rule" />
+          <div class="sentence">
+            <span class="field-label">When</span>
+            <div class="when-row">
+              <div class="signal-field" data-slot="signal">
+                <input id="action-signal" type="text" placeholder="bb04" maxlength="16" spellcheck="false"
+                       autocapitalize="off" autocorrect="off" aria-label="Signal" />
+              </div>
+              <span class="when-words">arrives from the device</span>
+              <span class="when-range" title="The signals a band app usually sends">bb00 – bbff</span>
+            </div>
+            <p class="field-error" data-error="signal" hidden></p>
+            <div class="or">or</div>
+            <div class="learn-row">
+              <button class="learn" id="learn" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-radio" /></svg><span>Learn from the device</span></button>
+              <span class="learn-hint" id="learn-hint">Press a button on the device that you want to use.</span>
+            </div>
+            <p class="field-error" data-error="learn" hidden></p>
+          </div>
+          <hr class="editor-rule" />
+          <div class="sentence do">
+            <span class="field-label" id="do-label">Do</span>
+            <div class="tabs" role="tablist" aria-labelledby="do-label" data-slot="kind">
+              <button type="button" role="tab" id="tab-keystroke" data-tab="keystroke" aria-controls="body-keystroke">Keystroke</button>
+              <button type="button" role="tab" id="tab-shell" data-tab="shell" aria-controls="body-shell">Shell</button>
+              <button type="button" role="tab" id="tab-shortcut" data-tab="shortcut" aria-controls="body-shortcut">Shortcut</button>
+              <button type="button" role="tab" id="tab-web_request" data-tab="web_request" aria-controls="body-web_request">Web request</button>
+            </div>
+            <p class="field-error" data-error="kind" hidden></p>
+
+            <!-- Keystroke: the keys, recorded or picked from the list (D3). -->
+            <div class="kind-grid" role="tabpanel" id="body-keystroke" data-body="keystroke" aria-labelledby="tab-keystroke">
+              <span class="row-label">Keys</span>
+              <div class="fill-row">
+                <div class="caps" id="caps" data-slot="keys" aria-live="polite"></div>
+                <span class="grow"></span>
+                <button class="record" id="record-keys" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-circle-dot" /></svg><span>Record keys</span></button>
+              </div>
+              <p class="record-note span" id="record-note" hidden></p>
+              <p class="field-error span" data-error="keys" hidden></p>
+              <div class="keys-warning whole" id="keys-warning" hidden>
+                <svg class="icon" aria-hidden="true"><use href="#i-shield-alert" /></svg>
+                <span id="keys-warning-words">Sending keystrokes needs the Device Control and Data Access permission. Mi Band Bridge does not have it yet.</span>
+                <button id="keys-open-settings" type="button">Open Settings</button>
+              </div>
+              <div class="or span">or</div>
+              <label class="row-label" for="key-pick">Key</label>
+              <div class="fill-row">
+                <div class="efield pick">
+                  <select id="key-pick"></select>
+                  <svg class="icon chevron-down" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                </div>
+                <div class="modifier-chips" role="group" aria-label="Modifiers">
+                  <button class="chip-toggle" type="button" data-modifier="command" aria-pressed="false">⌘ command</button>
+                  <button class="chip-toggle" type="button" data-modifier="shift" aria-pressed="false">⇧ shift</button>
+                  <button class="chip-toggle" type="button" data-modifier="option" aria-pressed="false">⌥ option</button>
+                  <button class="chip-toggle" type="button" data-modifier="control" aria-pressed="false">⌃ control</button>
+                  <button class="chip-toggle" type="button" data-modifier="fn" aria-pressed="false">fn</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shell: a command, or a script file. -->
+            <div class="kind-grid" role="tabpanel" id="body-shell" data-body="shell" aria-labelledby="tab-shell" hidden>
+              <label class="row-label" for="action-command" data-alt="shell">Command</label>
+              <div data-alt="shell">
+                <div class="efield" data-slot="command">
+                  <svg class="icon small" aria-hidden="true"><use href="#i-terminal" /></svg>
+                  <input class="mono" id="action-command" type="text" placeholder="open -a Music" spellcheck="false"
+                         autocapitalize="off" autocorrect="off" />
+                </div>
+              </div>
+              <p class="field-error span" data-error="command" hidden></p>
+              <div class="or span">or</div>
+              <label class="row-label" for="action-script" data-alt="script">Script file</label>
+              <div data-alt="script">
+                <div class="efield script" data-slot="script">
+                  <svg class="icon small" aria-hidden="true"><use href="#i-file-code" /></svg>
+                  <input class="mono" id="action-script" type="text" placeholder="~/scripts/toggle-desk-lamp.sh"
+                         spellcheck="false" autocapitalize="off" autocorrect="off" />
+                  <button class="mini" id="choose-script" type="button"><svg class="icon" aria-hidden="true"><use href="#i-folder-open" /></svg>Choose…</button>
+                </div>
+              </div>
+              <p class="field-error span" data-error="script" hidden></p>
+            </div>
+
+            <!-- Shortcut: a shortcut in Shortcuts, by name. -->
+            <div class="kind-grid" role="tabpanel" id="body-shortcut" data-body="shortcut" aria-labelledby="tab-shortcut" hidden>
+              <label class="row-label" for="action-shortcut">Shortcut</label>
+              <div class="efield shortcut" data-slot="shortcut">
+                <svg class="icon" aria-hidden="true"><use href="#i-zap" /></svg>
+                <select id="action-shortcut"></select>
+                <svg class="icon chevron-down" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+              </div>
+              <p class="field-error span" data-error="shortcut" hidden></p>
+              <div class="note-row span"><span id="shortcuts-said"></span><span class="grow"></span><button class="link" id="shortcuts-refresh" type="button">Refresh the list</button></div>
+            </div>
+
+            <!-- Web request: the method, the address, the headers and the
+                 body. -->
+            <div class="kind-grid" role="tabpanel" id="body-web_request" data-body="web_request" aria-labelledby="tab-web_request" hidden>
+              <span class="row-label">Request</span>
+              <div class="fill-row">
+                <div class="efield method" data-slot="method">
+                  <select id="action-method" aria-label="Method">
+                    <option>GET</option><option>POST</option><option>PUT</option>
+                    <option>PATCH</option><option>DELETE</option><option>HEAD</option>
+                  </select>
+                  <svg class="icon chevron-down" aria-hidden="true"><use href="#i-chevron-down" /></svg>
+                </div>
+                <div class="efield url" data-slot="url">
+                  <svg class="icon small" aria-hidden="true"><use href="#i-link" /></svg>
+                  <input class="mono" id="action-url" type="text" placeholder="http://lights.local/webhook" spellcheck="false"
+                         autocapitalize="off" autocorrect="off" aria-label="Address" />
+                </div>
+              </div>
+              <p class="field-error span" data-error="method" hidden></p>
+              <p class="field-error span" data-error="url" hidden></p>
+              <div class="hb span">
+                <label class="efield" data-slot="headers" title="One header a line, as Name: value">
+                  <span class="inline-label">Header</span>
+                  <textarea class="mono" id="action-headers" rows="1" placeholder="Authorization: Bearer …" spellcheck="false"></textarea>
+                </label>
+                <label class="efield" data-slot="body">
+                  <span class="inline-label">Body</span>
+                  <textarea class="mono" id="action-body" rows="1" placeholder='{"on": true}' spellcheck="false"></textarea>
+                </label>
+              </div>
+              <p class="field-error span" data-error="headers" hidden></p>
+            </div>
+          </div>
+          <div class="save-row">
+            <button class="accent save" id="action-save" type="submit">Save</button>
+            <button class="try" id="action-try" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-play" /></svg><span>Try it now</span></button>
+            <span class="try-note" id="try-note" aria-live="polite" hidden></span>
+            <span class="try-result" id="try-result" hidden></span>
+            <button class="text-button" id="action-cancel" type="button">Cancel</button>
+          </div>
+          <p class="field-error" data-error="general" hidden></p>
+        </form>
+      </div>
+
+      <div class="actions-foot">
+        <button id="add-action" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Add an action</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="section" id="apps">
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>Install or remove an app</h2></summary>
+    <div class="body">
+      <p class="lede">The apps you have installed.</p>
+      <!-- One row for each app installed from here: the apps this Mac can
+           name. The band names an app by its id alone, so an app it does
+           not list is never removed. arrange.js says what each row shows. -->
+      <div class="app-list" id="app-list" role="list" aria-label="Installed apps"></div>
+      <p class="hint bad" id="apps-note" hidden></p>
+      <div class="apps-foot">
+        <button class="accent install" id="install" type="button"><svg class="icon" aria-hidden="true"><use href="#i-download" /></svg><span>Install an app (.bin)</span></button>
+        <span class="install-status" id="install-status" aria-live="polite" hidden><svg class="icon" aria-hidden="true"><use href="#i-loader" /></svg><span></span></span>
+      </div>
+    </div>
+  </details>
+
+  <details class="section" id="arrange">
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>Arrange what the device shows</h2><span class="aside">drag to reorder</span></summary>
+    <div class="body">
+      <!-- The app menu and the shortcuts, as the band shows them, and what
+           each keeps out of view. A drop changes the band at once. The
+           control center is not in the window (D5). -->
+      <div class="columns">
+        <div class="column" data-list="menu">
+          <div class="column-head"><span class="column-title" id="menu-title">App menu</span><span class="column-count" id="menu-count"></span></div>
+          <div class="screens" id="menu-screens" role="list" aria-labelledby="menu-title"></div>
+        </div>
+        <div class="column" data-list="shortcuts">
+          <div class="column-head"><span class="column-title" id="shortcuts-title">Shortcuts</span><span class="column-count" id="shortcuts-count"></span></div>
+          <p class="column-help">The swipe order from the home screen. Swipe right for the top of this list, swipe left for the bottom — the row loops.</p>
+          <div class="screens" id="shortcuts-screens" role="list" aria-labelledby="shortcuts-title"></div>
+        </div>
+      </div>
+      <p class="hint bad" id="arrange-note" hidden></p>
+      <p class="sr-only" id="arrange-how">Press Space to pick the screen up, the arrow keys to move it, and Space to put it down.</p>
+      <p class="sr-only" id="arrange-live" aria-live="polite"></p>
+    </div>
+  </details>
+
+  <details class="section" id="about">
+    <summary><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down" /></svg><h2>About</h2></summary>
+    <div class="body">
+      <p class="about-name">Mi Band Bridge <span id="about-version"></span></p>
+      <p class="hint">Unofficial. Not made by or connected with Xiaomi.</p>
+      <p class="hint">The app is free to use, at work too. Its source code is under PolyForm Noncommercial 1.0.0.</p>
+      <p class="about-links">
+        <button class="link" type="button" data-page="app-license">App license</button>
+        <button class="link" type="button" data-page="source-license">Source code license</button>
+        <button class="link" type="button" data-page="notices">Third-party notices</button>
+      </p>
+    </div>
+  </details>
+</main>
+
+<footer class="statusbar">
+  <svg class="icon" aria-hidden="true"><use href="#i-file-code" /></svg>
+  <span id="config-lead">Device, settings and actions live in</span>
+  <span id="config-path"></span>
+  <span class="bad" id="status-note" hidden></span>
+  <button class="link" id="reveal"><span class="on-mac">Reveal in Finder</span><span class="on-windows">Show in File Explorer</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg></button>
+</footer>
+
+<!-- Forgetting a band and keeping what was built for it are two decisions,
+     so the window asks them apart: the forget here, and the reuse on the
+     next pair. -->
+<dialog class="sheet" id="forget-sheet" aria-labelledby="forget-title">
+  <form id="forget-form">
+    <div class="sheet-head">
+      <div class="sheet-badge"><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg></div>
+      <div class="sheet-text">
+        <h3 class="sheet-title" id="forget-title">Forget this device?</h3>
+        <p class="sheet-body" id="forget-body">The device will be unpaired. Choose what happens to what you set up for it.</p>
+      </div>
+    </div>
+    <fieldset class="options" id="forget-options">
+      <label class="option"><input type="radio" name="setup" value="keep" checked /><span class="option-text"><span class="option-title">Keep the actions and settings</span><span class="option-desc" id="forget-keep"></span></span></label>
+      <label class="option"><input type="radio" name="setup" value="delete" /><span class="option-text"><span class="option-title">Delete them as well</span><span class="option-desc" id="forget-delete"></span></span></label>
+    </fieldset>
+    <!-- After a forget, the key is only where the account login gives it, so
+         the sheet offers a copy before the person confirms. -->
+    <div class="alert caution" id="forget-key"><svg class="icon" aria-hidden="true"><use href="#i-key-round" /></svg><span>Forgetting removes the device's auth key from this <span class="on-mac">Mac</span><span class="on-windows">PC</span>. You need the key to pair it again. <button class="link copy-key" id="forget-copy-key" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg><span aria-live="polite">Copy key</span></button></span></div>
+    <div class="alert" id="forget-error" role="alert" hidden><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg><span></span></div>
+    <div class="sheet-actions">
+      <button type="button" id="forget-cancel">Cancel</button>
+      <button type="submit" class="destructive" id="forget-confirm">Forget device</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="reuse-sheet" aria-labelledby="reuse-title">
+  <form id="reuse-form">
+    <div class="sheet-head">
+      <div class="sheet-badge"><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg></div>
+      <div class="sheet-text">
+        <h3 class="sheet-title" id="reuse-title">Use the settings from your last device?</h3>
+        <p class="sheet-body" id="reuse-body"></p>
+      </div>
+    </div>
+    <fieldset class="options">
+      <label class="option"><input type="radio" name="setup" value="keep" checked /><span class="option-text"><span class="option-title">Use them for this device</span><span class="option-desc">Every action keeps its name, its signal and what it does. Nothing is lost.</span></span></label>
+      <label class="option"><input type="radio" name="setup" value="delete" /><span class="option-text"><span class="option-title">Start fresh</span><span class="option-desc">Begin with an empty list of actions and default settings.</span></span></label>
+    </fieldset>
+    <div class="alert" id="reuse-warning" hidden><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg><span></span></div>
+    <div class="sheet-actions">
+      <button type="button" id="reuse-cancel">Cancel</button>
+      <button type="submit" class="accent" id="reuse-confirm">Pair device</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="connection.js"></script>
+<script src="events.js"></script>
+<script src="actions.js"></script>
+<script src="arrange.js"></script>
+<script src="app.js"></script>

@@ -1,0 +1,25 @@
+# What THIRD-PARTY-NOTICES lists, for cargo-about: the crates that ship in
+# Mi Band Bridge and the Mi Band App Editor, on the Mac and on Windows.
+# scripts/third-party-notices.sh makes the file. Our own crates are private
+# (publish = false), so they are left out. So are build and dev dependencies,
+# which do not ship in an app.
+accepted = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "MIT",
+    "MIT-0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "ISC",
+    "Zlib",
+    "Unicode-3.0",
+    "MPL-2.0",
+    "Unlicense",
+    "0BSD",
+    "CC0-1.0",
+]
+targets = ["aarch64-apple-darwin", "x86_64-pc-windows-msvc"]
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+private = { ignore = true }

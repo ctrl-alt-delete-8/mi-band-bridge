@@ -1,0 +1,27 @@
+/* The design's faces: Inter for words, and JetBrains Mono for signals, paths
+   and the log. These are the files the Android relay carries
+   (android/app/src/main/res/font), under the SIL Open Font License, whose
+   texts are in this folder. The design uses three weights of each. A heavier
+   weight, such as the design's 700 for small capitals, is drawn in 600.
+
+   Roboto is the band's own font. The editor measures labels with Roboto
+   Medium, whose widths the band's labels have, and the preview draws them in
+   Roboto Regular, as thin as the band shows them (editor/src/label.rs says
+   why). Both are Roboto 2.138, under the Apache License 2.0, whose text is in
+   this folder. */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400;
+             src: url("inter_regular.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500;
+             src: url("inter_medium.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600;
+             src: url("inter_semibold.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400;
+             src: url("jetbrains_mono_regular.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 500;
+             src: url("jetbrains_mono_medium.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 600;
+             src: url("jetbrains_mono_semibold.ttf") format("truetype"); }
+@font-face { font-family: "Roboto"; font-style: normal; font-weight: 400;
+             src: url("roboto_regular.ttf") format("truetype"); }
+@font-face { font-family: "Roboto"; font-style: normal; font-weight: 500;
+             src: url("roboto_medium.ttf") format("truetype"); }

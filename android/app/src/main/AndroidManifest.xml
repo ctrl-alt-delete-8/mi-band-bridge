@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      Android 11 and later hide other apps unless they are named here. Without
+      this the Key Mapper broadcast is dropped, and nothing reports it.
+    -->
+    <queries>
+        <package android:name="io.github.sds100.keymapper" />
+        <!-- The gate: any one of these Gadgetbridge builds counts as installed. -->
+        <package android:name="nodomain.freeyourgadget.gadgetbridge" />
+        <package android:name="nodomain.freeyourgadget.gadgetbridge.nightly" />
+        <package android:name="nodomain.freeyourgadget.gadgetbridge.banglejs" />
+        <package android:name="nodomain.freeyourgadget.gadgetbridge.nightly_nopebble" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Relay">
+
+        <!--
+          A rotation or a resize reaches the window as a configuration change,
+          so the Activity is not recreated and an armed capture is not dropped.
+          The keyboard shrinks the window, so the pinned footer stays above it.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          Declared, so Android starts this app for a broadcast aimed at it by
+          name, even when no process is running. Gadgetbridge aims one here when
+          its BLE API package setting names this app. RelayService registers a
+          second copy in code, which also hears a broadcast aimed at nobody, so
+          one event often arrives twice, and Relay.handle makes the second a
+          repeat.
+        -->
+        <receiver
+            android:name=".BandReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="nodomain.freeyourgadget.gadgetbridge.ble_api.events.CHARACTERISTIC_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".RelayService"
+            android:exported="false" />
+
+        <!--
+          Starts the service again after a restart of the phone, and after an
+          update of this app, which stops it. Only the system sends these two.
+        -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

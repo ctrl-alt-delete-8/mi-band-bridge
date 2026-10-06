@@ -1,0 +1,59 @@
+[package]
+name = "bandbridge-editor"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+name = "band_editor"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bandbridge-editor"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# The system's config folder, where BandBridge keeps its socket on the Mac.
+dirs = "7"
+# Only the two formats the editor accepts. The default features pull in every
+# decoder the crate has, which this editor never uses.
+image = { version = "0.25", default-features = false, features = ["jpeg", "png"] }
+rand = "0.10"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+thiserror = "2"
+tiny-skia = "0.12"
+# Reads the band's font, Roboto Medium, to measure labels: only the advance
+# widths and the line height.
+ttf-parser = { version = "0.25", default-features = false, features = ["std"] }
+
+[target.'cfg(windows)'.dependencies]
+# BandBridge's pipe on Windows (W6): the user's SID names it, and a read
+# looks at what it holds, so a status can time out. The version BandBridge
+# already builds, so the crate is built once.
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Security_Authorization",
+    "Win32_System_Pipes",
+    "Win32_System_Threading",
+    # The About dialog opens its pages in the browser, through the shell.
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[target.'cfg(windows)'.dev-dependencies]
+# A fake BandBridge's pipe, for the link's tests on Windows.
+windows = { version = "0.62", features = [
+    "Win32_Storage_FileSystem",
+    "Win32_System_IO",
+    "Win32_System_Pipes",
+] }

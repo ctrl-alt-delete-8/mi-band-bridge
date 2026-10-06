@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "window",
+  "description": "The page draws the title bar, so it moves the window, and a double click on the bar zooms it, as a title bar does. Nothing else: events reach the page by drain_lines, and a working listen would show every line twice.",
+  "windows": ["main"],
+  "permissions": [
+    "core:window:allow-start-dragging",
+    "core:window:allow-internal-toggle-maximize"
+  ]
+}

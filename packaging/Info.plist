@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key><string>bandbridge-gui</string>
+    <key>CFBundleIdentifier</key><string>@IDENTIFIER@</string>
+    <key>CFBundleName</key><string>Mi Band Bridge</string>
+    <key>CFBundleDisplayName</key><string>Mi Band Bridge</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>1.0.0</string>
+    <key>CFBundleVersion</key><string>1.0.0</string>
+    <key>LSUIElement</key><true/>
+    <key>NSSupportsAutomaticTermination</key><false/>
+    <key>CFBundleIconFile</key><string>icon.png</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Mi Band Bridge connects to your Xiaomi Smart Band 7 to read its button events.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>An action's script may control another app.</string>
+</dict>
+</plist>

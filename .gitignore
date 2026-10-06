@@ -1,0 +1,24 @@
+/target
+*.log
+.env
+.superpowers/
+
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
+.DS_Store
+**/.DS_Store
+gui/target/
+
+# Written by the band app editor on every build
+apps/*/generated/
+apps/*/dist/
+
+# The Windows installers, as scripts/build-windows.ps1 copies them
+/dist/
+
+# Worktrees for parallel plan work
+.worktrees/
